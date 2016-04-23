@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newRoute"
+        android:icon="@drawable/ic_action_timer"
+        android:showAsAction="always"
+        android:title="@string/title_new_route">
+    </item>
+
+    <item
+        android:id="@+id/myRoutes"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always"
+        android:title="@string/my_routes" >
+    </item>
+
+    <item
+        android:id="@+id/userInfo"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always"
+        android:title="@string/user_info" >
+    </item>
+
+    <!--<item-->
+        <!--android:id="@+id/timer"-->
+        <!--android:icon="@drawable/ic_action_timer"-->
+        <!--android:showAsAction="always"-->
+        <!--android:title="@string/title_timer">-->
+    <!--</item>-->
+
+    <!--<item-->
+        <!--android:id="@+id/mapBtn"-->
+        <!--android:icon="@drawable/ic_action_timer"-->
+        <!--android:showAsAction="always"-->
+        <!--android:title="@string/title_map">-->
+    <!--</item>-->
+
+
+    <item
+        android:id="@+id/logout"
+        android:showAsAction="never"
+        android:title="@string/logout_action" >
+    </item>
+
+
+</menu>

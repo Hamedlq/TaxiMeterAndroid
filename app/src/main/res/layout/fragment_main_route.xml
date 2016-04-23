@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/one_route_fragment"
+        android:name="com.mibarim.main.ui.fragments.routeFragments.OneRouteFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_one_route" />
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:text="@string/my_group"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:textSize="16dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/stripe_repeat"
+        android:id="@+id/textView6" />
+
+    <FrameLayout
+        android:id="@+id/group_fragment"
+        android:name="com.mibarim.main.ui.fragments.routeFragments.GroupFragments"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_group" />
+
+    <FrameLayout
+        android:id="@+id/route_carousel_fragment"
+        android:name="com.mibarim.main.ui.fragments.routeFragments.RouteCarouselFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/route_fragment_carousel" />
+
+
+</LinearLayout>

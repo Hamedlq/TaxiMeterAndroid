@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:background="#00695c">
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="Logo"
+            android:src="@mipmap/ic_logo" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_signup"
+        style="@style/ShadowText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/stripe_repeat"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/text"
+        android:textColorLink="@color/text_link" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <TextView
+                    style="@style/ShadowText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="@string/label_mobile"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/text" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/et_mobile"
+                    style="@style/SignInEditText"
+                    android:completionThreshold="1"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/et_password" />
+
+                <TextView
+                    style="@style/ShadowText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/label_password"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/text" />
+
+                <EditText
+                    android:id="@+id/et_password"
+                    style="@style/SignInEditText"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:password="true" />
+
+                <Button
+                    android:id="@+id/b_signin"
+                    style="@style/ShadowText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button_background_states"
+                    android:gravity="center"
+                    android:onClick="handleLogin"
+                    android:padding="10dp"
+                    android:text="@string/label_login"
+                    android:textColor="@color/text"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                android:background="#80cbc4"
+                android:clickable="true"
+                android:onClick="gotoRegister"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/newUserRegister"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#111111" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

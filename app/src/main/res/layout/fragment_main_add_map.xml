@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/map_fragment"
+        android:name="com.mibarim.main.ui.fragments.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_map" />
+
+    <FrameLayout
+        android:id="@+id/srcdst_fragment"
+        android:name="com.mibarim.main.ui.fragments.SrcDstAddFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_srcdst" />
+
+    <FrameLayout
+        android:id="@+id/newRoute_carousel_fragment"
+        android:name="com.mibarim.main.ui.fragments.NewRouteCarouselFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_carousel" />
+    <FrameLayout
+        android:id="@+id/message_frgment"
+        android:name="com.mibarim.main.ui.fragments.ConfirmFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_confirm" />
+
+
+</RelativeLayout>
