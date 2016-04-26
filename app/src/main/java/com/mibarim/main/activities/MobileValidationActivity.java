@@ -6,10 +6,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mibarim.main.BootstrapApplication;
+import com.mibarim.main.BootstrapServiceProvider;
 import com.mibarim.main.R;
 import com.mibarim.main.core.Constants;
 import com.mibarim.main.models.ApiResponse;
@@ -56,37 +59,29 @@ public class MobileValidationActivity extends AccountAuthenticatorActivity {
      */
     public static final String PARAM_REPONSE_TYPE = "token";
 
-
     @Inject
     AuthenticateService authenticateService;
     @Inject
     RegisterService registerService;
     @Inject
+    BootstrapServiceProvider serviceProvider;
+    @Inject
     Bus bus;
 
 
-    @Bind(R.id.et_regMobile)
-    protected AutoCompleteTextView regMobileText;
-    @Bind(R.id.et_regPassword)
-    protected EditText regPasswordText;
-    @Bind(R.id.b_register)
-    protected Button registerButton;
-
-    private final TextWatcher watcher = validationTextWatcher();
+    @Bind(R.id.mobile_number)
+    protected TextView mobile_number;
+    @Bind(R.id.mobile_confirm_btn)
+    protected TextView mobile_confirm_btn;
+    @Bind(R.id.send_sms_btn)
+    protected TextView send_sms_btn;
 
     private SafeAsyncTask<Boolean> registerTask;
 
-    private String regMobile;
-
-    private String regPassword;
-
     private String authToken;
+    private String mobileNo;
 
-    private String authTokenType;
-
-    private TokenResponse loginResponse;
-
-    private ApiResponse response;
+    private boolean isConfirmed;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -96,43 +91,81 @@ public class MobileValidationActivity extends AccountAuthenticatorActivity {
 
         accountManager = AccountManager.get(this);
 
-        setContentView(R.layout.register_activity);
+        setContentView(R.layout.validation_activity);
+
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            mobileNo = getIntent().getStringExtra("MobileNo");
+            authToken = getIntent().getStringExtra("AuthToken");
+        }
+
 
         ButterKnife.bind(this);
 
-        regPasswordText.setOnKeyListener(new View.OnKeyListener() {
-
-            public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
-                if (event != null && ACTION_DOWN == event.getAction()
-                        && keyCode == KEYCODE_ENTER && registerButton.isEnabled()) {
-                    handleRegister(registerButton);
+        mobile_number.setText(mobileNo);
+        mobile_confirm_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    confirmMobileNo(mobileNo);
                     return true;
                 }
                 return false;
             }
         });
-
-        regPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            public boolean onEditorAction(final TextView v, final int actionId,
-                                          final KeyEvent event) {
-                if (actionId == IME_ACTION_DONE && registerButton.isEnabled()) {
-                    handleRegister(registerButton);
+        send_sms_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    sendConfirmSms();
                     return true;
                 }
                 return false;
             }
         });
+    }
 
-        regMobileText.addTextChangedListener(watcher);
-        regPasswordText.addTextChangedListener(watcher);
+    private void sendConfirmSms() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", "10008191", null)));
+    }
+
+    private void confirmMobileNo(final String mobileNo) {
+        showProgress();
+
+        registerTask = new SafeAsyncTask<Boolean>() {
+            public Boolean call() throws Exception {
+                isConfirmed = authenticateService.confirmMobile(authToken,mobileNo);
+                return isConfirmed;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                // Retrofit Errors are handled inside of the {
+//                if (!(e instanceof RetrofitError)) {
+//                    final Throwable cause = e.getCause() != null ? e.getCause() : e;
+//                    if (cause != null) {
+//                        Toaster.showLong(MobileValidationActivity.this, cause.getMessage());
+//                    }
+//                }
+            }
+
+            @Override
+            public void onSuccess(final Boolean authSuccess) {
+                onRegisterResult(authSuccess);
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                hideProgress();
+                registerTask = null;
+            }
+        };
+        registerTask.execute();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         bus.register(this);
-        updateUIWithValidation();
     }
 
     @Override
@@ -158,82 +191,7 @@ public class MobileValidationActivity extends AccountAuthenticatorActivity {
         return dialog;
     }
 
-    private TextWatcher validationTextWatcher() {
-        return new TextWatcherAdapter() {
-            public void afterTextChanged(final Editable gitDirEditText) {
-                updateUIWithValidation();
-            }
 
-        };
-    }
-
-    private void updateUIWithValidation() {
-        final boolean populated = populated(regMobileText) && populated(regPasswordText);
-        registerButton.setEnabled(populated);
-    }
-
-    private boolean populated(final EditText editText) {
-        return editText.length() > 0;
-    }
-
-    public void handleRegister(final View view) {
-        if (registerTask != null) {
-            return;
-        }
-        regMobile = regMobileText.getText().toString();
-        regPassword = regPasswordText.getText().toString();
-        showProgress();
-
-        registerTask = new SafeAsyncTask<Boolean>() {
-            public Boolean call() throws Exception {
-
-                /*User loginResponse = bootstrapService.authenticate(mobile, password,PARAM_GRANT_TYPE,PARAM_REPONSE_TYPE);
-                token = loginResponse.getSessionToken();*/
-                response = registerService.register(regMobile, regPassword);
-                if (response.Errors.size() == 0 && response.Status.equals("OK")) {
-                    return true;
-                }
-/*
-                    loginResponse = authenticateService.authenticate(regMobile, regPassword,PARAM_GRANT_TYPE,PARAM_REPONSE_TYPE);
-                    if(loginResponse!=null && loginResponse.access_token!=null && !loginResponse.access_token.equals("") ){
-                        authToken = loginResponse.access_token;
-                        return true;
-                    }else if(loginResponse.error!=null || loginResponse.error!=""){
-                        //Toaster.showLong(RegisterActivity.this, loginResponse.error, R.drawable.toast_error);
-                        return false;
-                    }
-                }else
-                {
-                    return false;
-                }
-*/
-                return false;
-            }
-
-            @Override
-            protected void onException(final Exception e) throws RuntimeException {
-                // Retrofit Errors are handled inside of the {
-                if (!(e instanceof RetrofitError)) {
-                    final Throwable cause = e.getCause() != null ? e.getCause() : e;
-                    if (cause != null) {
-                        Toaster.showLong(MobileValidationActivity.this, cause.getMessage());
-                    }
-                }
-            }
-
-            @Override
-            public void onSuccess(final Boolean authSuccess) {
-                onRegisterResult(authSuccess);
-            }
-
-            @Override
-            protected void onFinally() throws RuntimeException {
-                hideProgress();
-                registerTask = null;
-            }
-        };
-        registerTask.execute();
-    }
 
     /**
      * Show progress dialog
@@ -253,17 +211,15 @@ public class MobileValidationActivity extends AccountAuthenticatorActivity {
 
     public void onRegisterResult(final boolean result) {
         if (result) {
-            finishLogin();
+            finishIt();
         } else {
             Timber.d("onAuthenticationResult: failed to authenticate");
-            new HandleApiMessages(MobileValidationActivity.this, response).showMessages();
+            Toaster.showLong(MobileValidationActivity.this,getString(R.string.not_confirmed));
         }
     }
 
-    protected void finishLogin() {
+    protected void finishIt() {
         final Intent intent = new Intent();
-        intent.putExtra(Constants.Auth.REG_MOBILE, regMobile);
-        intent.putExtra(Constants.Auth.REG_PASSWORD, regPassword);
         setResult(RESULT_OK, intent);
         finish();
     }

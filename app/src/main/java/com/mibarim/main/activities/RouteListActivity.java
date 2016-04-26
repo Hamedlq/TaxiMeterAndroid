@@ -33,6 +33,7 @@ import com.mibarim.main.events.UnAuthorizedErrorEvent;
 import com.mibarim.main.models.CarInfoModel;
 import com.mibarim.main.models.LicenseInfoModel;
 import com.mibarim.main.models.PersonalInfoModel;
+import com.mibarim.main.models.Route.RouteResponse;
 import com.mibarim.main.models.RouteRequest;
 import com.mibarim.main.services.AuthenticateService;
 import com.mibarim.main.services.RouteRequestService;
@@ -45,6 +46,8 @@ import com.mibarim.main.ui.fragments.RouteListFragment;
 import com.mibarim.main.util.SafeAsyncTask;
 import com.mibarim.main.util.Toaster;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -66,7 +69,10 @@ public class RouteListActivity extends BootstrapActivity {
     UserInfoService userInfoService;
     @Inject
     LogoutService getLogoutService;
+    @Inject
+    RouteRequestService routeRequestService;
 
+    private List<RouteResponse> routeList;
 
     private boolean userHasAuthenticated = false;
 
@@ -229,7 +235,7 @@ public class RouteListActivity extends BootstrapActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.delete_route_btn:
-                Toaster.showLong(RouteListActivity.this, String.valueOf(info.position));
+                deleteRoute(String.valueOf(routeList.get(info.position - 1).RouteId));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -304,6 +310,10 @@ public class RouteListActivity extends BootstrapActivity {
 
     }
 
+    public void setRouteList(List<RouteResponse> list) {
+        routeList = list;
+    }
+
     private void logout() {
         getLogoutService.logout(new Runnable() {
             @Override
@@ -333,16 +343,8 @@ public class RouteListActivity extends BootstrapActivity {
     }
 
     private void ReloadActivity() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            recreate();
-        } else {
-            Intent intent = getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            overridePendingTransition(0, 0);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        }
+        finish();
+        startActivity(getIntent());
     }
 
 
@@ -438,5 +440,29 @@ public class RouteListActivity extends BootstrapActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_list_container);
         ((MainRouteListFragment) fragment).showRefreshBtn();
+    }
+
+    private void deleteRoute(final String routeId) {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (authToken == null) {
+                    authToken = serviceProvider.getAuthToken(RouteListActivity.this);
+                }
+                routeRequestService.deleteRoute(authToken, routeId);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onSuccess(final Boolean state) throws Exception {
+                super.onSuccess(state);
+                refreshRouteList();
+            }
+        }.execute();
     }
 }

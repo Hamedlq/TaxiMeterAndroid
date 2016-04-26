@@ -224,6 +224,7 @@ public abstract class ItemListFragment<E> extends Fragment
         if (exception != null) {
             if (getErrorMessage(exception) != 0) {
                 showError(getErrorMessage(exception));
+                Toaster.showLong(getActivity(), exception.getMessage());
             }
             showList();
             return;

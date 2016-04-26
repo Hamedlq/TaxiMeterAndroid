@@ -112,4 +112,10 @@ public class RouteRequestService {
     }
 
 
+    public ApiResponse deleteRoute(String authToken, String routeId) {
+        ApiResponse res = getService().deleteRoute("Bearer " + authToken,
+                routeId
+        );
+        return res;
+    }
 }

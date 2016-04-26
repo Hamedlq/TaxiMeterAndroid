@@ -36,7 +36,7 @@ public class CarouselFragment extends Fragment {
 
         ButterKnife.bind(this, getView());
 
-        pager.setAdapter(new BootstrapPagerAdapter(getResources(), getChildFragmentManager()));
+//        pager.setAdapter(new BootstrapPagerAdapter(getResources(), getChildFragmentManager()));
         indicator.setViewPager(pager);
         pager.setCurrentItem(1);
 

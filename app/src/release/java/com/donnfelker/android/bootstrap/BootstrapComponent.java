@@ -4,6 +4,7 @@ import com.mibarim.main.activities.AddMapActivity;
 import com.mibarim.main.activities.GroupActivity;
 import com.mibarim.main.activities.MapActivity;
 import com.mibarim.main.activities.MessagingActivity;
+import com.mibarim.main.activities.MobileValidationActivity;
 import com.mibarim.main.activities.NewRouteDelActivity;
 import com.mibarim.main.activities.RegisterActivity;
 import com.mibarim.main.activities.RouteActivity;
@@ -16,13 +17,11 @@ import com.mibarim.main.authenticator.AuthenticatorActivity;
 import com.mibarim.main.core.TimerService;
 import com.mibarim.main.ui.BootstrapActivity;
 import com.mibarim.main.ui.BootstrapFragmentActivity;
-import com.mibarim.main.ui.CheckInsListFragment;
 import com.mibarim.main.ui.NavigationDrawerFragment;
 import com.mibarim.main.ui.NewsActivity;
-import com.mibarim.main.ui.NewsListFragment;
 import com.mibarim.main.ui.UserActivity;
-import com.mibarim.main.ui.UserListFragment;
 import com.mibarim.main.ui.fragments.AddButtonFragment;
+import com.mibarim.main.ui.fragments.RefreshButtonFragment;
 import com.mibarim.main.ui.fragments.addRouteFragments.AddMapFragment;
 import com.mibarim.main.ui.fragments.ConfirmFragment;
 import com.mibarim.main.ui.fragments.MainAddMapFragment;
@@ -67,6 +66,8 @@ public interface BootstrapComponent {
 
     void inject(AuthenticatorActivity target);
 
+    void inject(MobileValidationActivity target);
+
     void inject(MessagingActivity target);
 
     void inject(MainMessagingFragment target);
@@ -89,13 +90,14 @@ public interface BootstrapComponent {
 
     void inject(AddMapFragment target);
 
+    void inject(RefreshButtonFragment target);
+
     void inject(SrcDstAddFragment target);
 
     void inject(MainAddMapFragment target);
 
     void inject(TimerService target);
 
-    void inject(CheckInsListFragment target);
 
     void inject(MapFragment target);
 
@@ -149,9 +151,7 @@ public interface BootstrapComponent {
 
     void inject(SuggestRouteButtonsFragment target);
 
-
     void inject(UserPersonalActivity target);
-
 
     void inject(BootstrapFragmentActivity target);
 
@@ -159,11 +159,8 @@ public interface BootstrapComponent {
 
     void inject(NewsActivity target);
 
-    void inject(NewsListFragment target);
 
     void inject(UserActivity target);
-
-    void inject(UserListFragment target);
 
 
 }

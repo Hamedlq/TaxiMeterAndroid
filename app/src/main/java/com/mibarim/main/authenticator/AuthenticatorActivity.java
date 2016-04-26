@@ -26,6 +26,7 @@ import com.mibarim.main.R;
 import com.mibarim.main.R.id;
 import com.mibarim.main.R.layout;
 import com.mibarim.main.R.string;
+import com.mibarim.main.activities.MobileValidationActivity;
 import com.mibarim.main.activities.RegisterActivity;
 import com.mibarim.main.models.TokenResponse;
 import com.mibarim.main.services.AuthenticateService;
@@ -122,6 +123,7 @@ public class AuthenticatorActivity extends ActionBarAccountAuthenticatorActivity
     private String password;
 
     private int RegisterActivityResponse = 777;
+    private int ConfirmResponse = 7777;
 
     private TokenResponse loginResponse;
     /**
@@ -401,7 +403,10 @@ public class AuthenticatorActivity extends ActionBarAccountAuthenticatorActivity
     }
 
     private void gotoMobileValidationActivity() {
-
+        final Intent intent = new Intent(AuthenticatorActivity.this, MobileValidationActivity.class);
+        intent.putExtra("MobileNo", mobile);
+        intent.putExtra("AuthToken", token);
+        AuthenticatorActivity.this.startActivityForResult(intent, ConfirmResponse);
     }
 
     public void gotoRegister(View view) {
@@ -416,6 +421,10 @@ public class AuthenticatorActivity extends ActionBarAccountAuthenticatorActivity
             mobile = data.getStringExtra(Constants.Auth.REG_MOBILE);
             password = data.getStringExtra(Constants.Auth.REG_PASSWORD);
             handleLogin(signInButton);
+        }else if(requestCode == ConfirmResponse && resultCode == RESULT_OK){
+            finishLogin();
         }
+
+
     }
 }

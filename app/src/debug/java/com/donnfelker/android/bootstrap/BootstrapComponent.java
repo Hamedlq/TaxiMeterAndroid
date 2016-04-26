@@ -17,12 +17,9 @@ import com.mibarim.main.authenticator.AuthenticatorActivity;
 import com.mibarim.main.core.TimerService;
 import com.mibarim.main.ui.BootstrapActivity;
 import com.mibarim.main.ui.BootstrapFragmentActivity;
-import com.mibarim.main.ui.CheckInsListFragment;
 import com.mibarim.main.ui.NavigationDrawerFragment;
 import com.mibarim.main.ui.NewsActivity;
-import com.mibarim.main.ui.NewsListFragment;
 import com.mibarim.main.ui.UserActivity;
-import com.mibarim.main.ui.UserListFragment;
 import com.mibarim.main.ui.fragments.AddButtonFragment;
 import com.mibarim.main.ui.fragments.RefreshButtonFragment;
 import com.mibarim.main.ui.fragments.addRouteFragments.AddMapFragment;
@@ -68,6 +65,7 @@ public interface BootstrapComponent {
     void inject(BootstrapApplication target);
 
     void inject(AuthenticatorActivity target);
+
     void inject(MobileValidationActivity target);
 
     void inject(MessagingActivity target);
@@ -100,7 +98,6 @@ public interface BootstrapComponent {
 
     void inject(TimerService target);
 
-    void inject(CheckInsListFragment target);
 
     void inject(MapFragment target);
 
@@ -164,11 +161,8 @@ public interface BootstrapComponent {
 
     void inject(NewsActivity target);
 
-    void inject(NewsListFragment target);
 
     void inject(UserActivity target);
-
-    void inject(UserListFragment target);
 
 
 }

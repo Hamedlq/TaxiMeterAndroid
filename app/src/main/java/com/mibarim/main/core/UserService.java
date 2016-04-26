@@ -5,6 +5,7 @@ import com.mibarim.main.models.TokenResponse;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.POST;
 
 /**
@@ -34,4 +35,9 @@ public interface UserService {
                       @Field(Constants.Http.PARAM_PASSWORD) String password,
                       @Field(Constants.Http.PARAM_GRANT_TYPE) String grant_type,
                       @Field(Constants.Http.PARAM_RESPONSE_TYPE) String response_type);
+
+    @FormUrlEncoded
+    @POST(Constants.Http.URL_MOBILE_CONFIRM_FRAG)
+    boolean validateMobile(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                           @Field("Mobile") String mobile);
 }

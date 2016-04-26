@@ -94,6 +94,7 @@ public class RouteListFragment extends ItemListFragment<RouteResponse> {
                         }
                     }
                     if (latest != null) {
+                        ((RouteListActivity)getActivity()).setRouteList(latest);
                         return latest;
                     } else {
                         return Collections.emptyList();

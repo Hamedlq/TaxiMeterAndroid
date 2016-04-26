@@ -163,5 +163,6 @@
     <string name="write_detail">جزییات آدرس را وارد نمایید</string>
     <string name="network_error">خطا در ارتباط با شبکه</string>
     <string name="access_error">خطا در دسترسی</string>
+    <string name="not_confirmed">پیامک دریافت نشده است. لطفا پس از چند دقیقه مجددا تلاش نمایید</string>
 
 </resources>

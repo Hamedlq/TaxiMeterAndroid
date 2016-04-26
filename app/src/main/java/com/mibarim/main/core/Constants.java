@@ -48,8 +48,9 @@ public final class Constants {
         /**
          * Base URL for all requests
          */
-        public static final String URL_BASE = "http://localhost:50226";
+//        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
+         public static final String URL_BASE = "http://mibarim.ir/testApp/CoreApi";
 
 
         /**
@@ -58,6 +59,7 @@ public final class Constants {
         public static final String URL_AUTH_FRAG = "/TokenAuthentication";
 
         public static final String URL_REGISTER_FRAG = "/RegisterWebUser";
+        public static final String URL_MOBILE_CONFIRM_FRAG = "/ConfirmMobileNo";
         public static final String URL_AUTH = URL_BASE + URL_AUTH_FRAG;
 
         /**
@@ -71,6 +73,7 @@ public final class Constants {
         public static final String URL_LEAVE_GROUP = "/LeaveGroup";
         public static final String URL_ACCEPT_ROUTE = "/AcceptSuggestedRoute";
         public static final String URL_DELETE_ROUTE_SUGGESTION = "/DeleteRouteSuggest";
+        public static final String URL_DELETE_ROUTE = "/DeleteRoute";
         public static final String URL_GET_ROUTE = "/GetUserRoutes";
         /**
          * UserInfoService

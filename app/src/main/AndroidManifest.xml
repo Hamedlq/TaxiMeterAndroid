@@ -46,6 +46,9 @@
         <activity
             android:name=".activities.MessagingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".activities.MobileValidationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.UserInfoActivity"

@@ -96,4 +96,10 @@ public interface SaveRouteRequestService {
                                       @Field("SelfRouteId") String selRouteId
     );
 
+    @POST(Constants.Http.URL_DELETE_ROUTE)
+    @FormUrlEncoded
+    ApiResponse deleteRoute(@Header(Constants.Http.PARAM_AUTHORIZATION) String authToken,
+                                      @Field("RouteRequestId") String routeId
+    );
+
 }
