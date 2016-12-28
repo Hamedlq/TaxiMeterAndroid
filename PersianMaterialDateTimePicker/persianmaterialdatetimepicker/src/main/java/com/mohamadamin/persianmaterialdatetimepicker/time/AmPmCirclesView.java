@@ -165,10 +165,10 @@ public class AmPmCirclesView extends View {
             int textSize = mAmPmCircleRadius * 3 / 4;
             mPaint.setTextSize(textSize);
 
-            // Line up the vertical center of the AM/PM circles with the bottom of the main circle.
+            // Line up the vertical center of the AM/PM circles with the bottom of the taximeter circle.
             mAmPmYCenter = layoutYCenter - mAmPmCircleRadius / 2 + circleRadius;
             // Line up the horizontal edges of the AM/PM circles with the horizontal edges
-            // of the main circle.
+            // of the taximeter circle.
             mAmXCenter = layoutXCenter - circleRadius + mAmPmCircleRadius;
             mPmXCenter = layoutXCenter + circleRadius - mAmPmCircleRadius;
 

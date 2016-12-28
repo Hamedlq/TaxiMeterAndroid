@@ -33,7 +33,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.Utils;
 
 /**
  * View to show what number is selected. This will draw a blue circle over the number, with a blue
- * line coming from the center of the main circle to the edge of the blue selection.
+ * line coming from the center of the taximeter circle to the edge of the blue selection.
  */
 public class RadialSelectorView extends View {
     private static final String TAG = "RadialSelectorView";
@@ -281,7 +281,7 @@ public class RadialSelectorView extends View {
             mCircleRadius = (int) (Math.min(mXCenter, mYCenter) * mCircleRadiusMultiplier);
 
             if (!mIs24HourMode) {
-                // We'll need to draw the AM/PM circles, so the main circle will need to have
+                // We'll need to draw the AM/PM circles, so the taximeter circle will need to have
                 // a slightly higher center. To keep the entire view centered vertically, we'll
                 // have to push it up by half the radius of the AM/PM circles.
                 int amPmCircleRadius = (int) (mCircleRadius * mAmPmCircleRadiusMultiplier);

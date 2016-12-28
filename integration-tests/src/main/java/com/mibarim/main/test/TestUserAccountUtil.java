@@ -1,16 +1,16 @@
 
 
-package com.mibarim.main.test;
+package com.mibarim.taximeter.test;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.util.Log;
-import static com.mibarim.main.core.Constants.Auth.*;
+import static com.mibarim.taximeter.core.Constants.Auth.*;
 
-import com.mibarim.main.tests.R;
-import com.mibarim.main.util.Ln;
+import com.mibarim.taximeter.tests.R;
+import com.mibarim.taximeter.util.Ln;
 
 
 /**

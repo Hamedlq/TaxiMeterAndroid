@@ -6,5 +6,9 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:textAppearance">@style/CustomTextAppearance</item>
+    </style>
+    <style name="CustomTextAppearance">
+        <item name="android:typeface">monospace</item>
     </style>
 </resources>

@@ -101,7 +101,7 @@ public class CircleView extends View {
             mCircleRadius = (int) (Math.min(mXCenter, mYCenter) * mCircleRadiusMultiplier);
 
             if (!mIs24HourMode) {
-                // We'll need to draw the AM/PM circles, so the main circle will need to have
+                // We'll need to draw the AM/PM circles, so the taximeter circle will need to have
                 // a slightly higher center. To keep the entire view centered vertically, we'll
                 // have to push it up by half the radius of the AM/PM circles.
                 int amPmCircleRadius = (int) (mCircleRadius * mAmPmCircleRadiusMultiplier);

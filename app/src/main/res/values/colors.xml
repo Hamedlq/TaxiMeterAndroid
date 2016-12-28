@@ -3,8 +3,10 @@
 <resources>
 
     <color name="text">#FCFCFC</color>
+    <color name="login_text">#004d40</color>
     <color name="text_light">#999999</color>
     <color name="text_inverted">#FFFFFF</color>
+    <color name="text_hint">#484848</color>
     <color name="text_title">#DFDFDF</color>
     <color name="pager_footer">#1fb6ed</color>
     <color name="pager_selected_text">#FFFFFF</color>
@@ -43,5 +45,29 @@
 
     <color name="dark_grey">#1f1f1f</color>
     <color name="navigation_drawer_item_separator">#c2c2c2</color>
+    <color name="colorPrimary">#FFA000</color>
+    <color name="colorPrimaryDark">#ff6f00</color>
+
+    <color name="darker_gray">#aaa</color>
+
+    <color name="week_time_on">#00bfa5</color>
+    <color name="week_time_text_on">#ffffff</color>
+    <color name="week_time_text_off">#111111</color>
+    <color name="transparent">#00000000</color>
+    <color name="tab_text">#EEEEEE</color>
+    <color name="tab_text_act">#FFF</color>
+    <color name="search_box">#FFF</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_black">#111111</color>
+    <color name="validation_bg">#80cbc4</color>
+    <color name="dark_text">#004d40</color>
+    <color name="help_text">#004d40</color>
+    <color name="help_slider">#fafafa</color>
+    <color name="splash_bc">#fafafa</color>
+    <color name="info_background">#ECECEC</color>
+    <color name="ride_background">#FFFFFF</color>
+    <color name="teal_light">#b2dfdb</color>
+    <color name="yellow_light">#ffeb3b</color>
+
 
 </resources>

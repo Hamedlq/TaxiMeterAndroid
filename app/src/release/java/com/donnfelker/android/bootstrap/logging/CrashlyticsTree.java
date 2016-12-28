@@ -1,4 +1,4 @@
-package com.mibarim.main.logging;
+package com.mibarim.taximeter.logging;
 
 import android.util.Log;
 

@@ -1,12 +1,11 @@
 
 
-package com.mibarim.main.core.core;
+package com.mibarim.taximeter.core.core;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
-import com.mibarim.main.services.AuthenticateService;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import java.io.BufferedReader;

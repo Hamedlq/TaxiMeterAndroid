@@ -111,7 +111,7 @@ public class RadialTextsView extends View {
         mIs24HourMode = is24HourMode;
         mHasInnerCircle = (innerTexts != null);
 
-        // Calculate the radius for the main circle.
+        // Calculate the radius for the taximeter circle.
         if (is24HourMode) {
             mCircleRadiusMultiplier = Float.parseFloat(
                     res.getString(R.string.mdtp_circle_radius_multiplier_24HourMode));
@@ -201,7 +201,7 @@ public class RadialTextsView extends View {
             mYCenter = getHeight() / 2;
             mCircleRadius = Math.min(mXCenter, mYCenter) * mCircleRadiusMultiplier;
             if (!mIs24HourMode) {
-                // We'll need to draw the AM/PM circles, so the main circle will need to have
+                // We'll need to draw the AM/PM circles, so the taximeter circle will need to have
                 // a slightly higher center. To keep the entire view centered vertically, we'll
                 // have to push it up by half the radius of the AM/PM circles.
                 float amPmCircleRadius = mCircleRadius * mAmPmCircleRadiusMultiplier;
@@ -225,7 +225,7 @@ public class RadialTextsView extends View {
             float numbersRadius =
                     mCircleRadius * mNumbersRadiusMultiplier * mAnimationRadiusMultiplier;
 
-            // Calculate the positions for the 12 numbers in the main circle.
+            // Calculate the positions for the 12 numbers in the taximeter circle.
             calculateGridSizes(numbersRadius, mXCenter, mYCenter,
                     mTextSize, mTextGridHeights, mTextGridWidths);
             if (mHasInnerCircle) {

@@ -1,13 +1,13 @@
 
 
-package com.mibarim.main.test;
+package com.mibarim.taximeter.test;
 
-import static com.mibarim.main.core.Constants.Extra.NEWS_ITEM;
+import static com.mibarim.taximeter.core.Constants.Extra.NEWS_ITEM;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.mibarim.main.core.News;
-import com.mibarim.main.ui.CarouselActivity;
+import com.mibarim.taximeter.core.News;
+import com.mibarim.taximeter.ui.CarouselActivity;
 
 
 /**
@@ -16,7 +16,7 @@ import com.mibarim.main.ui.CarouselActivity;
 public class NewsViewTest extends ActivityInstrumentationTestCase2<CarouselActivity> {
 
     /**
-     * Create test for {@link com.mibarim.main.ui.CarouselActivity}
+     * Create test for {@link com.mibarim.taximeter.ui.CarouselActivity}
      */
     public NewsViewTest() {
         super(CarouselActivity.class);

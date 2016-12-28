@@ -19,7 +19,7 @@
                 android:right="5dp"
                 android:top="5dp" />
 
-            <solid android:color="#ffcdd2" />
+            <solid android:color="#ef9a9a" />
         </shape>
     </item>
 </layer-list>

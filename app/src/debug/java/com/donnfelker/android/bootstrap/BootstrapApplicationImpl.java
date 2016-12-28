@@ -1,4 +1,4 @@
-package com.mibarim.main;
+package com.mibarim.taximeter;
 
 
 import timber.log.Timber;

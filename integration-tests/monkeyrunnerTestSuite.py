@@ -9,10 +9,10 @@ device = MonkeyRunner.waitForConnection()
 device.installPackage('../app/target/com-mibarim-main-1.0.apk')
 
 # sets a variable with the package's internal name
-package = 'com.mibarim.main'
+package = 'taximeter'
 
 # sets a variable with the name of an Activity in the package
-activity = 'com.mibarim.main.ui.CarouselActivity'
+activity = 'taximeter.ui.CarouselActivity'
 
 # sets the name of the component to start
 runComponent = package + '/' + activity

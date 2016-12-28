@@ -12,24 +12,42 @@
         tools:layout="@layout/fragment_map" />
 
     <FrameLayout
-        android:id="@+id/srcdst_fragment"
-        android:name="com.mibarim.main.ui.fragments.SrcDstAddFragment"
+        android:id="@+id/address_flag_fragment"
+        android:name="com.mibarim.main.ui.fragments.addRouteFragments.AddressFlagFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_srcdst" />
+        tools:layout="@layout/fragment_address_flag" />
+
 
     <FrameLayout
-        android:id="@+id/newRoute_carousel_fragment"
-        android:name="com.mibarim.main.ui.fragments.NewRouteCarouselFragment"
+        android:id="@+id/route_src_dst_fragment"
+        android:name="com.mibarim.main.ui.fragments.addRouteFragments.SrcDstFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_carousel" />
+        tools:layout="@layout/fragment_src_dst" />
+
+
+    <!--<FrameLayout
+        android:id="@+id/newRoute_dst_fragment"
+        android:name="com.mibarim.main.ui.fragments.DstFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_dst" />-->
+
+    <!--<FrameLayout
+        android:id="@+id/event_list_fragment"
+        android:name="com.mibarim.main.ui.fragments.addRouteFragments.RouteListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+
+<!--
     <FrameLayout
-        android:id="@+id/message_frgment"
-        android:name="com.mibarim.main.ui.fragments.ConfirmFragment"
+        android:id="@+id/info_submit_fragment"
+        android:name="com.mibarim.main.ui.fragments.InfoMessageFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_confirm" />
+        tools:layout="@layout/fragment_info_message"/>
+-->
 
 
 </RelativeLayout>

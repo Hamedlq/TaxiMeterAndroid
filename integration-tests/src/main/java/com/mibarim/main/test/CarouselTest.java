@@ -1,10 +1,10 @@
 
 
-package com.mibarim.main.test;
+package com.mibarim.taximeter.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.mibarim.main.ui.CarouselActivity;
+import com.mibarim.taximeter.ui.CarouselActivity;
 
 
 /**

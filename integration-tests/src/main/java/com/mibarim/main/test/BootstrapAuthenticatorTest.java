@@ -1,13 +1,13 @@
 
 
-package com.mibarim.main.test;
+package com.mibarim.taximeter.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.Button;
 
-import com.mibarim.main.authenticator.BootstrapAuthenticatorActivity;
-import com.mibarim.main.R;
+import com.mibarim.taximeter.authenticator.BootstrapAuthenticatorActivity;
+import com.mibarim.taximeter.R;
 
 
 /**
@@ -16,7 +16,7 @@ import com.mibarim.main.R;
 public class BootstrapAuthenticatorTest extends ActivityInstrumentationTestCase2<BootstrapAuthenticatorActivity> {
 
     /**
-     * Create test for {@link com.mibarim.main.authenticator.BootstrapAuthenticatorActivity}
+     * Create test for {@link com.mibarim.taximeter.authenticator.BootstrapAuthenticatorActivity}
      */
     public BootstrapAuthenticatorTest() {
         super(BootstrapAuthenticatorActivity.class);
