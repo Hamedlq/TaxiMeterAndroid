@@ -2,17 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mibarim.taximeter"
-    android:versionCode="12"
+    android:versionCode="13"
     android:versionName="@string/version" >
-
-    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.mibarim.taximeter.BootstrapApplicationImpl"
@@ -23,6 +20,9 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="AdadToken"
+            android:value="7887ecb716e749b2a2b6e035759c396f" />
         <activity
             android:name="com.mibarim.taximeter.ui.activities.SplashActivity"
             android:label="@string/app_name"
@@ -35,6 +35,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.AddMapActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
@@ -42,16 +46,19 @@
             android:name=".ui.activities.LocationSearchActivity"
             android:label="@string/location_search"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.HelpActivity"
+            android:label="@string/help_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AboutUsActivity"
+            android:label="@string/about_us"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="ir.adad.client.AdadActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent"/>
 
-        <service android:name="com.mibarim.taximeter.locationServices.LocationService" />
-        <service android:name="com.mibarim.taximeter.locationServices.GoogleLocationService" />
-        <service android:name="com.mibarim.taximeter.locationServices.LocationSender" />
-
-        <receiver android:name="com.mibarim.taximeter.receiver.LocationReceiver" >
-            <intent-filter>
-                <action android:name="LOCATION_RECEIVER_INTENT" />
-            </intent-filter>
-        </receiver>
 
         <!-- Replace with your Fabric Crashlytics key from Fabric.io -->
         <meta-data

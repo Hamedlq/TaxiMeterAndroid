@@ -8,6 +8,7 @@ import android.accounts.OperationCanceledException;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,10 +23,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +43,7 @@ import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.BootstrapServiceProvider;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.LocationService;
+import com.mibarim.taximeter.events.NetworkErrorEvent;
 import com.mibarim.taximeter.events.UnAuthorizedErrorEvent;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
@@ -54,6 +58,7 @@ import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.ui.BootstrapActivity;
+import com.mibarim.taximeter.ui.fragments.AboutUsFragment;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
@@ -137,7 +142,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     private String authToken;
 
-    public Menu theMenu;
+    //public Menu theMenu;
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
@@ -207,7 +212,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 .add(R.id.main_container, new MainAddMapFragment())
                 .commitAllowingStateLoss();
         mHandler = new Handler();
-
+        //Adad.prepareInterstitialAd();
     }
 
     private void showBackBtn(){
@@ -231,7 +236,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        theMenu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -264,9 +270,25 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         finish();
                 }
                 return true;
+            case R.id.help_item:
+                gotoHelp();
+                return true;
+            case R.id.about_item:
+                gotoAbout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void gotoAbout() {
+        Intent intent = new Intent(this, AboutUsActivity.class);
+        this.startActivity(intent);
+    }
+
+    private void gotoHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        this.startActivity(intent);
     }
 
 
@@ -307,6 +329,24 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         return super.onKeyUp(keyCode, event);
     }
 
+    @Subscribe
+    public void onNetworkErrorEvent(NetworkErrorEvent event) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.network_error)).setPositiveButton("تلاش مجدد", dialogClickListener).show();
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    doBtnClicked();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
 
     public void setSrcDstStateSelector(AddRouteStates state) {
         stateSelector = state;
@@ -709,6 +749,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             case SelectPriceState:
                 SetWaitState();
                 getPathPrice();
+                //Adad.showInterstitialAd(this);
                 //returnOk();
                 break;
         }

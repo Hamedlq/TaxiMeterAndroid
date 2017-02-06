@@ -5,12 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ir.adad.client.Banner
+        android:id="@+id/banner_ad_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/banner_ad_view"
         android:background="@drawable/services_background"
         android:orientation="vertical">
 
@@ -202,5 +209,7 @@
             android:background="@drawable/roundedwhitebutton"
             android:src="@drawable/ic_location" />
     </LinearLayout>
+
+
 
 </RelativeLayout>

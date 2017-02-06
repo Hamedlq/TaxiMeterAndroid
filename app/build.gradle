@@ -6,8 +6,8 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        classpath 'io.fabric.tools:gradle:1.19.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'io.fabric.tools:gradle:1.20.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
@@ -118,17 +118,18 @@ android {
             resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
         }
         cafeBazar {
-            resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.taximeter/?l=fa"
+            resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.main/?l=fa"
         }
         myket {
-            resValue "string", "update_link", "https://myket.ir/app/com.mibarim.taximeter"
+            resValue "string", "update_link", "https://myket.ir/app/com.mibarim.main"
         }
     }
 }
 
 dependencies {
     //google map AND //google cloud messaging
-    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('libs/adad-client-3.1.jar')
     //compile 'com.google.android.gms:play-services:9.0.1'
     //https://developers.google.com/android/guides/setup
     compile 'com.google.android.gms:play-services-location:9.4.0'

@@ -9,6 +9,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.mibarim.taximeter.util.FontsOverride;
 
+import ir.adad.client.Adad;
+
 /**
  * Mibarim application
  */
@@ -44,6 +46,8 @@ public abstract class BootstrapApplication extends Application {
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/IRANSans(FaNum)_Light.ttf");
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/IRANSans(FaNum)_Light.ttf");
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/IRANSans(FaNum)_Light.ttf");
+
+        Adad.initialize(getApplicationContext());
     }
     public static BootstrapComponent component() {
         return instance.component;

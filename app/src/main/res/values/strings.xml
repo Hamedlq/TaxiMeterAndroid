@@ -326,8 +326,15 @@
     <string name="title_activity_mapstest">Map</string>
     <string name="ride_down">ثبت محل پیاده شدن</string>
     <string name="zero">0</string>
-    <string name="shared_price">هزینه سرویس اشتراکی</string>
-    <string name="private_price">هزینه سرویس دربست</string>
+    <string name="shared_price">هزینه تاکسی گردشی</string>
+    <string name="private_price">هزینه تاکسی تلفنی</string>
     <string name="line_price">هزینه تاکسی خطی</string>
-
+    <string name="help_title">راهنما</string>
+    <string name="hint_1">* این برنامه در حال حاضر تنها برای شهر تهران قابل استفاده است</string>
+    <string name="taxi_website"></string>
+    <string name="faq_1">قیمت ها به صورت تقریبی و با توجه به نرخنامه سازمان تاکسیرانی شهر تهران محاسبه می شود</string>
+    <string name="q_2">قیمت ها چگونه محاسبه می شود؟</string>
+    <string name="about_us">درباره ما</string>
+    <string name="about_us_txt">«تاکسی‌متر نقشه‌ای» یکی از محصولات جانبی پروژه «می‌بریم» است. پروژه «می‌بریم» با هدف تسهیل رفت و آمد شهروندان از طریق اشتراک گذاری صندلی‌های خالی خودروهای تک سرنشین راه‌اندازی شده و از لینک زیر قابل دانلود است.</string>
+    <string name="about_us_txt2">اگر می‌خواهید با این پروژه بیشتر آشنا شوید حتما به سایت http://mibarim.com سر بزنید.</string>
 </resources>
