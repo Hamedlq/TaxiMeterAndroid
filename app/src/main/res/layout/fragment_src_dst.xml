@@ -211,6 +211,46 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/price_layout_tap30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/tap30_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_tap30"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
 

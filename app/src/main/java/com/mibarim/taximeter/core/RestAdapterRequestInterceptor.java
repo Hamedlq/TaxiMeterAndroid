@@ -7,14 +7,17 @@ public class RestAdapterRequestInterceptor implements RequestInterceptor {
 
 //    private UserAgentProvider userAgentProvider;
 
-    public RestAdapterRequestInterceptor() {
+    String contentType;
+
+    public RestAdapterRequestInterceptor(String contentType) {
+        this.contentType = contentType;
     }
 
     @Override
     public void intercept(RequestFacade request) {
 
         // Add header to set content type of JSON
-        request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        request.addHeader("Content-Type", contentType);
 
         // Add request authentication token.
         //request.addHeader("Authorization", userAgentProvider.get());

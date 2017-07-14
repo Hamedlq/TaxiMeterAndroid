@@ -1,7 +1,5 @@
 package com.mibarim.taximeter.ui.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.models.PathPrice;
@@ -44,8 +41,12 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
     protected TextView price_line;
     @Bind(R.id.price_snapp)
     protected TextView price_snapp;
+    @Bind(R.id.price_tap30)
+    protected TextView price_tap30;
     @Bind(R.id.price_layout_snapp)
     protected LinearLayout price_layout_snapp;
+    @Bind(R.id.price_layout_tap30)
+    protected LinearLayout price_layout_tap30;
     @Bind(R.id.price_layout_line)
     protected LinearLayout price_layout_line;
     @Bind(R.id.wait_layout)
@@ -101,6 +102,7 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
         price_layout_private.setVisibility(View.GONE);
         price_layout_shared.setVisibility(View.GONE);
         price_layout_snapp.setVisibility(View.GONE);
+        price_layout_tap30.setVisibility(View.GONE);
         wait_layout.setVisibility(View.GONE);
         do_source_btn.setVisibility(View.GONE);
 /*        route_path.setVisibility(View.GONE);
@@ -117,9 +119,11 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
             price_layout_private.setVisibility(View.VISIBLE);
             price_layout_shared.setVisibility(View.VISIBLE);
             price_layout_snapp.setVisibility(View.VISIBLE);
+            price_layout_tap30.setVisibility(View.VISIBLE);
             price_private.setText(thePrice.PrivateServicePrice);
             price_shared.setText(thePrice.SharedServicePrice);
             price_snapp.setText(thePrice.SnappServicePrice);
+            price_tap30.setText(thePrice.Tap30PathPrice);
         }
     }
 

@@ -44,6 +44,7 @@ import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
+import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.ui.BootstrapActivity;
@@ -125,6 +126,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private PathPrice pathPrice;
 
     private SnappResponse snappResponse;
+
+    private Tap30Response tap30Response;
 
     private List<Location> wayPoints;
 
@@ -454,9 +457,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     private void SetPathPrice() {
-        if (snappResponse == null || pathPrice == null)
+        if (tap30Response == null || pathPrice == null || snappResponse == null)
             return;
         pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
+        pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         ((MainAddMapFragment) fragment).setPrice(pathPrice);
@@ -745,6 +749,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 SetWaitState();
                 getPathPrice();
                 getPathPriceSnapp();
+                getPathPriceTap30();
                 //Adad.showInterstitialAd(this);
                 //returnOk();
                 break;
@@ -812,7 +817,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         final String authorization = sharedPreferences.getString("authorization",null);
         if (authorization == null)
         {
-            refreshAuthorizationKey(new Callback() {
+            refreshAuthorizationKeySnapp(new Callback() {
                 @Override
                 public void dosth() {
                     getPathPriceSnapp();
@@ -825,25 +830,32 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-               snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude,authorization);
+                snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude,authorization);
                 return true;
             }
 
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError)
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403)
                 {
-                    refreshAuthorizationKey(new Callback() {
+                    refreshAuthorizationKeySnapp(new Callback() {
                         @Override
                         public void dosth() {
                             getPathPriceSnapp();
                         }
                     });
                 }
-                if (e instanceof OperationCanceledException) {
-                    finish();
+                else{
+                    snappResponse = new SnappResponse();
+                    SetPathPrice();
+
                 }
+//                if (e instanceof OperationCanceledException) {
+//
+//                    finish();
+//
+//                }
             }
 
             @Override
@@ -854,20 +866,90 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
 
     }
-    private void refreshAuthorizationKey(final Callback callback)
+
+    public void getPathPriceTap30()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("tap30Auth",Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization",null);
+        if (authorization == null)
+        {
+            refreshAuthorizationKeyTap30(new Callback() {
+                @Override
+                public void dosth() {
+                    getPathPriceTap30();
+                }
+            });
+            return;
+        }
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                tap30Response = priceService.getPathPriceTap30(srcLatitude, srcLongitude, dstLatitude, dstLongitude,authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403 && false)
+                {
+                    refreshAuthorizationKeyTap30(new Callback() {
+                        @Override
+                        public void dosth() {
+                            getPathPriceTap30();
+                        }
+                    });
+                }
+                else{
+                    tap30Response = new Tap30Response();
+                    SetPathPrice();
+                }
+//                if (e instanceof OperationCanceledException) {
+//                    finish();
+//                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+            }
+
+        }.execute();
+
+    }
+
+
+    private void refreshAuthorizationKeySnapp(final Callback callback)
     {
         new SafeAsyncTask<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {
                 SharedPreferences.Editor editor = getSharedPreferences("snappAuth", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.getAuthorizationKey());
+                editor.putString("authorization", priceService.getSnappAuthorizationKey());
                 editor.commit();
                 callback.dosth();
                 return true;
             }
         }.execute();
     }
+    private void refreshAuthorizationKeyTap30(final Callback callback)
+    {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                SharedPreferences.Editor editor = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", priceService.getTap30AuthorizationKey());
+                editor.commit();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+    }
+
     private interface Callback{
         void dosth();
     }

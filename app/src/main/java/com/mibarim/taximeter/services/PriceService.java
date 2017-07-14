@@ -1,17 +1,15 @@
 package com.mibarim.taximeter.services;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.snapp.SnappAuthResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
+import com.mibarim.taximeter.models.tap30.Tap30Request;
+import com.mibarim.taximeter.models.tap30.Tap30Response;
 
 import javax.inject.Named;
 
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 
 /**
  * Created by Hamed on 3/10/2016.
@@ -26,11 +24,15 @@ public class PriceService {
     @Named("authSnapp")
     private RestAdapter snappAuthRestAdapter;
 
+    @Named("authTap30")
+    private RestAdapter tap30RestAdapter;
 
-    public PriceService(RestAdapter restAdapter,RestAdapter snappRestAdapter,RestAdapter snappAuthRestAdapter) {
+
+    public PriceService(RestAdapter restAdapter,RestAdapter snappRestAdapter,RestAdapter snappAuthRestAdapter,RestAdapter tap30RestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
+        this.tap30RestAdapter = tap30RestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -43,6 +45,8 @@ public class PriceService {
 
     public RestAdapter getSnappAuthRestAdapter(){return snappAuthRestAdapter;}
 
+    public RestAdapter getTap30RestAdapter(){return tap30RestAdapter;}
+
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
     }
@@ -54,6 +58,11 @@ public class PriceService {
     private com.mibarim.taximeter.RestInterfaces.SnappInterface getSnappAuthService() {
         return getSnappAuthRestAdapter().create(com.mibarim.taximeter.RestInterfaces.SnappInterface.class);
     }
+
+    private com.mibarim.taximeter.RestInterfaces.Tap30Interface getTap30Service() {
+        return getTap30RestAdapter().create(com.mibarim.taximeter.RestInterfaces.Tap30Interface.class);
+    }
+
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
         ApiResponse res = getService().GetPathPrice(
@@ -75,8 +84,8 @@ public class PriceService {
 
 
 //        try {
-            SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(snappRequest, authorization);
-            return snappApiResponse;
+        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(snappRequest, authorization);
+        return snappApiResponse;
 //        }catch (Exception e)
 //        {
 //            SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com","12345678","password",
@@ -111,7 +120,15 @@ public class PriceService {
 //        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(authorization,hashMap);
 
     }
-    public String getAuthorizationKey()
+    public Tap30Response getPathPriceTap30(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude,String authorization)
+    {
+
+        Tap30Request tap30Request = new Tap30Request(srcLatitude,srcLongitude,dstLatitude,dstLongitude,1,0,0,false,false,"2");
+        Tap30Response tap30Response = getTap30Service().GetPathPriceTap30(tap30Request, authorization);
+        return tap30Response;
+
+    }
+    public String getSnappAuthorizationKey()
     {
         String authorization;
         SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com","12345678","password",
@@ -120,5 +137,10 @@ public class PriceService {
         authorization = snappAuthResponse.getTokenType() + " " + snappAuthResponse.getAccessToken();
         return authorization;
 
+    }
+    public String getTap30AuthorizationKey()
+    {
+        String authorization = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjp7ImlkIjo4NjQ2OCwicHJvZmlsZUlkIjo4NjQ2OCwidXNlclBhc3NDcmVkZW50aWFsSWQiOjgyMjk1LCJpc0Nob3NlbkZvckluY2VudGl2ZSI6bnVsbCwiZGV2aWNlVG9rZW4iOiJOb0RldmljZVRva2VuWWV0IiwiZGV2aWNlVHlwZSI6IkFORFJPSUQiLCJyZWZlcnJhbENvZGUiOiIyT0FJQjciLCJyZWZlcnJlcklkIjpudWxsLCJyb2xlIjoiUEFTU0VOR0VSIiwiY3JlYXRlZEF0IjoiMjAxNi0wOC0xNFQxMzozNjoxMS44NTJaIiwidXBkYXRlZEF0IjoiMjAxNi0xMi0xNlQyMDo1MToxMy44MzdaIiwicHVzaHlEZXZpY2VUb2tlbiI6bnVsbCwidGVsZWdyYW1JZCI6bnVsbH0sImlhdCI6MTQ4MTkyMTQ5MCwiYXVkIjoiZG9yb3Noa2U6YXBwIiwiaXNzIjoiZG9yb3Noa2U6c2VydmVyIiwic3ViIjoiZG9yb3Noa2U6dG9rZW4ifQ.raEUrMSwJoRHUuCvy0oBHCapd8EebpzRNBqgFVSZXwiUueV5QfvQE-drhqIyFykwazZKKd5-KIfj9dmjeS3zAw";
+        return authorization;
     }
 }

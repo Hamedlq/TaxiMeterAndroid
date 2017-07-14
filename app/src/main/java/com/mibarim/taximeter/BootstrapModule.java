@@ -76,12 +76,19 @@ public class BootstrapModule {
 
     @Provides
     RestAdapterRequestInterceptor provideRestAdapterRequestInterceptor() {
-        return new RestAdapterRequestInterceptor();
+        return new RestAdapterRequestInterceptor("application/x-www-form-urlencoded; charset=UTF-8");
     }
 
     @Provides
-    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter,@Named("snappAuth") RestAdapter snappAuthRestAdapter) {
-        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter);
+    @Named("json")
+    RestAdapterRequestInterceptor provideRestAdapterRequestInterceptorJson() {
+        return new RestAdapterRequestInterceptor("application/json; charset=UTF-8");
+    }
+
+
+    @Provides
+    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter,@Named("snappAuth") RestAdapter snappAuthRestAdapter,@Named("tap30") RestAdapter tap30RestAdapter) {
+        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter,tap30RestAdapter);
     }
 
     @Provides
@@ -133,6 +140,25 @@ public class BootstrapModule {
                 .setClient(new OkClient(okHttpClient))
                 .build();
     }
+
+    @Provides
+    @Named("tap30")
+    RestAdapter provideRestAdapterTap30(RestErrorHandler restErrorHandler,@Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson)
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+
+        return new RestAdapter.Builder()
+                .setEndpoint("https://tap33.me/")
+//                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
 
 
 }

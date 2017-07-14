@@ -59,5 +59,9 @@ public class SnappResponse {
         this.data = data;
     }
 
+    public SnappResponse(){
+        data = new Data();
+        data.setAmount("نامعلوم");
+    }
 
 }
