@@ -11,4 +11,5 @@ public class PathPrice implements Serializable {
     public PathPoint PathRoute;
     public String SharedServicePrice;
     public String PrivateServicePrice;
+    public String SnappServicePrice;
 }

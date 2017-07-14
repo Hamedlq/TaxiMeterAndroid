@@ -1,9 +1,6 @@
 package com.mibarim.taximeter.ui.activities;
 
 
-import android.Manifest;
-import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
 import android.accounts.OperationCanceledException;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,17 +8,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -30,21 +23,16 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.BootstrapServiceProvider;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.LocationService;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
-import com.mibarim.taximeter.events.UnAuthorizedErrorEvent;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
 import com.mibarim.taximeter.models.Address.AddressResult;
@@ -54,16 +42,15 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.ui.BootstrapActivity;
-import com.mibarim.taximeter.ui.fragments.AboutUsFragment;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.Toaster;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -73,10 +60,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-import timber.log.Timber;
 
 
 /**
@@ -138,6 +123,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private String pathPrice;
     private PathPrice pathPrice;
 
+    private SnappResponse snappResponse;
+
     private List<Location> wayPoints;
 
     private String authToken;
@@ -146,6 +133,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
+
+    boolean snappPriceFound = false;
+    boolean otherPriceFound = false;
 
 
     protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
@@ -463,9 +453,13 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     private void SetPathPrice() {
+        if (snappResponse == null || pathPrice == null)
+            return;
+        pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         ((MainAddMapFragment) fragment).setPrice(pathPrice);
+
     }
 
     private void SetWaitState() {
@@ -749,6 +743,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             case SelectPriceState:
                 SetWaitState();
                 getPathPrice();
+                getPathPriceSnapp();
                 //Adad.showInterstitialAd(this);
                 //returnOk();
                 break;
@@ -809,5 +804,31 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 SetPathPrice();
             }
         }.execute();
+    }
+
+    public void getPathPriceSnapp()
+    {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+               snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof OperationCanceledException) {
+                    finish();
+                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+            }
+        }.execute();
+
     }
 }

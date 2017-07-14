@@ -329,6 +329,7 @@
     <string name="shared_price">هزینه تاکسی گردشی</string>
     <string name="private_price">هزینه تاکسی تلفنی</string>
     <string name="line_price">هزینه تاکسی خطی</string>
+    <string name="snapp_price">هزینه تاکسی اسنپ</string>
     <string name="help_title">راهنما</string>
     <string name="hint_1">* این برنامه در حال حاضر تنها برای شهر تهران قابل استفاده است</string>
     <string name="taxi_website"></string>

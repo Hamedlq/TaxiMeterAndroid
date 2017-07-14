@@ -20,6 +20,7 @@ import com.squareup.otto.Bus;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -79,8 +80,8 @@ public class BootstrapModule {
     }
 
     @Provides
-    PriceService providePriceService(RestAdapter restAdapter) {
-        return new PriceService(restAdapter);
+    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter) {
+        return new PriceService(restAdapter,snappRestAdapter);
     }
 
     @Provides
@@ -97,6 +98,24 @@ public class BootstrapModule {
                 .setConverter(new DynamicJsonConverter())
                 .setClient(new OkClient(okHttpClient))
                 .build();
+    }
+    @Provides
+    @Named("snapp")
+    RestAdapter provideRestAdapterSnapp(RestErrorHandler restErrorHandler, RestAdapterRequestInterceptor restRequestInterceptor, Gson gson)
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+
+        return new RestAdapter.Builder()
+                .setEndpoint("https://api.snapp.site/")
+                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+
     }
 
 
