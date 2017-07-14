@@ -80,8 +80,8 @@ public class BootstrapModule {
     }
 
     @Provides
-    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter) {
-        return new PriceService(restAdapter,snappRestAdapter);
+    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter,@Named("snappAuth") RestAdapter snappAuthRestAdapter) {
+        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter);
     }
 
     @Provides
@@ -109,13 +109,29 @@ public class BootstrapModule {
 
         return new RestAdapter.Builder()
                 .setEndpoint("https://api.snapp.site/")
-                .setErrorHandler(restErrorHandler)
+//                .setErrorHandler(restErrorHandler)
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
 //                .setConverter(new DynamicJsonConverter())//problem in bood!!
                 .setClient(new OkClient(okHttpClient))
                 .build();
+    }
 
+    @Provides
+    @Named("snappAuth")
+    RestAdapter provideRestAdapterSnappAuth(RestErrorHandler restErrorHandler, RestAdapterRequestInterceptor restRequestInterceptor, Gson gson){
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+
+        return new RestAdapter.Builder()
+                .setEndpoint("https://oauth-passenger.snapp.site/")
+//                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
     }
 
 

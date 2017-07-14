@@ -62,6 +62,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+import retrofit.RetrofitError;
 
 
 /**
@@ -805,19 +806,41 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
         }.execute();
     }
-
     public void getPathPriceSnapp()
     {
+        SharedPreferences sharedPreferences = getSharedPreferences("snappAuth",Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization",null);
+        if (authorization == null)
+        {
+            refreshAuthorizationKey(new Callback() {
+                @Override
+                public void dosth() {
+                    getPathPriceSnapp();
+                }
+            });
+            return;
+//            getPathPriceSnapp();
+        }
+
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-               snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+               snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude,authorization);
                 return true;
             }
 
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
+                if (e instanceof RetrofitError)
+                {
+                    refreshAuthorizationKey(new Callback() {
+                        @Override
+                        public void dosth() {
+                            getPathPriceSnapp();
+                        }
+                    });
+                }
                 if (e instanceof OperationCanceledException) {
                     finish();
                 }
@@ -830,5 +853,22 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
         }.execute();
 
+    }
+    private void refreshAuthorizationKey(final Callback callback)
+    {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                SharedPreferences.Editor editor = getSharedPreferences("snappAuth", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", priceService.getAuthorizationKey());
+                editor.commit();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+    }
+    private interface Callback{
+        void dosth();
     }
 }

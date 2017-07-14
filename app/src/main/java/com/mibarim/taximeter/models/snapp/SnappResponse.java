@@ -16,6 +16,8 @@ public class SnappResponse {
 
         private String distance;
 
+        private String message;
+
         public String getAmount() {
             return amount;
         }
@@ -30,6 +32,14 @@ public class SnappResponse {
 
         public void setDistance(String distance) {
             this.distance = distance;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 
