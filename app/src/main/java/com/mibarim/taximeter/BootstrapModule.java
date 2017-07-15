@@ -164,7 +164,7 @@ public class BootstrapModule {
 
     @Provides
     @Named("carpino")
-    RestAdapter provideCarpinoRestAdapter(RestErrorHandler restErrorHandler,RestAdapterRequestInterceptor restRequestInterceptor, Gson gson)
+    RestAdapter provideCarpinoRestAdapter(RestErrorHandler restErrorHandler,@Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson)
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);

@@ -141,9 +141,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
 
-    boolean snappPriceFound = false;
-    boolean otherPriceFound = false;
-
+    boolean fetchingSnappPrice = false;
+    boolean fetchingTap30Price = false;
+    boolean fetchingCarpinoPrice = false;
+    boolean fetchingMibarim = false;
+    boolean refreshingTokens = false;
 
     protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
 
@@ -460,10 +462,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     private void SetPathPrice() {
-        if (tap30Response == null || pathPrice == null || snappResponse == null)
+        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price || refreshingTokens)
             return;
-        pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
-        pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
+        if (snappResponse != null)
+             pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
+        if (tap30Response != null)
+            pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
+        if (carpinoResponse != null)
+            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         ((MainAddMapFragment) fragment).setPrice(pathPrice);
@@ -750,13 +756,23 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 RebuildDstFragment();
             case SelectPriceState:
                 SetWaitState();
-                getPathPrice();
-                getPathPriceSnapp();
-                getPathPriceTap30();
+                startFetchingData();
+
                 //Adad.showInterstitialAd(this);
                 //returnOk();
                 break;
         }
+    }
+
+    private void startFetchingData() {
+        fetchingMibarim = true;
+        fetchingSnappPrice = true;
+        fetchingTap30Price = true;
+        fetchingCarpinoPrice = true;
+        getPathPrice();
+        getPathPriceSnapp(true);
+        getPathPriceTap30(true);
+        getPathPriceCarpino(true);
     }
 
     private void returnOk() {
@@ -810,22 +826,31 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingMibarim = false;
                 SetPathPrice();
+                super.onFinally();
             }
         }.execute();
     }
-    public void getPathPriceSnapp()
+    public void getPathPriceSnapp(final boolean tryAgainForAuthorize)
     {
         SharedPreferences sharedPreferences = getSharedPreferences("snappAuth",Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization",null);
         if (authorization == null)
         {
-            refreshAuthorizationKeySnapp(new Callback() {
-                @Override
-                public void dosth() {
-                    getPathPriceSnapp();
-                }
-            });
+            if (tryAgainForAuthorize) {
+                refreshAuthorizationKeySnapp(new Callback() {
+                    @Override
+
+                    public void dosth() {
+                        getPathPriceSnapp(false);
+                    }
+                });
+            }
             return;
 //            getPathPriceSnapp();
         }
@@ -838,22 +863,28 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
 
             @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingSnappPrice = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
                 if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403)
                 {
-                    refreshAuthorizationKeySnapp(new Callback() {
-                        @Override
-                        public void dosth() {
-                            getPathPriceSnapp();
-                        }
-                    });
+                    if (tryAgainForAuthorize){
+                        refreshAuthorizationKeySnapp(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceSnapp(false);
+                            }
+                        });
+                    }
                 }
-                else{
-                    snappResponse = new SnappResponse();
-                    SetPathPrice();
 
-                }
+
 //                if (e instanceof OperationCanceledException) {
 //
 //                    finish();
@@ -870,18 +901,20 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     }
 
-    public void getPathPriceTap30()
+    public void getPathPriceTap30(final boolean tryAgainForAuthorize)
     {
         SharedPreferences sharedPreferences = getSharedPreferences("tap30Auth",Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization",null);
         if (authorization == null)
         {
-            refreshAuthorizationKeyTap30(new Callback() {
-                @Override
-                public void dosth() {
-                    getPathPriceTap30();
-                }
-            });
+            if (tryAgainForAuthorize) {
+                refreshAuthorizationKeyTap30(new Callback() {
+                    @Override
+                    public void dosth() {
+                        getPathPriceTap30(false);
+                    }
+                });
+            }
             return;
         }
 
@@ -892,25 +925,27 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 return true;
             }
 
-            @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403 && false)
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403 )
                 {
-                    refreshAuthorizationKeyTap30(new Callback() {
-                        @Override
-                        public void dosth() {
-                            getPathPriceTap30();
-                        }
-                    });
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyTap30(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceTap30(false);
+                            }
+                        });
+                    }
                 }
-                else{
-                    tap30Response = new Tap30Response();
-                    SetPathPrice();
-                }
-//                if (e instanceof OperationCanceledException) {
-//                    finish();
-//                }
+
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingTap30Price = false;
+                SetPathPrice();
+                super.onFinally();
             }
 
             @Override
@@ -923,18 +958,20 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     }
 
-    public void getPathPriceCarpino()
+    public void getPathPriceCarpino(final boolean tryAgainForAuthorize)
     {
         SharedPreferences sharedPreferences = getSharedPreferences("carpino",Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization",null);
         if (authorization == null)
         {
-            refreshAuthorizationKeyCarpino(new Callback() {
-                @Override
-                public void dosth() {
-                    getPathPriceCarpino();
-                }
-            });
+            if (tryAgainForAuthorize) {
+                refreshAuthorizationKeyCarpino(new Callback() {
+                    @Override
+                    public void dosth() {
+                        getPathPriceCarpino(false);
+                    }
+                });
+            }
             return;
         }
 
@@ -948,22 +985,24 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403 && false)
-                {
-                    refreshAuthorizationKeyCarpino(new Callback() {
-                        @Override
-                        public void dosth() {
-                            getPathPriceCarpino();
-                        }
-                    });
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyCarpino(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        });
+                    }
+
+//
                 }
-                else{
-                    carpinoResponse = new CarpinoResponse();
-                    SetPathPrice();
-                }
-//                if (e instanceof OperationCanceledException) {
-//                    finish();
-//                }
+            }
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingCarpinoPrice = false;
+                SetPathPrice();
+                super.onFinally();
             }
 
             @Override
@@ -978,6 +1017,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     private void refreshAuthorizationKeySnapp(final Callback callback)
     {
+        refreshingTokens = true;
         new SafeAsyncTask<Boolean>() {
 
             @Override
@@ -986,6 +1026,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 editor.putString("authorization", priceService.getSnappAuthorizationKey());
                 editor.commit();
                 callback.dosth();
+                refreshingTokens = false;
                 return true;
             }
         }.execute();
@@ -1012,7 +1053,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.getCarpinoAuthorizationKey());
+//                editor.putString("authorization", priceService.getCarpinoAuthorizationKey());
+                editor.putString("authorization",
+                      "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..npe025tzUFZUg4It.nZzDIkwk6uip4XtRTini72g24Z5UiBkuCLhyK0aVl25ZqJXrk1Y-zIa83VBRerWwQVR2eMuSrlXacM7YOzN14nP67KdgKdXZ5yVdyDcx0Z8wSMDt-0cqLv1kLYhWgbDbXlcUYx2FsAlM666phlk79CzFZXrwMTcvZCt5KH2yth6HakxXwodUhD4QyPB3zcqogYxwIzG6gvbq41a8muD7hrDLdcFkeu3j-IxpAPebZJmdFY5GFCX-nNfmX47xmicK9GaHSFspDSTsjo3Ewc2JwjnrZUxTnzVXSLC4ncQ3QHQmx1n6r1f__yjjmuxuKk6dx-xk4BD3ov4U05c7GG5ngP36jqJ5NPVN-XdjZh6-v2bSch29EigTg4V56upXDss8IwYyynnKJEV1KlHcpZoaDKbzy6QO1y-RmPl6Ezcef8tQuSXHYKQqaOR0OpZncrC5YdyVVkfstG1OLPaXPFc3cTswRa8RHADfjrUuqdplJ1epIFqjIw8ct3jWL23KgunpWRS3L_LY5Ce10a7FbJe3v5ix8RGckj5meAHuZ37Fa8bkBhBZz91nRqqi9ASnZxLMqeFDV2mMjq0Md3OSldRDf6I8SjfOmDUBsdcIo34h9zxfxnLUWv7-u-wqSB_m.Hf4KciJCM3oKnzZpkU_GIA"  );
                 editor.commit();
                 callback.dosth();
                 return true;
