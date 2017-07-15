@@ -1,6 +1,10 @@
 package com.mibarim.taximeter.services;
 
+import android.util.Base64;
+
 import com.mibarim.taximeter.models.ApiResponse;
+import com.mibarim.taximeter.models.carpino.CarpinoAuthResponse;
+import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.snapp.SnappAuthResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
@@ -27,12 +31,16 @@ public class PriceService {
     @Named("authTap30")
     private RestAdapter tap30RestAdapter;
 
+    @Named("carpino")
+    private RestAdapter carpinoRestAdapter;
 
-    public PriceService(RestAdapter restAdapter,RestAdapter snappRestAdapter,RestAdapter snappAuthRestAdapter,RestAdapter tap30RestAdapter) {
+
+    public PriceService(RestAdapter restAdapter,RestAdapter snappRestAdapter,RestAdapter snappAuthRestAdapter,RestAdapter tap30RestAdapter,RestAdapter carpinoRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
         this.tap30RestAdapter = tap30RestAdapter;
+        this.carpinoRestAdapter = carpinoRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -46,6 +54,8 @@ public class PriceService {
     public RestAdapter getSnappAuthRestAdapter(){return snappAuthRestAdapter;}
 
     public RestAdapter getTap30RestAdapter(){return tap30RestAdapter;}
+
+    public RestAdapter getCarpinoRestAapter(){return carpinoRestAdapter;}
 
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
@@ -62,6 +72,11 @@ public class PriceService {
     private com.mibarim.taximeter.RestInterfaces.Tap30Interface getTap30Service() {
         return getTap30RestAdapter().create(com.mibarim.taximeter.RestInterfaces.Tap30Interface.class);
     }
+
+    private com.mibarim.taximeter.RestInterfaces.CarpinoInterface getCarpinoService() {
+        return getCarpinoRestAapter().create(com.mibarim.taximeter.RestInterfaces.CarpinoInterface.class);
+    }
+
 
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
@@ -128,6 +143,13 @@ public class PriceService {
         return tap30Response;
 
     }
+    public CarpinoResponse getPathPriceCarpino(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude,String authorization)
+    {
+        String origin = srcLatitude + "," + srcLongitude;
+        String destination = dstLatitude +"," + dstLongitude;
+        CarpinoResponse carpinoResponse = getCarpinoService().GetPathPriceCarpino(origin, destination ,"0,0", "NORMAL", "SINGLE", "0",authorization);
+        return carpinoResponse;
+    }
     public String getSnappAuthorizationKey()
     {
         String authorization;
@@ -142,5 +164,12 @@ public class PriceService {
     {
         String authorization = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjp7ImlkIjo4NjQ2OCwicHJvZmlsZUlkIjo4NjQ2OCwidXNlclBhc3NDcmVkZW50aWFsSWQiOjgyMjk1LCJpc0Nob3NlbkZvckluY2VudGl2ZSI6bnVsbCwiZGV2aWNlVG9rZW4iOiJOb0RldmljZVRva2VuWWV0IiwiZGV2aWNlVHlwZSI6IkFORFJPSUQiLCJyZWZlcnJhbENvZGUiOiIyT0FJQjciLCJyZWZlcnJlcklkIjpudWxsLCJyb2xlIjoiUEFTU0VOR0VSIiwiY3JlYXRlZEF0IjoiMjAxNi0wOC0xNFQxMzozNjoxMS44NTJaIiwidXBkYXRlZEF0IjoiMjAxNi0xMi0xNlQyMDo1MToxMy44MzdaIiwicHVzaHlEZXZpY2VUb2tlbiI6bnVsbCwidGVsZWdyYW1JZCI6bnVsbH0sImlhdCI6MTQ4MTkyMTQ5MCwiYXVkIjoiZG9yb3Noa2U6YXBwIiwiaXNzIjoiZG9yb3Noa2U6c2VydmVyIiwic3ViIjoiZG9yb3Noa2U6dG9rZW4ifQ.raEUrMSwJoRHUuCvy0oBHCapd8EebpzRNBqgFVSZXwiUueV5QfvQE-drhqIyFykwazZKKd5-KIfj9dmjeS3zAw";
         return authorization;
+    }
+    public String getCarpinoAuthorizationKey()
+    {
+//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
+        String basicAuthorization = "Basic " + "YXJtaW4uemlyYWs5N0BnbWFpbC5jb206YXo0NDg0";
+        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID","PASSENGER","app_version",basicAuthorization);
+        return carpinoAuthResponse.getAuthToken();
     }
 }

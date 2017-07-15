@@ -87,8 +87,11 @@ public class BootstrapModule {
 
 
     @Provides
-    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter,@Named("snappAuth") RestAdapter snappAuthRestAdapter,@Named("tap30") RestAdapter tap30RestAdapter) {
-        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter,tap30RestAdapter);
+    PriceService providePriceService(RestAdapter restAdapter,@Named("snapp") RestAdapter snappRestAdapter,
+                                     @Named("snappAuth") RestAdapter snappAuthRestAdapter,
+                                     @Named("tap30") RestAdapter tap30RestAdapter,
+                                     @Named("carpino") RestAdapter carpinoRestAdapter) {
+        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter,tap30RestAdapter,carpinoRestAdapter);
     }
 
     @Provides
@@ -157,6 +160,25 @@ public class BootstrapModule {
 //                .setConverter(new DynamicJsonConverter())//problem in bood!!
                 .setClient(new OkClient(okHttpClient))
                 .build();
+    }
+
+    @Provides
+    @Named("carpino")
+    RestAdapter provideCarpinoRestAdapter(RestErrorHandler restErrorHandler,RestAdapterRequestInterceptor restRequestInterceptor, Gson gson)
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+
+        return new RestAdapter.Builder()
+                .setEndpoint("https://api.carpino.io/")
+//                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+
     }
 
 

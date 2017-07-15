@@ -42,6 +42,7 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
@@ -128,6 +129,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private SnappResponse snappResponse;
 
     private Tap30Response tap30Response;
+
+    private CarpinoResponse carpinoResponse;
 
     private List<Location> wayPoints;
 
@@ -920,6 +923,58 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     }
 
+    public void getPathPriceCarpino()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("carpino",Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization",null);
+        if (authorization == null)
+        {
+            refreshAuthorizationKeyCarpino(new Callback() {
+                @Override
+                public void dosth() {
+                    getPathPriceCarpino();
+                }
+            });
+            return;
+        }
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                carpinoResponse = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude,authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403 && false)
+                {
+                    refreshAuthorizationKeyCarpino(new Callback() {
+                        @Override
+                        public void dosth() {
+                            getPathPriceCarpino();
+                        }
+                    });
+                }
+                else{
+                    carpinoResponse = new CarpinoResponse();
+                    SetPathPrice();
+                }
+//                if (e instanceof OperationCanceledException) {
+//                    finish();
+//                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+            }
+
+        }.execute();
+
+    }
 
     private void refreshAuthorizationKeySnapp(final Callback callback)
     {
@@ -950,6 +1005,21 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
     }
 
+    private void refreshAuthorizationKeyCarpino(final Callback callback)
+    {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", priceService.getCarpinoAuthorizationKey());
+                editor.commit();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
     private interface Callback{
         void dosth();
     }
