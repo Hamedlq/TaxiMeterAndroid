@@ -1,5 +1,6 @@
 package com.mibarim.taximeter.ui.fragments;
 
+import android.graphics.Path;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -223,6 +224,31 @@ public class MainAddMapFragment extends Fragment {
         }
         Fragment mapFragment = fragmentManager.findFragmentById(R.id.map_fragment);
         ((AddMapFragment) mapFragment).setPriceState(pathPrice.PathRoute);
+    }
+    public void setSnappPrice(String snappPrice)
+    {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setSnappPrice((snappPrice));
+        }
+
+    }
+    public void setTap30Price(String tap30Price)
+    {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setTap30Price((tap30Price));
+        }
+    }
+    public void setCarpinoPrice(String carpinoPrice)
+    {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setCarpinoPrice((carpinoPrice));
+        }
     }
     public void SetWaitState() {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

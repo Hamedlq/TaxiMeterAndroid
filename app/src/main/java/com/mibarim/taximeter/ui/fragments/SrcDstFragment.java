@@ -121,24 +121,36 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
             //price_line.setText("-");
         } else {
             setAllBlocksInvisible();
-            if (thePrice.Tap30PathPrice != null) {
-                price_layout_tap30.setVisibility(View.VISIBLE);
-                price_tap30.setText(thePrice.Tap30PathPrice);
-            }
-            if (thePrice.SnappServicePrice != null){
-                price_snapp.setText(thePrice.SnappServicePrice);
-                price_layout_snapp.setVisibility(View.VISIBLE);
-            }
-            if (thePrice.CarpinoPathPrice != null){
-                price_carpino.setText(thePrice.CarpinoPathPrice);
-                price_layout_carpino.setVisibility(View.VISIBLE);
-            }
             price_layout_private.setVisibility(View.VISIBLE);
             price_layout_shared.setVisibility(View.VISIBLE);
             price_private.setText(thePrice.PrivateServicePrice);
             price_shared.setText(thePrice.SharedServicePrice);
         }
     }
+
+
+    public void setSnappPrice(String snappPrice)
+    {
+        price_layout_snapp.setVisibility(View.VISIBLE);
+        price_snapp.setText(snappPrice);
+
+    }
+    public void setTap30Price(String tap30Price)
+    {
+
+        price_layout_tap30.setVisibility(View.VISIBLE);
+        price_tap30.setText(tap30Price);
+
+
+    }
+
+    public void setCarpinoPrice(String carpinoPrice)
+    {
+        price_layout_carpino.setVisibility(View.VISIBLE);
+        price_carpino.setText(carpinoPrice);
+
+    }
+
 
     public void setWait() {
         setAllBlocksInvisible();

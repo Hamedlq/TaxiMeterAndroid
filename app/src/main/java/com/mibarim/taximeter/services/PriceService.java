@@ -99,7 +99,7 @@ public class PriceService {
 
 
 //        try {
-        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(snappRequest, authorization);
+            SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(snappRequest, authorization);
         return snappApiResponse;
 //        }catch (Exception e)
 //        {
