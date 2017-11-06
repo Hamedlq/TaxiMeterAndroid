@@ -17,7 +17,7 @@ public class Tap30Request {
 
     public Tap30Request(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, int i, int i1, int i2, boolean b, boolean b1, String s) {
         origin = new Location(srcLatitude, srcLongitude);
-        destination = new Location(srcLatitude, srcLongitude);
+        destination = new Location(dstLatitude, dstLongitude);
     }
 
     public Location getOrigin() {
