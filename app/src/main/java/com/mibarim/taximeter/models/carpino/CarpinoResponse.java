@@ -13,6 +13,9 @@ public class CarpinoResponse {
     }
 
     public String getTotal() {
+        double d = Double.parseDouble(total);
+        int i = (int) d;
+        total = Integer.toString(i);
         return total;
     }
 

@@ -473,7 +473,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         ((MainAddMapFragment) fragment).setPrice(pathPrice);
-
+        ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
+        ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
+        ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
     }
 
     private void SetWaitState() {
@@ -1055,7 +1057,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
 //                editor.putString("authorization", priceService.getCarpinoAuthorizationKey());
                 editor.putString("authorization",
-                      "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..npe025tzUFZUg4It.nZzDIkwk6uip4XtRTini72g24Z5UiBkuCLhyK0aVl25ZqJXrk1Y-zIa83VBRerWwQVR2eMuSrlXacM7YOzN14nP67KdgKdXZ5yVdyDcx0Z8wSMDt-0cqLv1kLYhWgbDbXlcUYx2FsAlM666phlk79CzFZXrwMTcvZCt5KH2yth6HakxXwodUhD4QyPB3zcqogYxwIzG6gvbq41a8muD7hrDLdcFkeu3j-IxpAPebZJmdFY5GFCX-nNfmX47xmicK9GaHSFspDSTsjo3Ewc2JwjnrZUxTnzVXSLC4ncQ3QHQmx1n6r1f__yjjmuxuKk6dx-xk4BD3ov4U05c7GG5ngP36jqJ5NPVN-XdjZh6-v2bSch29EigTg4V56upXDss8IwYyynnKJEV1KlHcpZoaDKbzy6QO1y-RmPl6Ezcef8tQuSXHYKQqaOR0OpZncrC5YdyVVkfstG1OLPaXPFc3cTswRa8RHADfjrUuqdplJ1epIFqjIw8ct3jWL23KgunpWRS3L_LY5Ce10a7FbJe3v5ix8RGckj5meAHuZ37Fa8bkBhBZz91nRqqi9ASnZxLMqeFDV2mMjq0Md3OSldRDf6I8SjfOmDUBsdcIo34h9zxfxnLUWv7-u-wqSB_m.Hf4KciJCM3oKnzZpkU_GIA"  );
+                      "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.commit();
                 callback.dosth();
                 return true;
