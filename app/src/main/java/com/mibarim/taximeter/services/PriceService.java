@@ -177,20 +177,22 @@ public class PriceService {
         return carpinoResponse;
     }
 
-    public String getSnappAuthorizationKey() {
-        String authorization;
-        SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
-                "android_293ladfa12938176yfgsndf",
-                "as;dfh98129-9111.*(U)jsflsdf");
-        authorization = snappAuthResponse.getTokenType() + " " + snappAuthResponse.getAccessToken();
-        return authorization;
+//    public String getSnappAuthorizationKey() {
+//        String authorization;
+//        SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
+//                "android_293ladfa12938176yfgsndf",
+//                "as;dfh98129-9111.*(U)jsflsdf");
+//        authorization = snappAuthResponse.getTokenType() + " " + snappAuthResponse.getAccessToken();
+//        return authorization;
+//
+//    }
 
-    }
-
-    public String tap30Unauthorizationint(int error, String authorization) {
+    public String tap30Unauthorizationint( String authorization) {
         tokenGenerator = new tmTokensModel();
-        if (error == 403)
+        if (!authorization.matches(""))
             tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.NOT_SET, authorization);
 
 //        Tap30AuthResponse tap30AuthResponse = getTap30AuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
 //                "android_293ladfa12938176yfgsndf",
@@ -200,11 +202,11 @@ public class PriceService {
         return tokenGenerator.getTap30Token();
     }
 
-    public String carpinoUnauthorizationint(int error, String authorization) {
+    public String carpinoUnauthorizationint( String authorization) {
         tokenGenerator = new tmTokensModel();
-        if (error == 401)
+        if (!authorization.matches(""))
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.EXPIRED, authorization);
-        if(error == 400)
+        else
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.NOT_SET, authorization);
 
 //        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
@@ -212,5 +214,18 @@ public class PriceService {
 //        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
 
         return tokenGenerator.getCarpinoToken();
+    }
+    public String snappUnauthorizationint( String authorization) {
+        tokenGenerator = new tmTokensModel();
+        if (!authorization.matches(""))
+            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.NOT_SET, authorization);
+
+//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
+//        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
+//        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
+
+        return tokenGenerator.getSnappToken();
     }
 }
