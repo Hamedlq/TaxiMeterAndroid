@@ -12,7 +12,7 @@ import retrofit.http.Query;
 
 
 public interface AuthtenticationsInerface {
-    String URL_GET_TOKEN = "/GetTokens";
+    String URL_GET_TOKEN = "/testapp/GetTokens";
 
     @POST(AuthtenticationsInerface.URL_GET_TOKEN)
     tmTokensModel getToken(@Body tmTokensModel model);

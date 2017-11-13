@@ -16,7 +16,7 @@ public class generateToken {
 
     public generateToken(String stc, String token, int tokenStatus) {
         adapter = new RestAdapter.Builder()
-                .setEndpoint(Constants.Http.URL_BASE)
+                .setEndpoint("http://mibarimapp.com")
                 .build();
         model = new tmTokensModel();
         switch (stc){

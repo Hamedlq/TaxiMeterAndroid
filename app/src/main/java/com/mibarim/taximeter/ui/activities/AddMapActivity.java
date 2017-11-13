@@ -50,6 +50,7 @@ import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
+import com.mibarim.taximeter.services.tmTokensModel;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
@@ -468,8 +469,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     private void SetPathPrice() {
-        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price || refreshingTokens) {
-            Log.i(TAG, fetchingCarpinoPrice + "," + fetchingMibarim + "," + fetchingSnappPrice + "," + fetchingTap30Price + "," + refreshingTokens);
+        //I just remove refreshing token
+        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price ) {
             return;
         }
 //
@@ -479,21 +480,22 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 //            pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
 //        if (carpinoResponse != null)
 //            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
+        tmTokensModel tm = new tmTokensModel();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         if (pathPrice != null) {
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
             removeWaitLayout();
         }
-        if (snappResponse.data.getAmount() != null) {
+        if (tm.getSnappTokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
             ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
             removeWaitLayout();
         }
-        if (tap30Response.getData().getPrice() != null) {
+        if (tm.getTap30TokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
             ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
             removeWaitLayout();
         }
-        if (carpinoResponse.getTotal() != null) {
+        if (tm.getCarpinoTokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
             removeWaitLayout();
         }
@@ -942,7 +944,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 //            });
 //        } else {
         SharedPreferences sharedPreferences = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE);
-        final String authorization = "";
+        final String authorization = sharedPreferences.getString("authorization", "");
 
 
         new SafeAsyncTask<Boolean>() {
@@ -971,7 +973,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             public void dosth() {
                                 getPathPriceCarpino(false);
                             }
-                        },  authorization);
+                        }, authorization);
                     }
                 }
                 if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
@@ -981,7 +983,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             public void dosth() {
                                 getPathPriceCarpino(false);
                             }
-                        },  authorization);
+                        }, authorization);
                     }
                 }
             }
@@ -1042,7 +1044,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             public void dosth() {
                                 getPathPriceCarpino(false);
                             }
-                        },  authorization);
+                        }, authorization);
                     }
                 }
                 if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
@@ -1052,7 +1054,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             public void dosth() {
                                 getPathPriceCarpino(false);
                             }
-                        },  authorization);
+                        }, authorization);
                     }
                 }
             }
@@ -1080,7 +1082,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 SharedPreferences.Editor editor = getSharedPreferences("snappAuth", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.snappUnauthorizationint( authorization));
+                editor.putString("authorization", priceService.snappUnauthorizationint(authorization));
 //                editor.putString("authorization",
 //                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.apply();
@@ -1096,7 +1098,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 SharedPreferences.Editor editor = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.tap30Unauthorizationint( authorization));
+                editor.putString("authorization", priceService.tap30Unauthorizationint(authorization));
                 editor.apply();
                 callback.dosth();
                 return true;
@@ -1110,7 +1112,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.carpinoUnauthorizationint( authorization));
+                editor.putString("authorization", priceService.carpinoUnauthorizationint(authorization));
 //                editor.putString("authorization",
 //                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.apply();
