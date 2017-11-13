@@ -177,6 +177,7 @@ public final class Constants {
         public static final String URL_GET_CONTACTS = "/GetUserContacts";
         public static final String URL_PRICE = "/GetPrice";
         public static final String URL_PATH_PRICE = "/GetPathPrice";
+        public static final String URL_GET_TOKEN = "/GetPathPrice";
     }
 
     public static final class Geocoding {

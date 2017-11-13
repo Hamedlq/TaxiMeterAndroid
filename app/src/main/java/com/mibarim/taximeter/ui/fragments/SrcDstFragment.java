@@ -53,7 +53,7 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
     protected LinearLayout price_layout_carpino;
     @Bind(R.id.price_layout_line)
     protected LinearLayout price_layout_line;
-    @Bind(R.id.wait_layout)
+    @Bind(R.id.waiting_layout)
     protected LinearLayout wait_layout;
 
     @Bind(R.id.my_location)

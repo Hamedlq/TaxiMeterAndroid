@@ -1,9 +1,19 @@
 package com.mibarim.taximeter.RestInterfaces;
+import android.support.annotation.Nullable;
 
-/**
- * Created by armin on 7/15/17.
- */
+import com.mibarim.taximeter.core.Constants.Http;
+import com.mibarim.taximeter.services.tmTokensModel;
+
+import retrofit.Callback;
+import retrofit.http.Body;
+import retrofit.http.Field;
+import retrofit.http.POST;
+import retrofit.http.Query;
+
 
 public interface AuthtenticationsInerface {
+    String URL_GET_TOKEN = "/hh";
 
+    @POST(AuthtenticationsInerface.URL_GET_TOKEN)
+    tmTokensModel getToken(@Body tmTokensModel model);
 }
