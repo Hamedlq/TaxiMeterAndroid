@@ -26,8 +26,6 @@ import retrofit.RestAdapter;
  */
 public class PriceService {
 
-    private tmTokensModel tokenGenerator;
-
     private RestAdapter restAdapter;
 
     @Named("snapp")
@@ -188,7 +186,7 @@ public class PriceService {
 //    }
 
     public String tap30Unauthorizationint(String authorization) {
-        tokenGenerator = new tmTokensModel();
+        tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
@@ -203,7 +201,7 @@ public class PriceService {
     }
 
     public String carpinoUnauthorizationint(String authorization) {
-        tokenGenerator = new tmTokensModel();
+        tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
@@ -212,12 +210,11 @@ public class PriceService {
 //        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
 //        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
 //        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
-
         return tokenGenerator.getCarpinoToken();
     }
 
     public String snappUnauthorizationint(String authorization) {
-        tokenGenerator = new tmTokensModel();
+        tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else

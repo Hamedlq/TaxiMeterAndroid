@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -202,9 +205,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }*/
 
         initScreen();
-        SharedPreferences snappPreferences;
-        SharedPreferences tap30Preferences;
-        SharedPreferences carpinoPreferences;
+        final SharedPreferences snappPreferences;
+        final SharedPreferences tap30Preferences;
+        final SharedPreferences carpinoPreferences;
         final tmTokensModel firstLoad = new tmTokensModel();
         snappPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
         stc[0] = snappPreferences.getString("authorization", "");
@@ -218,6 +221,15 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             public Object call() throws Exception {
                 if (stc[0].matches("") && stc[1].matches("") && stc[2].matches("")) {
                     firstLoad.getToken("all", tmTokensModel.tokenStatus.NOT_SET, "");
+                    SharedPreferences.Editor snappEditor = snappPreferences.edit();
+                    snappEditor.putString("authorization", firstLoad.getSnappToken())
+                            .apply();
+                    SharedPreferences.Editor tap30Editor = tap30Preferences.edit();
+                    tap30Editor.putString("authorization", firstLoad.getTap30Token())
+                            .apply();
+                    SharedPreferences.Editor carpinoEditor = carpinoPreferences.edit();
+                    carpinoEditor.putString("authorization", firstLoad.getCarpinoToken())
+                            .apply();
                 }
                 return null;
             }
@@ -225,19 +237,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
+                    Toast.makeText(AddMapActivity.this , "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
             }
         }.execute();
-        SharedPreferences.Editor snappEditor = snappPreferences.edit();
-        snappEditor.putString("authorization", firstLoad.getSnappToken())
-                .apply();
-        SharedPreferences.Editor tap30Editor = snappPreferences.edit();
-        tap30Editor.putString("authorization", firstLoad.getTap30Token())
-                .apply();
-        SharedPreferences.Editor carpinoEditor = snappPreferences.edit();
-        carpinoEditor.putString("authorization", firstLoad.getCarpinoToken())
-                .apply();
     }
-
 
     private void initScreen() {
         //userData.DeleteTime();
@@ -516,7 +520,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 //            pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
 //        if (carpinoResponse != null)
 //            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
-        tmTokensModel tm = new tmTokensModel();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         if (pathPrice != null) {
@@ -904,8 +907,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     public void getPathPriceSnapp(final boolean tryAgainForAuthorize) {
-
-        final String authorization = "";
+        SharedPreferences sharedPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
 
         new SafeAsyncTask<Boolean>() {
             @Override
@@ -1043,7 +1046,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     public void getPathPriceCarpino(final boolean tryAgainForAuthorize) {
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("carpino", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization", "");
 //        if (tryAgainForAuthorize)
 //            refreshAuthorizationKeyCarpino(new Callback() {
@@ -1117,8 +1120,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             public Boolean call() throws Exception {
+                String snapp = priceService.snappUnauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("snappAuth", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.snappUnauthorizationint(authorization));
+                editor.putString("authorization", snapp);
 //                editor.putString("authorization",
 //                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.apply();
@@ -1133,8 +1137,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             public Boolean call() throws Exception {
+                String tap30 = priceService.tap30Unauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.tap30Unauthorizationint(authorization));
+                editor.putString("authorization", tap30);
                 editor.apply();
                 callback.dosth();
                 return true;
@@ -1147,8 +1152,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             public Boolean call() throws Exception {
+                String carpino = priceService.carpinoUnauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
-                editor.putString("authorization", priceService.carpinoUnauthorizationint(authorization));
+                editor.putString("authorization", carpino);
 //                editor.putString("authorization",
 //                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.apply();

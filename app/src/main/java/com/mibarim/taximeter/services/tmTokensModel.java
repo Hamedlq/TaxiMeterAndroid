@@ -1,5 +1,12 @@
 package com.mibarim.taximeter.services;
 
+import com.mibarim.taximeter.models.ApiResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 /**
  * Created by Arya on 11/12/2017.
  */
@@ -32,6 +39,13 @@ public class tmTokensModel {
     private int tap30TokenStatus;
     private int carpinoTokenStatus;
 
+    public tmTokensModel() {
+        snappToken = "";
+        tap30Token = "";
+        carpinoToken = "";
+
+    }
+
     public int getSnappTokenStatus() {
         return snappTokenStatus;
     }
@@ -54,14 +68,6 @@ public class tmTokensModel {
 
     void setCarpinoTokenStatus(int carpinoTokenStatus) {
         this.carpinoTokenStatus = carpinoTokenStatus;
-    }
-
-
-    public tmTokensModel() {
-        snappToken = "";
-        tap30Token = "";
-        carpinoToken = "";
-
     }
 
 
@@ -91,31 +97,41 @@ public class tmTokensModel {
 
 
     public String getToken(String stc, tokenStatus status, String authorization) {
+        tmTokensModel model;
+        model = new GenerateToken(stc, authorization, status.getValue()).token();
 
-        tmTokensModel model = new GenerateToken(stc, authorization, status.getValue()).token();
         switch (stc) {
             case "snapp":
-                if (model.snappTokenStatus == 3)
+                if (model.snappTokenStatus == 3) {
                     setSnappToken(model.snappToken);
-                else return stc;
+                    setSnappTokenStatus(model.snappTokenStatus);
+                } else return stc;
                 break;
             case "tap30":
-                if (model.tap30TokenStatus == 3)
+                if (model.tap30TokenStatus == 3) {
                     setTap30Token(model.tap30Token);
-                else return stc;
+                    setTap30TokenStatus(model.tap30TokenStatus);
+                } else return stc;
                 break;
             case "carpino":
-                if (model.carpinoTokenStatus == 3)
+                if (model.carpinoTokenStatus == 3) {
                     setCarpinoToken(model.carpinoToken);
-                else return stc;
+                    setCarpinoTokenStatus(model.carpinoTokenStatus);
+                } else return stc;
                 break;
             case "all":
-                if (model.snappTokenStatus == 3)
+                if (model.snappTokenStatus == 3) {
                     setSnappToken(model.snappToken);
-                if (model.tap30TokenStatus == 3)
+                    setSnappTokenStatus(model.snappTokenStatus);
+                }
+                if (model.tap30TokenStatus == 3) {
                     setTap30Token(model.tap30Token);
-                if (model.carpinoTokenStatus == 3)
+                    setTap30TokenStatus(model.tap30TokenStatus);
+                }
+                if (model.carpinoTokenStatus == 3) {
                     setCarpinoToken(model.carpinoToken);
+                    setCarpinoTokenStatus(model.carpinoTokenStatus);
+                }
                 return null;
         }
         return "";

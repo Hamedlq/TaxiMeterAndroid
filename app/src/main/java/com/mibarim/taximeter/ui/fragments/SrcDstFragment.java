@@ -1,5 +1,8 @@
 package com.mibarim.taximeter.ui.fragments;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
@@ -99,6 +103,70 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
                     break;
             }
         }
+        price_layout_shared.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i;
+                PackageManager manager = getActivity().getPackageManager();
+                try {
+                    i = manager.getLaunchIntentForPackage("com.mibarim.main");
+                    if (i == null)
+                        throw new PackageManager.NameNotFoundException();
+                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                }
+            }
+        });
+        price_layout_snapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i;
+                PackageManager manager = getActivity().getPackageManager();
+                try {
+                    i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
+                    if (i == null)
+                        throw new PackageManager.NameNotFoundException();
+                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
+                }
+            }
+        });
+        price_layout_tap30.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i;
+                PackageManager manager = getActivity().getPackageManager();
+                try {
+                    i = manager.getLaunchIntentForPackage("taxi.tap30.passenger");
+                    if (i == null)
+                        throw new PackageManager.NameNotFoundException();
+                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
+                }
+            }
+        });
+        price_layout_carpino.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i;
+                PackageManager manager = getActivity().getPackageManager();
+                try {
+                    i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
+                    if (i == null)
+                        throw new PackageManager.NameNotFoundException();
+                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
+                }
+            }
+        });
     }
 
     private void setAllBlocksInvisible() {
@@ -129,14 +197,13 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
     }
 
 
-    public void setSnappPrice(String snappPrice)
-    {
+    public void setSnappPrice(String snappPrice) {
         price_layout_snapp.setVisibility(View.VISIBLE);
         price_snapp.setText(snappPrice);
 
     }
-    public void setTap30Price(String tap30Price)
-    {
+
+    public void setTap30Price(String tap30Price) {
 
         price_layout_tap30.setVisibility(View.VISIBLE);
         price_tap30.setText(tap30Price);
@@ -144,8 +211,7 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
 
     }
 
-    public void setCarpinoPrice(String carpinoPrice)
-    {
+    public void setCarpinoPrice(String carpinoPrice) {
         price_layout_carpino.setVisibility(View.VISIBLE);
         price_carpino.setText(carpinoPrice);
 

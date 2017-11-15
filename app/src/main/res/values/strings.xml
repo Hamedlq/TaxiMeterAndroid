@@ -326,7 +326,7 @@
     <string name="title_activity_mapstest">Map</string>
     <string name="ride_down">ثبت محل پیاده شدن</string>
     <string name="zero">0</string>
-    <string name="shared_price">هزینه تاکسی گردشی</string>
+    <string name="shared_price">هزینه تاکسی می بریم</string>
     <string name="private_price">هزینه تاکسی تلفنی</string>
     <string name="line_price">هزینه تاکسی خطی</string>
     <string name="snapp_price">هزینه تاکسی اسنپ</string>

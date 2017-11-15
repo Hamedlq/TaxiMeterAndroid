@@ -3,6 +3,11 @@ package com.mibarim.taximeter.services;
 import com.mibarim.taximeter.RestInterfaces.AuthtenticationsInerface;
 import com.mibarim.taximeter.core.Constants;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit.RestAdapter;
 
 /**
@@ -13,8 +18,10 @@ public class GenerateToken {
 
     private tmTokensModel model;
     private RestAdapter adapter;
+    private List<String> json;
 
     public GenerateToken(String stc, String token, int tokenStatus) {
+        json = new ArrayList<>();
         adapter = new RestAdapter.Builder()
                 .setEndpoint("http://mibarimapp.com")
                 .build();
@@ -31,12 +38,31 @@ public class GenerateToken {
             case "carpino":
                 model.setCarpinoToken(token);
                 model.setCarpinoTokenStatus(tokenStatus);
+                break;
+            case "all":
+                model.setSnappToken(token);
+                model.setSnappTokenStatus(tokenStatus);
+                model.setTap30Token(token);
+                model.setTap30TokenStatus(tokenStatus);
+                model.setCarpinoToken(token);
+                model.setCarpinoTokenStatus(tokenStatus);
         }
     }
 
     public tmTokensModel token() {
-
-        return adapter.create(AuthtenticationsInerface.class).getToken(model);
+        json = adapter.create(AuthtenticationsInerface.class).getToken(model).Messages;
+        try {
+            JSONObject mainObject = new JSONObject(json.get(0));
+            model.setSnappToken(mainObject.getString("SnappToken"));
+            model.setSnappTokenStatus(mainObject.getInt("SnappTokenStatus"));
+            model.setTap30Token(mainObject.getString("Tap30Token"));
+            model.setTap30TokenStatus(mainObject.getInt("Tap30TokenStatus"));
+            model.setCarpinoToken(mainObject.getString("CarpinoToken"));
+            model.setCarpinoTokenStatus(mainObject.getInt("CarpinoTokenStatus"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return model;
 
     }
 }
