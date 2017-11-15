@@ -187,7 +187,7 @@ public class PriceService {
 //
 //    }
 
-    public String tap30Unauthorizationint( String authorization) {
+    public String tap30Unauthorizationint(String authorization) {
         tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.EXPIRED, authorization);
@@ -202,7 +202,7 @@ public class PriceService {
         return tokenGenerator.getTap30Token();
     }
 
-    public String carpinoUnauthorizationint( String authorization) {
+    public String carpinoUnauthorizationint(String authorization) {
         tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.EXPIRED, authorization);
@@ -215,7 +215,8 @@ public class PriceService {
 
         return tokenGenerator.getCarpinoToken();
     }
-    public String snappUnauthorizationint( String authorization) {
+
+    public String snappUnauthorizationint(String authorization) {
         tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.EXPIRED, authorization);

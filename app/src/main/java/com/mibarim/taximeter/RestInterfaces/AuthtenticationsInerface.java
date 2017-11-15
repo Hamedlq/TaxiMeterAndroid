@@ -1,4 +1,5 @@
 package com.mibarim.taximeter.RestInterfaces;
+
 import android.support.annotation.Nullable;
 
 import com.mibarim.taximeter.core.Constants.Http;

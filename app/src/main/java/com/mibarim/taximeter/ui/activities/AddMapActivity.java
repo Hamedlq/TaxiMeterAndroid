@@ -153,6 +153,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     boolean fetchingMibarim = false;
     boolean refreshingTokens = false;
 
+    String[] stc = new String[3];
+
     protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
 
     @Override
@@ -200,6 +202,40 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }*/
 
         initScreen();
+        SharedPreferences snappPreferences;
+        SharedPreferences tap30Preferences;
+        SharedPreferences carpinoPreferences;
+        final tmTokensModel firstLoad = new tmTokensModel();
+        snappPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
+        stc[0] = snappPreferences.getString("authorization", "");
+        tap30Preferences = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE);
+        stc[1] = tap30Preferences.getString("authorization", "");
+        carpinoPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
+        stc[2] = carpinoPreferences.getString("authorization", "");
+        new SafeAsyncTask() {
+
+            @Override
+            public Object call() throws Exception {
+                if (stc[0].matches("") && stc[1].matches("") && stc[2].matches("")) {
+                    firstLoad.getToken("all", tmTokensModel.tokenStatus.NOT_SET, "");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+        }.execute();
+        SharedPreferences.Editor snappEditor = snappPreferences.edit();
+        snappEditor.putString("authorization", firstLoad.getSnappToken())
+                .apply();
+        SharedPreferences.Editor tap30Editor = snappPreferences.edit();
+        tap30Editor.putString("authorization", firstLoad.getTap30Token())
+                .apply();
+        SharedPreferences.Editor carpinoEditor = snappPreferences.edit();
+        carpinoEditor.putString("authorization", firstLoad.getCarpinoToken())
+                .apply();
     }
 
 
@@ -470,7 +506,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     private void SetPathPrice() {
         //I just remove refreshing token
-        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price ) {
+        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price) {
             return;
         }
 //
@@ -487,15 +523,15 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
             removeWaitLayout();
         }
-        if (tm.getSnappTokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
+        if (snappResponse != null) {
             ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
             removeWaitLayout();
         }
-        if (tm.getTap30TokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
+        if (tap30Response != null) {
             ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
             removeWaitLayout();
         }
-        if (tm.getCarpinoTokenStatus() == tmTokensModel.tokenStatus.VALID.getValue()) {
+        if (carpinoResponse != null) {
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
             removeWaitLayout();
         }

@@ -1,16 +1,5 @@
 package com.mibarim.taximeter.services;
 
-import android.os.AsyncTask;
-import android.support.annotation.Nullable;
-
-import com.mibarim.taximeter.RestInterfaces.AuthtenticationsInerface;
-import com.mibarim.taximeter.core.Constants;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * Created by Arya on 11/12/2017.
  */
@@ -21,7 +10,8 @@ public class tmTokensModel {
     public enum tokenStatus {
         NOT_SET(1),
         EXPIRED(2),
-        VALID(3);
+        VALID(3),
+        INVALID(4);
 
         private int value;
 
@@ -36,7 +26,7 @@ public class tmTokensModel {
 
     private String snappToken;
     private String tap30Token;
-    public String carpinoToken;
+    private String carpinoToken;
 
     private int snappTokenStatus;
     private int tap30TokenStatus;
@@ -46,7 +36,7 @@ public class tmTokensModel {
         return snappTokenStatus;
     }
 
-    public void setSnappTokenStatus(int snappTokenStatus) {
+    void setSnappTokenStatus(int snappTokenStatus) {
         this.snappTokenStatus = snappTokenStatus;
     }
 
@@ -54,7 +44,7 @@ public class tmTokensModel {
         return tap30TokenStatus;
     }
 
-    public void setTap30TokenStatus(int tap30TokenStatus) {
+    void setTap30TokenStatus(int tap30TokenStatus) {
         this.tap30TokenStatus = tap30TokenStatus;
     }
 
@@ -62,7 +52,7 @@ public class tmTokensModel {
         return carpinoTokenStatus;
     }
 
-    public void setCarpinoTokenStatus(int carpinoTokenStatus) {
+    void setCarpinoTokenStatus(int carpinoTokenStatus) {
         this.carpinoTokenStatus = carpinoTokenStatus;
     }
 
@@ -75,15 +65,15 @@ public class tmTokensModel {
     }
 
 
-    public void setSnappToken(String token) {
+    void setSnappToken(String token) {
         this.snappToken = token;
     }
 
-    public void setTap30Token(String token) {
+    void setTap30Token(String token) {
         this.tap30Token = token;
     }
 
-    public void setCarpinoToken(String token) {
+    void setCarpinoToken(String token) {
         this.carpinoToken = token;
     }
 
@@ -100,24 +90,34 @@ public class tmTokensModel {
     }
 
 
-    public void getToken(String stc, tokenStatus status, String authorization) {
+    public String getToken(String stc, tokenStatus status, String authorization) {
 
-        if (stc.matches("snapp")) {
-            if (status == tokenStatus.EXPIRED)
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.EXPIRED.getValue()).token().snappToken);
-            else
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.NOT_SET.getValue()).token().snappToken);
-        } else if (stc.matches("tap30")) {
-            if (status == tokenStatus.EXPIRED)
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.EXPIRED.getValue()).token().tap30Token);
-            else
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.NOT_SET.getValue()).token().tap30Token);
-        } else if (stc.matches("carpino")) {
-            if (status == tokenStatus.EXPIRED)
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.EXPIRED.getValue()).token().carpinoToken);
-            else
-                setCarpinoToken(new generateToken(stc, authorization, tokenStatus.NOT_SET.getValue()).token().carpinoToken);
+        tmTokensModel model = new GenerateToken(stc, authorization, status.getValue()).token();
+        switch (stc) {
+            case "snapp":
+                if (model.snappTokenStatus == 3)
+                    setSnappToken(model.snappToken);
+                else return stc;
+                break;
+            case "tap30":
+                if (model.tap30TokenStatus == 3)
+                    setTap30Token(model.tap30Token);
+                else return stc;
+                break;
+            case "carpino":
+                if (model.carpinoTokenStatus == 3)
+                    setCarpinoToken(model.carpinoToken);
+                else return stc;
+                break;
+            case "all":
+                if (model.snappTokenStatus == 3)
+                    setSnappToken(model.snappToken);
+                if (model.tap30TokenStatus == 3)
+                    setTap30Token(model.tap30Token);
+                if (model.carpinoTokenStatus == 3)
+                    setCarpinoToken(model.carpinoToken);
+                return null;
         }
+        return "";
     }
-
 }
