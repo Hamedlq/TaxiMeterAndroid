@@ -53,12 +53,20 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:orientation="horizontal"
-                android:padding="12dp">
+                android:padding="12dp"
+                >
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:src="@mipmap/mibarim_icon"
+                        android:layout_marginLeft="5dp"/>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -66,7 +74,8 @@
                         android:layout_weight="1"
                         android:text="@string/shared_price"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
+                        android:textColor="@color/text_black"
+                        />
 
                     <TextView
                         android:id="@+id/price_shared"
@@ -96,11 +105,17 @@
                 android:background="@drawable/border"
                 android:orientation="horizontal"
                 android:padding="12dp">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:layout_marginLeft="5dp"/>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -138,10 +153,17 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:src="@mipmap/mibarim_icon"
+                    android:layout_marginLeft="5dp"/>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -179,10 +201,17 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:src="@mipmap/snapp_icon"
+                    android:layout_marginLeft="5dp"/>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -219,10 +248,18 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="32dp"
+                    android:src="@mipmap/tap30_icon"
+                    android:layout_marginLeft="5dp"/>
+
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -259,10 +296,17 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="32dp"
+                    android:src="@mipmap/carpino_icon"
+                    android:layout_marginLeft="5dp"/>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
