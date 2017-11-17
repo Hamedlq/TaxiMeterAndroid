@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 public class SrcDstFragment extends Fragment implements View.OnTouchListener {
 
     @Bind(R.id.do_source_btn)
-    protected TextView do_source_btn;
+    protected Button do_source_btn;
 
 
     @Bind(R.id.price_shared)
@@ -115,7 +116,11 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
                     i.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(i);
                 } catch (PackageManager.NameNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                    } catch (Exception e1) {
+                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -131,7 +136,11 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
                     i.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(i);
                 } catch (PackageManager.NameNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
+                    } catch (Exception e1) {
+                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -147,7 +156,11 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
                     i.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(i);
                 } catch (PackageManager.NameNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
+                    } catch (Exception e1) {
+                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -163,7 +176,11 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
                     i.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(i);
                 } catch (PackageManager.NameNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
+                    } catch (Exception e1) {
+                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

@@ -343,17 +343,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.beardedhen.androidbootstrap.BootstrapButton
+            <Button
                 android:id="@+id/do_source_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="@string/do_source"
-                app:bootstrapBrand="warning"
-                app:bootstrapSize="lg"
-                app:buttonMode="regular"
-                app:roundedCorners="true"
-                app:showOutline="false" />
+                android:background="@color/colorPrimary"
+               />
         </LinearLayout>
     </LinearLayout>
 
