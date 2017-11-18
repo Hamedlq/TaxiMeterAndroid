@@ -149,10 +149,11 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 if (!theSrcLat.equals(srcLat) && !theSrcLng.equals(srcLng)) {
                     srcLat = theSrcLat;
                     srcLng = theSrcLng;
-                    SharedPreferences prefs = getActivity().getSharedPreferences(
-                            "com.mibarim.main", Context.MODE_PRIVATE);
-                    prefs.edit().putString("SrcLatitude", srcLat).apply();
-                    prefs.edit().putString("SrcLongitude", srcLng).apply();
+                    if (getActivity() != null) {
+                        SharedPreferences prefs = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+                        prefs.edit().putString("SrcLatitude", srcLat).apply();
+                        prefs.edit().putString("SrcLongitude", srcLng).apply();
+                    }
                     mCallback.setSrcLatLng(srcLat, srcLng);
                     mCallback.onMapStopDrag(srcLat, srcLng);
                 }
@@ -425,11 +426,11 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         mMap.animateCamera(cu);
     }
 
-    public void setPriceState(PathPoint pathRoute){
+    public void setPriceState(PathPoint pathRoute) {
         ClearRoute();
         setSourceFlag();
         setDestinationFlag();
-        List<PathPoint> pathPoints=new ArrayList<>();
+        List<PathPoint> pathPoints = new ArrayList<>();
         pathPoints.add(pathRoute);
         drawPath(pathPoints, 1);
         zoomToBoundry();

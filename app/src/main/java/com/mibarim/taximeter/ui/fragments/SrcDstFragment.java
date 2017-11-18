@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.ui.OpeningDialogTheme;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
 
 import butterknife.Bind;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Hamed on 3/4/2016.
  */
-public class SrcDstFragment extends Fragment implements View.OnTouchListener {
+public class SrcDstFragment extends Fragment {
 
     @Bind(R.id.do_source_btn)
     protected Button do_source_btn;
@@ -86,8 +87,22 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ButterKnife.bind(this, getView());
-        do_source_btn.setOnTouchListener(this);
-        my_location.setOnTouchListener(this);
+        do_source_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof AddMapActivity) {
+                    ((AddMapActivity) getActivity()).doBtnClicked();
+                }
+            }
+        });
+        my_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof AddMapActivity) {
+                    ((AddMapActivity) getActivity()).gotoMyLocation();
+                }
+            }
+        });
 
         setAllBlocksInvisible();
         if (getActivity() instanceof AddMapActivity) {
@@ -107,81 +122,145 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
         price_layout_shared.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i;
-                PackageManager manager = getActivity().getPackageManager();
-                try {
-                    i = manager.getLaunchIntentForPackage("com.mibarim.main");
-                    if (i == null)
-                        throw new PackageManager.NameNotFoundException();
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    startActivity(i);
-                } catch (PackageManager.NameNotFoundException e) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
-                    } catch (Exception e1) {
-                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                final OpeningDialogTheme dialog = new OpeningDialogTheme(getActivity());
+                dialog.show();
+                dialog.setText("می بریم", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                dialog.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i;
+                        PackageManager manager = getActivity().getPackageManager();
+                        dialog.dismiss();
+                        try {
+                            i = manager.getLaunchIntentForPackage("com.mibarim.main");
+                            if (i == null)
+                                throw new PackageManager.NameNotFoundException();
+                            i.addCategory(Intent.CATEGORY_LAUNCHER);
+                            startActivity(i);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                            } catch (Exception e1) {
+                                Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
-                }
+                });
+                dialog.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         price_layout_snapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i;
-                PackageManager manager = getActivity().getPackageManager();
-                try {
-                    i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
-                    if (i == null)
-                        throw new PackageManager.NameNotFoundException();
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    startActivity(i);
-                } catch (PackageManager.NameNotFoundException e) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
-                    } catch (Exception e1) {
-                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                final OpeningDialogTheme dialog = new OpeningDialogTheme(getActivity());
+                dialog.show();
+                dialog.setText("اسنپ", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                dialog.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i;
+                        PackageManager manager = getActivity().getPackageManager();
+                        dialog.dismiss();
+                        try {
+                            i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
+                            if (i == null)
+                                throw new PackageManager.NameNotFoundException();
+                            i.addCategory(Intent.CATEGORY_LAUNCHER);
+                            startActivity(i);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
+                            } catch (Exception e1) {
+                                Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
-                }
+                });
+                dialog.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         price_layout_tap30.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i;
-                PackageManager manager = getActivity().getPackageManager();
-                try {
-                    i = manager.getLaunchIntentForPackage("taxi.tap30.passenger");
-                    if (i == null)
-                        throw new PackageManager.NameNotFoundException();
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    startActivity(i);
-                } catch (PackageManager.NameNotFoundException e) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
-                    } catch (Exception e1) {
-                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                final OpeningDialogTheme dialog = new OpeningDialogTheme(getActivity());
+                dialog.show();
+                dialog.setText("تپسی", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                dialog.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i;
+                        PackageManager manager = getActivity().getPackageManager();
+                        dialog.dismiss();
+                        try {
+                            i = manager.getLaunchIntentForPackage("taxi.tap30.passenger");
+                            if (i == null)
+                                throw new PackageManager.NameNotFoundException();
+                            i.addCategory(Intent.CATEGORY_LAUNCHER);
+                            startActivity(i);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
+                            } catch (Exception e1) {
+                                Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
-                }
+                });
+                dialog.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         price_layout_carpino.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i;
-                PackageManager manager = getActivity().getPackageManager();
-                try {
-                    i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
-                    if (i == null)
-                        throw new PackageManager.NameNotFoundException();
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    startActivity(i);
-                } catch (PackageManager.NameNotFoundException e) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
-                    } catch (Exception e1) {
-                        Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                final OpeningDialogTheme dialog = new OpeningDialogTheme(getActivity());
+                dialog.show();
+                dialog.setText("کارپینو", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                dialog.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i;
+                        PackageManager manager = getActivity().getPackageManager();
+                        dialog.dismiss();
+                        try {
+                            i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
+                            if (i == null)
+                                throw new PackageManager.NameNotFoundException();
+                            i.addCategory(Intent.CATEGORY_LAUNCHER);
+                            startActivity(i);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
+                            } catch (Exception e1) {
+                                Toast.makeText(getActivity(), "هیج گونه مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
-                }
+                });
+                dialog.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
@@ -240,25 +319,24 @@ public class SrcDstFragment extends Fragment implements View.OnTouchListener {
         wait_layout.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            switch (v.getId()) {
-                case R.id.do_source_btn:
-                    if (getActivity() instanceof AddMapActivity) {
-                        ((AddMapActivity) getActivity()).doBtnClicked();
-                    }
-                    break;
-                case R.id.my_location:
-                    if (getActivity() instanceof AddMapActivity) {
-                        ((AddMapActivity) getActivity()).gotoMyLocation();
-                    }
-                    break;
-            }
-            return true;
-        }
-        return false;
-    }
-
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        if (event.getAction() == MotionEvent.ACTION_UP) {
+//            switch (v.getId()) {
+//                case R.id.do_source_btn:
+//                    if (getActivity() instanceof AddMapActivity) {
+//                        ((AddMapActivity) getActivity()).doBtnClicked();
+//                    }
+//                    break;
+////                case R.id.my_location:
+////                    if (getActivity() instanceof AddMapActivity) {
+////                        ((AddMapActivity) getActivity()).gotoMyLocation();
+////                    }
+////                    break;
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 }
 

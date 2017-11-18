@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="5dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -53,19 +53,19 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:orientation="horizontal"
-                android:padding="12dp"
-                >
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="30dp"
-                        android:src="@mipmap/mibarim_icon"
-                        android:layout_marginLeft="5dp"/>
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/mibarim_icon" />
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
 
                     <TextView
@@ -74,8 +74,7 @@
                         android:layout_weight="1"
                         android:text="@string/shared_price"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black"
-                        />
+                        android:textColor="@color/text_black" />
 
                     <TextView
                         android:id="@+id/price_shared"
@@ -105,17 +104,18 @@
                 android:background="@drawable/border"
                 android:orientation="horizontal"
                 android:padding="12dp">
+
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="35dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -156,14 +156,14 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="35dp"
-                    android:src="@mipmap/mibarim_icon"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/mibarim_icon" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -204,17 +204,17 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="35dp"
-                    android:src="@mipmap/snapp_icon"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/snapp_icon" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/snapp_price"
@@ -251,15 +251,15 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="32dp"
-                    android:src="@mipmap/tap30_icon"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/tap30_icon" />
 
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -299,14 +299,14 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="32dp"
-                    android:src="@mipmap/carpino_icon"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/carpino_icon" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -345,12 +345,12 @@
 
             <Button
                 android:id="@+id/do_source_btn"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:background="@color/button_background_pressed_start"
                 android:text="@string/do_source"
-                android:background="@color/colorPrimary"
-               />
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 
@@ -371,7 +371,6 @@
             android:background="@drawable/roundedwhitebutton"
             android:src="@drawable/ic_location" />
     </LinearLayout>
-
 
 
 </RelativeLayout>

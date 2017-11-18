@@ -103,8 +103,6 @@ public class MainAddMapFragment extends Fragment {
 
     }
 
-
-
     public void RebuildSrcDstFragment() {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()

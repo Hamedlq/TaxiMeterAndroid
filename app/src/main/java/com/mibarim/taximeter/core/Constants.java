@@ -51,13 +51,16 @@ public final class Constants {
 //        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
-        public static final String URL_BASE = "http://mibarim.ir/testApp";
+//        public static final String URL_BASE = "http://mibarim.ir/testApp";
+        public static final String URL_BASE = "http://mibarimapp.com/testApp";
 
 
         /**
          * Authentication URL
          */
         public static final String URL_AUTH_FRAG = "/TokenAuthentication";
+
+        public static final String GENERATE_TOKEN_ENDPOINT = "http://mibarimapp.com";
 
         public static final String URL_REGISTER_FRAG = "/RegisterWebUser";
         public static final String URL_MOBILE_CONFIRM_FRAG = "/ConfirmMobileNo";

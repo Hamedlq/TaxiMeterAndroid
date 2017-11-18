@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,6 +55,7 @@ import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.services.tmTokensModel;
+import com.mibarim.taximeter.ui.AlertDialogTheme;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
@@ -73,6 +75,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
+
+import static com.mibarim.taximeter.R.string.message;
 
 
 /**
@@ -237,11 +241,12 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
-                    Toast.makeText(AddMapActivity.this , "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
+                if (e instanceof RetrofitError)
+                    Toast.makeText(AddMapActivity.this, "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
             }
         }.execute();
     }
+
 
     private void initScreen() {
         //userData.DeleteTime();
@@ -349,6 +354,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 case SelectDestinationState:
                     setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                     hideBackBtn();
+//                    if ()
                     fragmentManager.beginTransaction()
                             .replace(R.id.main_container, new MainAddMapFragment())
                             .commitAllowingStateLoss();
@@ -538,6 +544,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
             removeWaitLayout();
         }
+        if (findViewById(R.id.waiting_layout).getVisibility() == View.VISIBLE) {
+            Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
+            removeWaitLayout();
+        }
     }
 
     public void removeWaitLayout() {
@@ -640,10 +650,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         route = component.long_name;
                     }
                     if (type.trim().equals("neighborhood")) {
-                        neighborhood = component.long_name + "? ";
+                        neighborhood = component.long_name + ", ";
                     }
                     if (type.trim().equals("locality")) {
-                        locality = component.long_name + "? ";
+                        locality = component.long_name + ", ";
                     }
                 }
             }
@@ -814,23 +824,32 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     public void doBtnClicked() {
-        switch (getSrcDstStateSelector()) {
-            case SelectOriginState:
-                setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
-                showBackBtn();
-                RebuildDstFragment();
-                break;
-            case SelectDestinationState:
-                setSrcDstStateSelector(AddRouteStates.SelectPriceState);
-                RebuildDstFragment();
-            case SelectPriceState:
-                SetWaitState();
-                startFetchingData();
+        if (isNetworkConnected()) {
+            switch (getSrcDstStateSelector()) {
+                case SelectOriginState:
+                    setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
+                    showBackBtn();
+                    RebuildDstFragment();
+                    break;
+                case SelectDestinationState:
+                    setSrcDstStateSelector(AddRouteStates.SelectPriceState);
+                    RebuildDstFragment();
+                case SelectPriceState:
+                    SetWaitState();
+                    startFetchingData();
 
-                //Adad.showInterstitialAd(this);
-                //returnOk();
-                break;
-        }
+                    //Adad.showInterstitialAd(this);
+                    //returnOk();
+                    break;
+            }
+        } else
+            Toast.makeText(this, "اتصال خود به اینترنت را چک کنید", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void startFetchingData() {
@@ -867,8 +886,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 ((MainAddMapFragment) fragment).MoveMap(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
             }
         } else {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            AlertDialogTheme alertDialog = new AlertDialogTheme(AddMapActivity.this);
+            alertDialog.show();
         }
     }
 
@@ -958,8 +977,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             }
                         }, authorization);
                     }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 2) {
 
-//
                 }
 
             }

@@ -1,7 +1,7 @@
 package com.mibarim.taximeter.services;
 
 import com.mibarim.taximeter.RestInterfaces.AuthtenticationsInerface;
-import com.mibarim.taximeter.core.Constants;
+import com.mibarim.taximeter.ui.activities.AddMapActivity;
 
 import org.json.JSONObject;
 
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
+
+import static com.mibarim.taximeter.core.Constants.Http.GENERATE_TOKEN_ENDPOINT;
 
 /**
  * Created by Arya on 11/13/2017.
@@ -23,7 +25,7 @@ public class GenerateToken {
     public GenerateToken(String stc, String token, int tokenStatus) {
         json = new ArrayList<>();
         adapter = new RestAdapter.Builder()
-                .setEndpoint("http://mibarimapp.com")
+                .setEndpoint(GENERATE_TOKEN_ENDPOINT)
                 .build();
         model = new tmTokensModel();
         switch (stc) {
@@ -60,7 +62,7 @@ public class GenerateToken {
             model.setCarpinoToken(mainObject.getString("CarpinoToken"));
             model.setCarpinoTokenStatus(mainObject.getInt("CarpinoTokenStatus"));
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
         return model;
 

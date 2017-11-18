@@ -12,13 +12,13 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="20dp"
-            android:src="@mipmap/mibarim"
+            android:src="@drawable/mibarim_icon"
             android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_centerHorizontal="true" />
 
         <!--<ImageView
             android:layout_width="match_parent"
