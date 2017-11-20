@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="5dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/wait_layout"
+            android:id="@+id/waiting_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -55,10 +55,18 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/mibarim_icon" />
+
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -88,6 +96,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/price_layout_private"
                 android:layout_width="match_parent"
@@ -96,9 +105,16 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/ic_launcher" />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -137,9 +153,16 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/mibarim_icon" />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -170,6 +193,148 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/price_layout_snapp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/snapp_icon" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/snapp_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_snapp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/price_layout_tap30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/tap30_icon" />
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/tap30_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_tap30"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/price_layout_carpino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/carpino_icon" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/carpino_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_carpino"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -178,17 +343,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.beardedhen.androidbootstrap.BootstrapButton
+            <Button
                 android:id="@+id/do_source_btn"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:background="@color/button_background_pressed_start"
                 android:text="@string/do_source"
-                app:bootstrapBrand="warning"
-                app:bootstrapSize="lg"
-                app:buttonMode="regular"
-                app:roundedCorners="true"
-                app:showOutline="false" />
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 
@@ -209,7 +371,6 @@
             android:background="@drawable/roundedwhitebutton"
             android:src="@drawable/ic_location" />
     </LinearLayout>
-
 
 
 </RelativeLayout>

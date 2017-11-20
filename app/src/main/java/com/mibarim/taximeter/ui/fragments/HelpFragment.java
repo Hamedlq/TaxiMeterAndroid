@@ -30,6 +30,8 @@ public class HelpFragment extends Fragment {
 
     @Bind(R.id.price_link)
     protected TextView price_link;
+    @Bind(R.id.price_service_link)
+    protected TextView price_service_link;
 
     public HelpFragment() {
     }
@@ -57,6 +59,13 @@ public class HelpFragment extends Fragment {
 
         price_link.setMovementMethod(LinkMovementMethod.getInstance());
         price_link.setText(Html.fromHtml("<p>"+getString(R.string.faq_1)+"</p><br/><a href=\"" + "http://taxi.tehran.ir/Default.aspx?tabid=312" + "\">" + "وبسایت تاکسیرانی تهران" + "</a>"));
+
+        price_service_link.setMovementMethod(LinkMovementMethod.getInstance());
+        price_service_link.setText(Html.fromHtml("<a href=\"" + "http://mibarim.com/" + "\">" + "می‌بریم" + "</a>"
+                +"<br/><a href=\"" + "https://snapp.ir/" + "\">" + "اسنپ" + "</a>"
+        +"<br/><a href=\"" + "https://tap30.ir/" + "\">" + "تپسی" + "</a>"
+                +"<br/><a href=\"" + "https://www.carpino.ir/" + "\">" + "کارپینو" + "</a>"));
+
     }
 
 }

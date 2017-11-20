@@ -1,9 +1,6 @@
 package com.mibarim.taximeter.ui.activities;
 
 
-import android.Manifest;
-import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
 import android.accounts.OperationCanceledException;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,40 +8,35 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.Uri;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.BootstrapServiceProvider;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.LocationService;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
-import com.mibarim.taximeter.events.UnAuthorizedErrorEvent;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
 import com.mibarim.taximeter.models.Address.AddressResult;
@@ -54,16 +46,19 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.carpino.CarpinoResponse;
+import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
+import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
+import com.mibarim.taximeter.ui.AlertDialogTheme;
+import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ui.BootstrapActivity;
-import com.mibarim.taximeter.ui.fragments.AboutUsFragment;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.Toaster;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -73,10 +68,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-import timber.log.Timber;
+import retrofit.RetrofitError;
+
+import static com.mibarim.taximeter.R.string.message;
 
 
 /**
@@ -138,15 +134,29 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private String pathPrice;
     private PathPrice pathPrice;
 
+    private SnappResponse snappResponse;
+
+    private Tap30Response tap30Response;
+
+    private CarpinoResponse carpinoResponse;
+
     private List<Location> wayPoints;
 
     private String authToken;
+
 
     //public Menu theMenu;
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
 
+    boolean fetchingSnappPrice = false;
+    boolean fetchingTap30Price = false;
+    boolean fetchingCarpinoPrice = false;
+    boolean fetchingMibarim = false;
+    boolean refreshingTokens = false;
+
+    String[] stc = new String[3];
 
     protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
 
@@ -195,6 +205,42 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }*/
 
         initScreen();
+        final SharedPreferences snappPreferences;
+        final SharedPreferences tap30Preferences;
+        final SharedPreferences carpinoPreferences;
+        final tmTokensModel firstLoad = new tmTokensModel();
+        snappPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
+        stc[0] = snappPreferences.getString("authorization", "");
+        tap30Preferences = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE);
+        stc[1] = tap30Preferences.getString("authorization", "");
+        carpinoPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
+        stc[2] = carpinoPreferences.getString("authorization", "");
+        new SafeAsyncTask() {
+
+            @Override
+            public Object call() throws Exception {
+                if (stc[0].matches("") && stc[1].matches("") && stc[2].matches("")) {
+                    firstLoad.getToken("all", tmTokensModel.tokenStatus.NOT_SET, "");
+                    SharedPreferences.Editor snappEditor = snappPreferences.edit();
+                    snappEditor.putString("authorization", firstLoad.getSnappToken())
+                            .apply();
+                    SharedPreferences.Editor tap30Editor = tap30Preferences.edit();
+                    tap30Editor.putString("authorization", firstLoad.getTap30Token())
+                            .apply();
+                    SharedPreferences.Editor carpinoEditor = carpinoPreferences.edit();
+                    carpinoEditor.putString("authorization", firstLoad.getCarpinoToken())
+                            .apply();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError)
+                    Toast.makeText(AddMapActivity.this, "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
     }
 
 
@@ -215,7 +261,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         //Adad.prepareInterstitialAd();
     }
 
-    private void showBackBtn(){
+    private void showBackBtn() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (Build.VERSION.SDK_INT >= 17) {
@@ -225,7 +271,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             actionBar.setHomeButtonEnabled(true);
         }
     }
-    private void hideBackBtn(){
+
+    private void hideBackBtn() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
@@ -303,6 +350,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 case SelectDestinationState:
                     setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                     hideBackBtn();
+//                    if ()
                     fragmentManager.beginTransaction()
                             .replace(R.id.main_container, new MainAddMapFragment())
                             .commitAllowingStateLoss();
@@ -332,7 +380,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     @Subscribe
     public void onNetworkErrorEvent(NetworkErrorEvent event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.network_error)).setPositiveButton("تلاش مجدد", dialogClickListener).show();
+        builder.setMessage(getString(R.string.network_error)).setPositiveButton("???? ????", dialogClickListener).show();
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -463,9 +511,44 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     private void SetPathPrice() {
+        //I just remove refreshing token
+        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price) {
+            return;
+        }
+//
+//        if (snappResponse != null)
+//            pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
+//        if (tap30Response != null)
+//            pathPrice.Tap30PathPrice = tap30Response.getData().getPrice();
+//        if (carpinoResponse != null)
+//            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        ((MainAddMapFragment) fragment).setPrice(pathPrice);
+        if (pathPrice != null) {
+            ((MainAddMapFragment) fragment).setPrice(pathPrice);
+            removeWaitLayout();
+        }
+        if (snappResponse != null) {
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
+            removeWaitLayout();
+        }
+        if (tap30Response != null) {
+            ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
+            removeWaitLayout();
+        }
+        if (carpinoResponse != null) {
+            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
+            removeWaitLayout();
+        }
+        if (findViewById(R.id.waiting_layout).getVisibility() == View.VISIBLE) {
+            Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
+            removeWaitLayout();
+        }
+    }
+
+    public void removeWaitLayout() {
+        LinearLayout Wait_layout = (LinearLayout) findViewById(R.id.waiting_layout);
+        Wait_layout.setVisibility(View.GONE);
     }
 
     private void SetWaitState() {
@@ -563,10 +646,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         route = component.long_name;
                     }
                     if (type.trim().equals("neighborhood")) {
-                        neighborhood = component.long_name + "، ";
+                        neighborhood = component.long_name + ", ";
                     }
                     if (type.trim().equals("locality")) {
-                        locality = component.long_name + "، ";
+                        locality = component.long_name + ", ";
                     }
                 }
             }
@@ -737,22 +820,43 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     public void doBtnClicked() {
-        switch (getSrcDstStateSelector()) {
-            case SelectOriginState:
-                setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
-                showBackBtn();
-                RebuildDstFragment();
-                break;
-            case SelectDestinationState:
-                setSrcDstStateSelector(AddRouteStates.SelectPriceState);
-                RebuildDstFragment();
-            case SelectPriceState:
-                SetWaitState();
-                getPathPrice();
-                //Adad.showInterstitialAd(this);
-                //returnOk();
-                break;
-        }
+        if (isNetworkConnected()) {
+            switch (getSrcDstStateSelector()) {
+                case SelectOriginState:
+                    setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
+                    showBackBtn();
+                    RebuildDstFragment();
+                    break;
+                case SelectDestinationState:
+                    setSrcDstStateSelector(AddRouteStates.SelectPriceState);
+                    RebuildDstFragment();
+                case SelectPriceState:
+                    SetWaitState();
+                    startFetchingData();
+
+                    //Adad.showInterstitialAd(this);
+                    //returnOk();
+                    break;
+            }
+        } else
+            Toast.makeText(this, "اتصال خود به اینترنت را چک کنید", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    private void startFetchingData() {
+        fetchingMibarim = true;
+        fetchingSnappPrice = true;
+        fetchingTap30Price = true;
+        fetchingCarpinoPrice = true;
+        getPathPrice();
+        getPathPriceSnapp(true);
+        getPathPriceTap30(true);
+        getPathPriceCarpino(true);
     }
 
     private void returnOk() {
@@ -778,8 +882,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 ((MainAddMapFragment) fragment).MoveMap(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
             }
         } else {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            AlertDialogTheme alertDialog = new AlertDialogTheme(AddMapActivity.this);
+            alertDialog.show();
         }
     }
 
@@ -806,8 +910,278 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingMibarim = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+        }.execute();
+    }
+
+    public void getPathPriceSnapp(final boolean tryAgainForAuthorize) {
+        SharedPreferences sharedPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                snappResponse = priceService.getPathPriceSnapp(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingSnappPrice = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeySnapp(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceSnapp(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeySnapp(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceSnapp(false);
+                            }
+                        }, authorization);
+                    }
+
+//
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeySnapp(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 2) {
+
+                }
+
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
                 SetPathPrice();
             }
         }.execute();
+
+    }
+
+    public void getPathPriceTap30(final boolean tryAgainForAuthorize) {
+//        if (tryAgainForAuthorize) {
+//            refreshAuthorizationKeyTap30(new Callback() {
+//                @Override
+//                public void dosth() {
+//                    getPathPriceTap30(false);
+//                }
+//            });
+//        } else {
+        SharedPreferences sharedPreferences = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                tap30Response = priceService.getPathPriceTap30(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyTap30(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceTap30(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyTap30(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyTap30(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingTap30Price = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+            }
+
+        }.execute();
+//        }
+    }
+
+    public void getPathPriceCarpino(final boolean tryAgainForAuthorize) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+//        if (tryAgainForAuthorize)
+//            refreshAuthorizationKeyCarpino(new Callback() {
+//                @Override
+//                public void dosth() {
+//                    getPathPriceCarpino(false);
+//                }
+//            });
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                carpinoResponse = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyCarpino(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyCarpino(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyCarpino(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCarpino(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingCarpinoPrice = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+            }
+
+        }.execute();
+    }
+
+    private void refreshAuthorizationKeySnapp(final Callback callback, final String authorization) {
+        refreshingTokens = true;
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String snapp = priceService.snappUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("snappAuth", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", snapp);
+//                editor.putString("authorization",
+//                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+    }
+
+    private void refreshAuthorizationKeyTap30(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String tap30 = priceService.tap30Unauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("tap30Auth", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", tap30);
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+    }
+
+    private void refreshAuthorizationKeyCarpino(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String carpino = priceService.carpinoUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", carpino);
+//                editor.putString("authorization",
+//                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
+
+    private interface Callback {
+        void dosth();
     }
 }

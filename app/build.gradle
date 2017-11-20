@@ -6,7 +6,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.20.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -49,8 +49,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 13
-        versionName "0.1"
+        versionCode 14
+        versionName "0.2"
 
         applicationVariants.all { variant ->
             variant.resValue "string", "version", variant.versionName
@@ -149,7 +149,6 @@ dependencies {
     //Osm Bonous Pack with usefull things
     //compile 'com.github.MKergall.osmbonuspack:OSMBonusPack:v5.7'
     //okhttp
-    compile 'com.squareup.okhttp:okhttp:2.7.0'
     //Android bootstrap
     compile 'com.beardedhen:androidbootstrap:2.1.0'
 
@@ -188,6 +187,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true
     }
+
+    compile 'com.squareup.okhttp:okhttp:2.7.2'
 
     //androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.4'

@@ -16,6 +16,7 @@ import com.mibarim.taximeter.ui.fragments.LocationSearchMainFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.ui.fragments.SrcDstFragment;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;

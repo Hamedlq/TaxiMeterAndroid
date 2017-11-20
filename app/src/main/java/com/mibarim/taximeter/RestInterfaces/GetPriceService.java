@@ -6,7 +6,6 @@ import com.mibarim.taximeter.models.ApiResponse;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
-import retrofit.http.Header;
 import retrofit.http.POST;
 
 /**
@@ -20,5 +19,7 @@ public interface GetPriceService {
                              @Field("DstLat") String DstLat,
                              @Field("DstLng") String DstLng
     );
+
+
 
 }

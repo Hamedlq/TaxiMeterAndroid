@@ -29,8 +29,8 @@
     <color name="main_background_end">#2C2C2C</color>
     <color name="button_background_enabled_start">#1fb6ed</color>
     <color name="button_background_enabled_end">#1c9ac8</color>
-    <color name="button_background_pressed_start">#f76500</color>
-    <color name="button_background_pressed_end">#fb812c</color>
+    <color name="button_background_pressed_start">#246068</color>
+    <color name="button_background_pressed_end">#012E34</color>
     <color name="edit_text_background_start">#EFF6FF</color>
     <color name="edit_text_background_end">#FBFDFF</color>
     <color name="button_background_disabled_start">#7b7b7b</color>
@@ -45,8 +45,8 @@
 
     <color name="dark_grey">#1f1f1f</color>
     <color name="navigation_drawer_item_separator">#c2c2c2</color>
-    <color name="colorPrimary">#FFA000</color>
-    <color name="colorPrimaryDark">#ff6f00</color>
+    <color name="colorPrimary">#69969C</color>
+    <color name="colorPrimaryDark">#0E464E</color>
 
     <color name="darker_gray">#aaa</color>
 
@@ -67,7 +67,8 @@
     <color name="info_background">#ECECEC</color>
     <color name="ride_background">#FFFFFF</color>
     <color name="teal_light">#b2dfdb</color>
-    <color name="yellow_light">#ffeb3b</color>
+    <color name="yellow_light">#0E464E</color>
+    <color name="dialog_button">#0E464E</color>
 
 
 </resources>

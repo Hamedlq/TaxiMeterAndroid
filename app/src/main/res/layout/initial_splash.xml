@@ -12,13 +12,13 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/logo_white"
+            android:src="@drawable/mibarim_icon"
             android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_centerHorizontal="true" />
 
         <!--<ImageView
             android:layout_width="match_parent"
@@ -58,5 +58,12 @@
             android:layout_marginTop="20dp"
             android:layout_below="@id/textView6"
             android:layout_centerHorizontal="true" />-->
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"/>
     </RelativeLayout>
 </LinearLayout>
