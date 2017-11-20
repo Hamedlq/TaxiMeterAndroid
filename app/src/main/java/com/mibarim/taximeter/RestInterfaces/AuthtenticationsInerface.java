@@ -1,16 +1,10 @@
 package com.mibarim.taximeter.RestInterfaces;
 
-import android.support.annotation.Nullable;
-
-import com.mibarim.taximeter.core.Constants.Http;
 import com.mibarim.taximeter.models.ApiResponse;
-import com.mibarim.taximeter.services.tmTokensModel;
+import com.mibarim.taximeter.models.tmTokensModel;
 
-import retrofit.Callback;
 import retrofit.http.Body;
-import retrofit.http.Field;
 import retrofit.http.POST;
-import retrofit.http.Query;
 
 
 public interface AuthtenticationsInerface {

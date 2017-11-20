@@ -1,17 +1,14 @@
-package com.mibarim.taximeter.services;
+package com.mibarim.taximeter.models;
 
-import com.mibarim.taximeter.models.ApiResponse;
+import com.mibarim.taximeter.services.GenerateToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by Arya on 11/12/2017.
  */
 
-public class tmTokensModel {
+public class tmTokensModel implements Serializable {
 
 
     public enum tokenStatus {
@@ -50,7 +47,7 @@ public class tmTokensModel {
         return snappTokenStatus;
     }
 
-    void setSnappTokenStatus(int snappTokenStatus) {
+    public void setSnappTokenStatus(int snappTokenStatus) {
         this.snappTokenStatus = snappTokenStatus;
     }
 
@@ -58,7 +55,7 @@ public class tmTokensModel {
         return tap30TokenStatus;
     }
 
-    void setTap30TokenStatus(int tap30TokenStatus) {
+    public void setTap30TokenStatus(int tap30TokenStatus) {
         this.tap30TokenStatus = tap30TokenStatus;
     }
 
@@ -66,20 +63,20 @@ public class tmTokensModel {
         return carpinoTokenStatus;
     }
 
-    void setCarpinoTokenStatus(int carpinoTokenStatus) {
+    public void setCarpinoTokenStatus(int carpinoTokenStatus) {
         this.carpinoTokenStatus = carpinoTokenStatus;
     }
 
 
-    void setSnappToken(String token) {
+    public void setSnappToken(String token) {
         this.snappToken = token;
     }
 
-    void setTap30Token(String token) {
+    public void setTap30Token(String token) {
         this.tap30Token = token;
     }
 
-    void setCarpinoToken(String token) {
+    public void setCarpinoToken(String token) {
         this.carpinoToken = token;
     }
 

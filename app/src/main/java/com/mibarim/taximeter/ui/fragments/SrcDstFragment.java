@@ -124,7 +124,7 @@ public class SrcDstFragment extends Fragment {
             public void onClick(View v) {
                 final OpeningDialogTheme dialog = new OpeningDialogTheme(getActivity());
                 dialog.show();
-                dialog.setText("می بریم", "آیا تمایل به باز کردن این برنامه دارید؟");
+                dialog.setText("می‌بریم", "آیا تمایل به باز کردن این برنامه دارید؟");
 
                 dialog.yes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -295,7 +295,15 @@ public class SrcDstFragment extends Fragment {
 
     public void setSnappPrice(String snappPrice) {
         price_layout_snapp.setVisibility(View.VISIBLE);
-        price_snapp.setText(snappPrice);
+        int snappPriceToman = 0;
+
+        try {
+            snappPriceToman = Integer.parseInt(snappPrice);
+            snappPriceToman = snappPriceToman/10;
+        } catch(NumberFormatException nfe) {
+
+        }
+        price_snapp.setText(String.valueOf(snappPriceToman));
 
     }
 
@@ -309,7 +317,15 @@ public class SrcDstFragment extends Fragment {
 
     public void setCarpinoPrice(String carpinoPrice) {
         price_layout_carpino.setVisibility(View.VISIBLE);
-        price_carpino.setText(carpinoPrice);
+        int carpinoPriceToman = 0;
+
+        try {
+            carpinoPriceToman = Integer.parseInt(carpinoPrice);
+            carpinoPriceToman = carpinoPriceToman/10;
+        } catch(NumberFormatException nfe) {
+
+        }
+        price_carpino.setText(String.valueOf(carpinoPriceToman));
 
     }
 

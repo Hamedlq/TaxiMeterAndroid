@@ -1,10 +1,12 @@
 package com.mibarim.taximeter.models.tap30;
 
+import java.io.Serializable;
+
 /**
  * Created by armin on 7/14/17.
  */
 
-public class Tap30Response {
+public class Tap30Response implements Serializable {
 
     private String result;
 
@@ -26,7 +28,7 @@ public class Tap30Response {
         this.data = data;
     }
 
-    public class Data{
+    public class Data implements Serializable {
 
         private String text;
 

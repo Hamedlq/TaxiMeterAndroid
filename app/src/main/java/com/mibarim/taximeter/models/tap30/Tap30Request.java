@@ -1,12 +1,13 @@
 package com.mibarim.taximeter.models.tap30;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by armin on 7/14/17.
  */
 
-public class Tap30Request {
+public class Tap30Request implements Serializable {
 
 
     private Location origin;
@@ -36,7 +37,7 @@ public class Tap30Request {
         this.destination = destination;
     }
 
-    private class Location{
+    private class Location implements Serializable {
 
         public Location(String latitude, String longitude) {
             this.longitude = Double.parseDouble(longitude);

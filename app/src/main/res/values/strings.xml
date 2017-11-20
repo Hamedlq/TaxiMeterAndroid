@@ -2,7 +2,7 @@
 
 <resources>
 
-    <string name="app_name">تاکسیمتر</string>
+    <string name="app_name">Unknown</string>
     <string name="content_column">Content</string>
     <string name="page_referrers">Referrers</string>
     <string name="refresh_action">Refresh</string>
@@ -326,20 +326,22 @@
     <string name="title_activity_mapstest">Map</string>
     <string name="ride_down">ثبت محل پیاده شدن</string>
     <string name="zero">0</string>
-    <string name="shared_price">هزینه می بریم</string>
-    <string name="private_price">هزینه تاکسی تلفنی</string>
+    <string name="shared_price">تاکسی اشتراکی می‌بریم</string>
+    <string name="private_price"> تاکسی تلفنی</string>
     <string name="line_price">هزینه تاکسی خطی</string>
-    <string name="snapp_price">هزینه اسنپ</string>
-    <string name="tap30_price">هزینه تپسی</string>
-    <string name="carpino_price">هزینه کارپینو</string>
+    <string name="snapp_price"> اسنپ</string>
+    <string name="tap30_price"> تپسی</string>
+    <string name="carpino_price"> کارپینو</string>
     <string name="help_title">راهنما</string>
-    <string name="hint_1">* این برنامه در حال حاضر تنها برای شهر تهران قابل استفاده است</string>
+    <string name="hint_1">قیمت‌هایی که در این برنامه اعلام می‌شود از منابع مختلف استخراج می‌شود و با توجه به شرایط مختلف ممکن است معتبر نباشد</string>
     <string name="taxi_website"></string>
-    <string name="faq_1">قیمت ها به صورت تقریبی و با توجه به نرخنامه سازمان تاکسیرانی شهر تهران محاسبه می شود</string>
+    <string name="faq_1">قیمت تاکسی تلفنی به صورت تقریبی و با توجه به نرخنامه سازمان تاکسیرانی شهر تهران محاسبه می شود</string>
     <string name="q_2">قیمت ها چگونه محاسبه می شود؟</string>
+    <string name="faq_3">قیمت‌های سرویس‌های اسنپ، تپسی، کارپینو و می‌بریم از وبسایت این برنامه‌ها استخراج می‌شود</string>
     <string name="about_us">درباره ما</string>
     <string name="about_us_txt">«تاکسی‌متر نقشه‌ای» یکی از محصولات جانبی پروژه «می‌بریم» است. پروژه «می‌بریم» با هدف تسهیل رفت و آمد شهروندان از طریق اشتراک گذاری صندلی‌های خالی خودروهای تک سرنشین راه‌اندازی شده و از لینک زیر قابل دانلود است.</string>
     <string name="about_us_txt2">اگر می‌خواهید با این پروژه بیشتر آشنا شوید حتما به سایت http://mibarim.com سر بزنید.</string>
     <string name="gps_alert_content">موقیت مکانی شما غیرفعال است. آیا مایلید آن را فعال کنید؟</string>
     <string name="gps_alert_header">موقیت‌ یاب</string>
+    <string name="like_to_open">"آیا تمایل به باز کردن این برنامه دارید؟"</string>
 </resources>

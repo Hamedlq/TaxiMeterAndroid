@@ -1,20 +1,12 @@
 package com.mibarim.taximeter.services;
 
-import android.util.Log;
-import android.content.*;
-import android.widget.Toast;
-
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
-import com.mibarim.taximeter.models.snapp.SnappAuthResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
-import com.mibarim.taximeter.ui.activities.AddMapActivity;
-import com.squareup.okhttp.OkHttpClient;
-
-import java.io.IOException;
+import com.mibarim.taximeter.models.tmTokensModel;
 
 import javax.inject.Named;
 

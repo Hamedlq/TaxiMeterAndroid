@@ -2,11 +2,13 @@ package com.mibarim.taximeter.models.snapp;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by armin on 7/13/17.
  */
 
-public class SnappResponse {
+public class SnappResponse implements Serializable {
     private String status;
     public Data data;
     public class Data{

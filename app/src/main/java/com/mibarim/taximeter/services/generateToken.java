@@ -1,7 +1,7 @@
 package com.mibarim.taximeter.services;
 
 import com.mibarim.taximeter.RestInterfaces.AuthtenticationsInerface;
-import com.mibarim.taximeter.ui.activities.AddMapActivity;
+import com.mibarim.taximeter.models.tmTokensModel;
 
 import org.json.JSONObject;
 

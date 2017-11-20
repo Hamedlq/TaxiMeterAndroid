@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -54,14 +52,13 @@ import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
-import com.mibarim.taximeter.services.tmTokensModel;
 import com.mibarim.taximeter.ui.AlertDialogTheme;
+import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.Toaster;
-import com.squareup.okhttp.internal.DiskLruCache;
 import com.squareup.otto.Subscribe;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
@@ -71,7 +68,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;

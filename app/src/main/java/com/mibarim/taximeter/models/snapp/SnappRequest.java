@@ -3,11 +3,13 @@ package com.mibarim.taximeter.models.snapp;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by armin on 7/13/17.
  */
 
-public class SnappRequest{
+public class SnappRequest implements Serializable {
 
     @SerializedName("origin_lat")
     private String SrcLat;

@@ -1,10 +1,12 @@
 package com.mibarim.taximeter.models.carpino;
 
+import java.io.Serializable;
+
 /**
  * Created by armin on 7/15/17.
  */
 
-public class CarpinoAuthResponse {
+public class CarpinoAuthResponse implements Serializable {
     private String authToken;
     private String tokenType;
 
