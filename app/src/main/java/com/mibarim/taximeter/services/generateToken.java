@@ -1,6 +1,7 @@
 package com.mibarim.taximeter.services;
 
 import com.mibarim.taximeter.RestInterfaces.AuthtenticationsInerface;
+import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.tmTokensModel;
 
 import org.json.JSONObject;
@@ -52,7 +53,8 @@ public class GenerateToken {
     }
 
     public tmTokensModel token() {
-        json = adapter.create(AuthtenticationsInerface.class).getToken(model).Messages;
+        ApiResponse response = adapter.create(AuthtenticationsInerface.class).getToken(model);
+        json = response.Messages;
         try {
             JSONObject mainObject = new JSONObject(json.get(0));
             model.setSnappToken(mainObject.getString("SnappToken"));

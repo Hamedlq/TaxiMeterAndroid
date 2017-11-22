@@ -942,7 +942,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                if (e instanceof RetrofitError /*&& ((RetrofitError) e).getResponse().getStatus() == 403*/) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeySnapp(new Callback() {
                             @Override
@@ -952,31 +952,31 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         }, authorization);
                     }
                 }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeySnapp(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceSnapp(false);
-                            }
-                        }, authorization);
-                    }
-
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeySnapp(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceSnapp(false);
+//                            }
+//                        }, authorization);
+//                    }
 //
-                }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeySnapp(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceCarpino(false);
-                            }
-                        }, authorization);
-                    }
-                }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 2) {
-
-                }
+////
+//                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeySnapp(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceCarpino(false);
+//                            }
+//                        }, authorization);
+//                    }
+//                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 2) {
+//
+//                }
 
             }
 
@@ -1011,7 +1011,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                if (e instanceof RetrofitError /*&& ((RetrofitError) e).getResponse().getStatus() == 403*/) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyTap30(new Callback() {
                             @Override
@@ -1021,26 +1021,26 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         }, authorization);
                     }
                 }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeyTap30(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceCarpino(false);
-                            }
-                        }, authorization);
-                    }
-                }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeyTap30(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceCarpino(false);
-                            }
-                        }, authorization);
-                    }
-                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeyTap30(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceCarpino(false);
+//                            }
+//                        }, authorization);
+//                    }
+//                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeyTap30(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceCarpino(false);
+//                            }
+//                        }, authorization);
+//                    }
+//                }
             }
 
             @Override
@@ -1082,7 +1082,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 403) {
+                if (e instanceof RetrofitError /*&& ((RetrofitError) e).getResponse().getStatus() == 403*/) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override
@@ -1092,26 +1092,26 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         }, authorization);
                     }
                 }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeyCarpino(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceCarpino(false);
-                            }
-                        }, authorization);
-                    }
-                }
-                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
-                    if (tryAgainForAuthorize) {
-                        refreshAuthorizationKeyCarpino(new Callback() {
-                            @Override
-                            public void dosth() {
-                                getPathPriceCarpino(false);
-                            }
-                        }, authorization);
-                    }
-                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 401) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeyCarpino(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceCarpino(false);
+//                            }
+//                        }, authorization);
+//                    }
+//                }
+//                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+//                    if (tryAgainForAuthorize) {
+//                        refreshAuthorizationKeyCarpino(new Callback() {
+//                            @Override
+//                            public void dosth() {
+//                                getPathPriceCarpino(false);
+//                            }
+//                        }, authorization);
+//                    }
+//                }
             }
 
             @Override
