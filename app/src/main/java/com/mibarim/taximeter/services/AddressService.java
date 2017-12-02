@@ -39,21 +39,21 @@ public class AddressService {
     public AddressResult getAddress(String latitude, String longitude) {
         AddressResult res = getAddressService().getAddress(latitude +','+ longitude,
                 Constants.Geocoding.LANGUAGE_VALUE,
-                Constants.Geocoding.LOCATION_TYPE_VALUE,
-                Constants.Geocoding.GOOGLE_SERVICE_VALUE);
+                Constants.Geocoding.LOCATION_TYPE_VALUE/*,
+                addressKey*/);
         return res;
     }
-    public AutoCompleteResult getAutocomplete(String searchText) {
+    public AutoCompleteResult getAutocomplete(String searchText, String googleKey) {
         AutoCompleteResult res = getAddressService().getAutocomplete(searchText,
                 Constants.Geocoding.LANGUAGE_VALUE,
-                Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE);
+                googleKey);
         return res;
     }
 
-    public DetailPlaceResult getPlaceDetail(String placeId) {
+    public DetailPlaceResult getPlaceDetail(String placeId, String googleKey) {
         DetailPlaceResult res = getAddressService().getPlaceDetail(placeId,
                 Constants.Geocoding.LANGUAGE_VALUE,
-                Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE);
+                googleKey);
         return res;
     }
 

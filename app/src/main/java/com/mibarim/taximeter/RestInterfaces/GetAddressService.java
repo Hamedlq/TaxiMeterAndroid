@@ -20,8 +20,8 @@ public interface GetAddressService {
     @GET(Constants.Geocoding.SERVICE_URL)
     AddressResult getAddress(@Query(Constants.Geocoding.LAT_LONG_KEY) String latlong,
                            @Query(Constants.Geocoding.LANGUAGE_KEY) String language,
-                           @Query(Constants.Geocoding.LOCATION_TYPE_VALUE) String locationType,
-                           @Query(Constants.Geocoding.GOOGLE_SERVICE_KEY) String googleKey);
+                           @Query(Constants.Geocoding.LOCATION_TYPE_VALUE) String locationType/*,
+                           @Query(Constants.Geocoding.GOOGLE_SERVICE_KEY) String googleKey*/);
 
     @GET(Constants.Geocoding.AUTOCOMPLETE_SERVICE_URL)
     AutoCompleteResult getAutocomplete(@Query(Constants.Geocoding.AUTOCOMPLETE_INPUT) String searchText,

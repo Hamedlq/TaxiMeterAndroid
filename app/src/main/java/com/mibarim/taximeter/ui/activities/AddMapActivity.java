@@ -13,7 +13,6 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -21,7 +20,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +33,7 @@ import com.google.gson.Gson;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.BootstrapServiceProvider;
 import com.mibarim.taximeter.R;
+import com.mibarim.taximeter.core.Constants;
 import com.mibarim.taximeter.core.LocationService;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
 import com.mibarim.taximeter.models.Address.AddressComponent;
@@ -71,8 +70,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
-
-import static com.mibarim.taximeter.R.string.message;
+//import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
 
 
 /**
@@ -167,6 +165,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
+
         /*if (getCacheDir() != null) {
             OpenStreetMapTileProviderConstants.setCachePath(getCacheDir().getAbsolutePath());
         }*/
@@ -766,17 +765,18 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     private void getPlaceDetail(final String placeId) {
+        final SharedPreferences pref = getSharedPreferences(Constants.Geocoding.GOOGLE_KEYS, MODE_PRIVATE);
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 if (getSrcDstStateSelector() == AddRouteStates.SelectOriginState) {
-                    DetailPlaceResult response = addressService.getPlaceDetail(placeId);
+                    DetailPlaceResult response = addressService.getPlaceDetail(placeId, pref.getString(Constants.Geocoding.GOOGLE_AUTOCOMPLETE_AUTH, null));
                     srcLatitude = response.result.geometry.location.lat;
                     srcLongitude = response.result.geometry.location.lng;
                     return true;
                 }
                 if (getSrcDstStateSelector() == AddRouteStates.SelectDestinationState) {
-                    DetailPlaceResult response = addressService.getPlaceDetail(placeId);
+                    DetailPlaceResult response = addressService.getPlaceDetail(placeId, pref.getString(Constants.Geocoding.GOOGLE_AUTOCOMPLETE_AUTH, null));
                     dstLatitude = response.result.geometry.location.lat;
                     dstLongitude = response.result.geometry.location.lng;
                     return true;

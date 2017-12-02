@@ -199,10 +199,13 @@ public final class Constants {
         public static final String LOCATION_TYPE_KEY = "location_type";
         public static final String LOCATION_TYPE_VALUE = "GEOMETRIC_CENTER|APPROXIMATE";
         public static final String GOOGLE_AUTOCOMPLETE_SERVICE_KEY = "key";
-        public static final String GOOGLE_AUTOCOMPLETE_SERVICE_VALUE = "AIzaSyCgq_JPSr6m0qKVHeyXnTI85FvpESXitSk";
+//        public static final String GOOGLE_AUTOCOMPLETE_SERVICE_VALUE = "autocomplete";//AIzaSyCgq_JPSr6m0qKVHeyXnTI85FvpESXitSk
         public static final String GOOGLE_SERVICE_KEY = "key";
-        public static final String GOOGLE_SERVICE_VALUE = "AIzaSyAbHHEaaGfcm2jtmfdbvu_qraFZAbr0QGM";
+//        public static final String GOOGLE_SERVICE_VALUE = "AIzaSyAbHHEaaGfcm2jtmfdbvu_qraFZAbr0QGM";
         public static final String PLACE_ID_KEY = "placeid";
+        public static final String GOOGLE_KEYS = "google.autocomplete";
+        public static final String GOOGLE_AUTOCOMPLETE_AUTH = "google.autocomplete.googleKey";
+//        public static final String GOOGLE_ADDRESS_AUTH = "google.address.googleKey";
     }
 
     public static final class MibarimServer {

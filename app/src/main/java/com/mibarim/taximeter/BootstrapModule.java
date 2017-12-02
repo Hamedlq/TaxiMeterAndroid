@@ -12,6 +12,7 @@ import com.mibarim.taximeter.core.RestErrorHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mibarim.taximeter.services.AddressService;
+import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.util.DynamicJsonConverter;
 import com.squareup.okhttp.OkHttpClient;
@@ -84,6 +85,11 @@ public class BootstrapModule {
     @Provides
     AddressService provideAddressService(RestAdapter restAdapter) {
         return new AddressService();
+    }
+
+    @Provides
+    GoogleAutocompleteService provideAutocompleteService() {
+        return new GoogleAutocompleteService();
     }
 
     @Provides
