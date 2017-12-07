@@ -46,21 +46,19 @@ import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
-import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
+import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
+import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.ui.AlertDialogTheme;
-import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.Toaster;
 import com.squareup.otto.Subscribe;
-
-//import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +68,8 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
+
+//import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 //import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
 
 
@@ -141,6 +141,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
 
     private String authToken;
+
+    private boolean isGettingPrice;
 
 
     //public Menu theMenu;
@@ -237,7 +239,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
                 if (e instanceof RetrofitError)
-                    Toast.makeText(AddMapActivity.this, "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMapActivity.this, getString(R.string.server_not_responde), Toast.LENGTH_SHORT).show();
             }
         }.execute();
     }
@@ -355,11 +357,13 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             .commitAllowingStateLoss();
                     break;
                 case SelectPriceState:
-                    setSrcDstStateSelector(AddRouteStates.SelectOriginState);
-                    hideBackBtn();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.main_container, new MainAddMapFragment())
-                            .commitAllowingStateLoss();
+                    if (!isGettingPrice) {
+                        setSrcDstStateSelector(AddRouteStates.SelectOriginState);
+                        hideBackBtn();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.main_container, new MainAddMapFragment())
+                                .commitAllowingStateLoss();
+                    }
                     break;
 /*
             case "REQUESTING":
@@ -536,13 +540,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             removeWaitLayout();
         }
         if (carpinoResponse != null) {
-            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getTotal());
+            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
             removeWaitLayout();
         }
         if (findViewById(R.id.waiting_layout).getVisibility() == View.VISIBLE) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         }
+        isGettingPrice = false;
     }
 
     public void removeWaitLayout() {
@@ -849,6 +854,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     private void startFetchingData() {
+        isGettingPrice = true;
         fetchingMibarim = true;
         fetchingSnappPrice = true;
         fetchingTap30Price = true;
@@ -1082,7 +1088,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError /*&& ((RetrofitError) e).getResponse().getStatus() == 403*/) {
+
+                /*if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
+                    getPathPriceCarpino(false);
+                    Toast.makeText(AddMapActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else*/ if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override

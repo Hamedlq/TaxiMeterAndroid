@@ -7,11 +7,13 @@ import java.io.Serializable;
  */
 
 public class CarpinoResponse implements Serializable {
-    private String total;
 
+    private String total;
+    private String payable;
 
     public CarpinoResponse() {
-        this.total = "مامعلوم";
+        this.total = "نامعلوم";
+        this.payable = "نامعلوم";
     }
 
     public String getTotal() {
@@ -23,5 +25,12 @@ public class CarpinoResponse implements Serializable {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public String getPayable() {
+        double d = Double.parseDouble(payable);
+        int i = (int) d;
+        payable = Integer.toString(i);
+        return payable;
     }
 }
