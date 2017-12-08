@@ -49,7 +49,7 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 14
+        versionCode 18
         versionName "0.1"
 
         applicationVariants.all { variant ->
@@ -121,13 +121,16 @@ android {
     }
     productFlavors {
         mibarim {
-            resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
+            resValue "string", "update_link", "http://mibarim.ir/androidapp/DownloadKerayechi/"
         }
         cafeBazar {
             resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.main/?l=fa"
         }
         myket {
             resValue "string", "update_link", "https://myket.ir/app/com.mibarim.main"
+        }
+        iranApps {
+            resValue "string", "update_link", "http://iranapps.ir/app/com.mibarim.main"
         }
     }
 }
@@ -171,14 +174,14 @@ dependencies {
     //ShowcaseView
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
 
-    compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
-    compile 'com.nineoldandroids:library:2.4.0'
+    /*compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
+    compile 'com.nineoldandroids:library:2.4.0'*/
 
     // Event Bus
     compile 'com.squareup:otto:1.3.5'
 
     // Image Loading
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.picasso:picasso:2.5.2'
 
     // HTTP
     compile 'com.squareup.retrofit:retrofit:1.9.0'
