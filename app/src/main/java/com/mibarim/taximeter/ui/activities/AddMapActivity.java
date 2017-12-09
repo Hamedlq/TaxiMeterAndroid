@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +51,7 @@ import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
+import com.mibarim.taximeter.ratingApp;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.ui.AlertDialogTheme;
@@ -65,6 +67,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -155,6 +159,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     boolean fetchingCarpinoPrice = false;
     boolean fetchingMibarim = false;
     boolean refreshingTokens = false;
+    SharedPreferences prefs = null;
 
     String[] stc = new String[3];
 
@@ -241,6 +246,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     Toast.makeText(AddMapActivity.this, "خطا در برقراری ارتباط با سرور", Toast.LENGTH_SHORT).show();
             }
         }.execute();
+
+        prefs = getSharedPreferences("taximeter", MODE_PRIVATE);
+
     }
 
 
@@ -259,7 +267,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 .commitAllowingStateLoss();
         mHandler = new Handler();
         //Adad.prepareInterstitialAd();
+
+
     }
+
 
     private void showBackBtn() {
         ActionBar actionBar = getSupportActionBar();
@@ -543,7 +554,19 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         if (findViewById(R.id.waiting_layout).getVisibility() == View.VISIBLE) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
+        } else {
+            if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        prefs.edit().putBoolean("btnClick", false).apply();
+                        setRate();
+
+                    }
+                }, 2000);
+            }
         }
+
     }
 
     public void removeWaitLayout() {
@@ -611,6 +634,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onSuccess(res);
                 SetAddress();
             }
+
         }.execute();
     }
 
@@ -826,6 +850,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
                     showBackBtn();
                     RebuildDstFragment();
+
+//                    if (prefs.getInt("rateApp", 1) > 0) {
+//                        setRate();
+//
+//                    }
                     break;
                 case SelectDestinationState:
                     setSrcDstStateSelector(AddRouteStates.SelectPriceState);
@@ -833,13 +862,103 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 case SelectPriceState:
                     SetWaitState();
                     startFetchingData();
-
+                    prefs.edit().putBoolean("btnClick", true).apply();
                     //Adad.showInterstitialAd(this);
                     //returnOk();
                     break;
             }
         } else
             Toast.makeText(this, "اتصال خود به اینترنت را چک کنید", Toast.LENGTH_SHORT).show();
+    }
+
+    public int fibonacci(int number) {
+        int a = 1, b = 1, c = 1;
+        while (number != c) {
+            a = b;
+            b = c;
+            c = a + b;
+
+        }
+
+        return c + b;
+    }
+
+    public void setRate() {
+
+        prefs.edit().putInt("rateApp", (prefs.getInt("rateApp", 0) + 1)).apply();
+        if (prefs.getInt("fibo", 3) == prefs.getInt("rateApp", 0)) {
+
+
+            final ratingApp dialog = new ratingApp(this);
+            dialog.setCancelable(false);
+            dialog.show();
+            dialog.neverRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    prefs.edit().putInt("rateApp", -1).apply();
+                    dialog.dismiss();
+                }
+            });
+            dialog.yesRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    prefs.edit().putInt("rateApp", -1).apply();
+                    dialog.dismiss();
+
+
+                    String marketRate = getString(R.string.rate_link);
+
+                    switch (marketRate) {
+                        case "bazaar://details?id=com.mibarim.taximeter": {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(marketRate));
+                            intent.setPackage("com.farsitel.bazaar");
+                            try {
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "بازار بر روی گوشی شما نصب نیست", Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                        }
+                        case "myket://comment?id=com.mibarim.taximeter": {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(marketRate));
+                            try {
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "مایکت بر روی گوشی شما نصب نیست", Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                        }
+                        case "http://iranapps.ir/app/com.mibarim.taximeter": {
+                            Uri uri = Uri.parse(marketRate); // missing 'http://' will cause crashed
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            try {
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "ایران اپس بر روی گوشی شما نصب نیست", Toast.LENGTH_LONG).show();
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            });
+            dialog.noRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    prefs.edit().putInt("rateApp", 0).apply();
+                    prefs.edit().putInt("fibo", fibonacci(prefs.getInt("fibo", 3))).apply();
+                    dialog.dismiss();
+
+                }
+            });
+
+        }
+
+
     }
 
     private boolean isNetworkConnected() {
@@ -880,6 +999,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 final FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
                 ((MainAddMapFragment) fragment).MoveMap(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                Log.i("MyLocation", String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()));
             }
         } else {
             AlertDialogTheme alertDialog = new AlertDialogTheme(AddMapActivity.this);
