@@ -1,6 +1,7 @@
 package com.mibarim.taximeter.services;
 
 import com.mibarim.taximeter.models.ApiResponse;
+import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
@@ -96,6 +97,17 @@ public class PriceService {
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
         ApiResponse res = getService().GetPathPrice(
+                srcLatitude,
+                srcLongitude,
+                dstLatitude,
+                dstLongitude
+        );
+        return res;
+    }
+
+
+    public PathPrice GetTap30PriceFromServer(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
+        PathPrice res = getService().GetTap30Price(
                 srcLatitude,
                 srcLongitude,
                 dstLatitude,

@@ -180,6 +180,7 @@ public final class Constants {
         public static final String URL_GET_CONTACTS = "/GetUserContacts";
         public static final String URL_PRICE = "/GetPrice";
         public static final String URL_PATH_PRICE = "/GetPathPrice";
+        public static final String URL_TAP30_PATH_PRICE_FROM_SERVER = "/GetTap30Price";
 
     }
 

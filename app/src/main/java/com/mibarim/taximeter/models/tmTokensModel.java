@@ -94,7 +94,7 @@ public class tmTokensModel implements Serializable {
 
 
     public String getToken(String stc, tokenStatus status, String authorization) {
-        tmTokensModel model;
+        tmTokensModel model;  // wtf (what a terrible failure) ??
         model = new GenerateToken(stc, authorization, status.getValue()).token();
 
         switch (stc) {

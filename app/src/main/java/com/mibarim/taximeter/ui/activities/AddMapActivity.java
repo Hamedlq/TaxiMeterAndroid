@@ -144,6 +144,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     private boolean isGettingPrice;
 
+    PathPrice tap30PathPriceResponse;
+
 
     //public Menu theMenu;
     //private Tracker mTracker;
@@ -535,10 +537,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
             removeWaitLayout();
         }
-        if (tap30Response != null) {
+        /*if (tap30Response != null) {
             ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
             removeWaitLayout();
+        }*/
+
+        if (tap30PathPriceResponse != null) {
+            ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
+            removeWaitLayout();
         }
+
         if (carpinoResponse != null) {
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
             removeWaitLayout();
@@ -861,7 +869,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         fetchingCarpinoPrice = true;
         getPathPrice();
         getPathPriceSnapp(true);
-        getPathPriceTap30(true);
+//        getPathPriceTap30(true);
+        getPathPriceTap30_2();
         getPathPriceCarpino(true);
     }
 
@@ -1012,6 +1021,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 tap30Response = priceService.getPathPriceTap30(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+
+
                 return true;
             }
 
@@ -1065,6 +1076,49 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
 //        }
     }
+
+
+
+    private void getPathPriceTap30_2() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+
+                tap30PathPriceResponse = priceService.GetTap30PriceFromServer(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+//                Gson gson = new Gson();
+//                for (String json : response.Messages) {
+//                    pathPrice = gson.fromJson(json, PathPrice.class);
+//                }
+                return true;
+            }
+
+            @Override
+            protected void onException(final Exception e) throws RuntimeException {
+                super.onException(e);
+                if (e instanceof OperationCanceledException) {
+                    finish();
+                }
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+                SetPathPrice();
+
+
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                fetchingTap30Price = false;
+                SetPathPrice();
+                super.onFinally();
+            }
+        }.execute();
+    }
+
+
+
 
     public void getPathPriceCarpino(final boolean tryAgainForAuthorize) {
 
