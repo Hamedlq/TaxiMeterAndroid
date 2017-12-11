@@ -15,6 +15,45 @@
         android:orientation="vertical">
 
 
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="2"-->
+        <!--android:gravity="center">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="20sp"-->
+        <!--android:textStyle="bold"-->
+        <!--android:text="@string/rate_header"-->
+        <!--android:gravity="center"/>-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/ic_like" />-->
+        <!--</LinearLayout>-->
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableEnd="@drawable/ic_like"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="@string/rate_header"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/footer"
@@ -22,12 +61,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginTop="10dp"
-            android:text="با امتیاز به برنامه از کرایه چی حمایت کنید"
+            android:text="@string/rate_footer"
             android:textColor="#000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
+            android:textSize="15sp" />
 
 
     </LinearLayout>

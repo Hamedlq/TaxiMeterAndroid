@@ -577,6 +577,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 }, 2000);
             }
         }
+        isGettingPrice = false;
 
     }
 

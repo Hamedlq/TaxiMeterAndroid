@@ -345,4 +345,6 @@
     <string name="gps_alert_content">موقیت مکانی شما غیرفعال است. آیا مایلید آن را فعال کنید؟</string>
     <string name="gps_alert_header">موقیت‌ یاب</string>
     <string name="like_to_open">"آیا تمایل به باز کردن این برنامه دارید؟"</string>
+    <string name="rate_header">به کرایه‌چی امتیاز بده</string>
+    <string name="rate_footer">اگه کرایه‌چی رو دوست داری با امتیازت که چند ثانیه بیشتر طول نمی‌کشه ازش حمایت کن :)</string>
 </resources>
