@@ -5,20 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ir.adad.client.Banner
+    <!--<ir.adad.client.Banner
         android:id="@+id/banner_ad_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp" />-->
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/banner_ad_view"
         android:background="@drawable/services_background"
+        android:orientation="vertical">-->
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/services_background"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -41,109 +51,11 @@
 
 
         <LinearLayout
+            android:id="@+id/price_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:id="@+id/price_layout_shared"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/mibarim_icon" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/shared_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_shared"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/price_layout_private"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/taxitehran" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/private_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_private"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/price_layout_line"
@@ -335,6 +247,103 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/price_layout_shared"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/mibarim_icon" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/shared_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_shared"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/price_layout_private"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@mipmap/taxitehran" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/private_price"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:id="@+id/price_private"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/toman"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/text_black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

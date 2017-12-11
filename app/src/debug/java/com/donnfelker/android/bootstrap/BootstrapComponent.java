@@ -1,5 +1,6 @@
 package com.mibarim.taximeter;
 
+import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.ui.activities.AboutUsActivity;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
 import com.mibarim.taximeter.ui.activities.HelpActivity;
@@ -61,6 +62,5 @@ public interface BootstrapComponent {
     void inject(HelpActivity target);
 
     void inject(HelpFragment target);
-
 
 }

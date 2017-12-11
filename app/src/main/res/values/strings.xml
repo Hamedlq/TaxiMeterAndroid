@@ -207,6 +207,7 @@
     <string name="slide_1_title">با خودروی تک سرنشین به محل کار می روید؟</string>
     <string name="slide_2_title">راهی جدید برای سفرهای شما</string>
     <string name="slide_3_title">آلودگی هوا و مسئولیت ما</string>
+    <string name="server_not_responde">خطا در برقراری ارتباط با سرور</string>
 
     <string name="update_msg">لطفا این برنامه را بروزرسانی کنید.</string>
     <string name="update">بروزرسانی</string>

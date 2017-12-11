@@ -1,22 +1,27 @@
 package com.mibarim.taximeter.ui.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.adapters.LocationAdapter;
+import com.mibarim.taximeter.core.Constants;
 import com.mibarim.taximeter.models.Address.AutoCompleteResult;
 import com.mibarim.taximeter.models.Address.Place;
 import com.mibarim.taximeter.services.AddressService;
+import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.ui.ItemListFragment;
 import com.mibarim.taximeter.ui.ThrowableLoader;
 import com.mibarim.taximeter.ui.activities.LocationSearchActivity;
+import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.SingleTypeAdapter;
 
 import java.util.ArrayList;
@@ -28,16 +33,22 @@ import javax.inject.Inject;
 import retrofit.RetrofitError;
 
 public class LocationListFragment extends ItemListFragment<Place> {
-
+    
+    
     @Inject
     protected AddressService addressService;
-    private int RELOAD_REQUEST = 1234;
+    @Inject
+    protected GoogleAutocompleteService autocomplete;
+    AutoCompleteResult res;
+    boolean refreshingToken = false;
     List<Place> latest;
+    private int RELOAD_REQUEST = 1234;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BootstrapApplication.component().inject(this);
+        res = new AutoCompleteResult();
     }
 
     @Override
@@ -64,22 +75,38 @@ public class LocationListFragment extends ItemListFragment<Place> {
         return new ThrowableLoader<List<Place>>(getActivity(), items) {
             @Override
             public List<Place> loadData() throws Exception {
-                Gson gson = new Gson();
+//                Gson gson = new Gson();
                 try {
-                    AutoCompleteResult res = new AutoCompleteResult();
                     latest = new ArrayList<Place>();
                     if (getActivity() != null) {
                         String term = ((LocationSearchActivity) getActivity()).getSearchTerm();
                         if (!term.equals("")) {
-                            res = addressService.getAutocomplete(term);
-                            if (res != null) {
+                            SharedPreferences pref = getActivity().getSharedPreferences(Constants.Geocoding.GOOGLE_KEYS, Context.MODE_PRIVATE);
+                            String googleKey = pref.getString(Constants.Geocoding.GOOGLE_AUTOCOMPLETE_AUTH, "");
+                            res = addressService.getAutocomplete(term, googleKey);
+                            if (!res.status.equals("OK") && !refreshingToken) {
+                                new SafeAsyncTask<Boolean>() {
+                                    @Override
+                                    public Boolean call() throws Exception {
+                                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.Geocoding.GOOGLE_KEYS, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        String googleKey = autocomplete.getKey(pref.getString(Constants.Geocoding.GOOGLE_AUTOCOMPLETE_AUTH, ""));
+                                        editor.putString(Constants.Geocoding.GOOGLE_AUTOCOMPLETE_AUTH, googleKey)
+                                                .apply();
+                                        refreshingToken = true;
+                                        return true;
+                                    }
+                                }.execute();
+                            }
+                            if (res != null && res.predictions.size() > 0) {
+                                refreshingToken = false;
                                 for (Place placeJson : res.predictions) {
                                     latest.add(placeJson);
                                 }
                             }
                         }
                     }
-                    if (latest != null) {
+                    if (latest != null && latest.size() > 0) {
                         return latest;
                     } else {
                         return Collections.emptyList();
