@@ -218,26 +218,40 @@ public class MainAddMapFragment extends Fragment {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            ((SrcDstFragment) fragment).setPrice(pathPrice);
+            ((SrcDstFragment) fragment).setPrice(getString(R.string.private_price), pathPrice, R.mipmap.taxitehran);
         }
         Fragment mapFragment = fragmentManager.findFragmentById(R.id.map_fragment);
         ((AddMapFragment) mapFragment).setPriceState(pathPrice.PathRoute);
     }
-    public void setSnappPrice(String snappPrice)
-    {
+
+    public void setMibarimPrice(PathPrice mibarimPrice) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            ((SrcDstFragment) fragment).setSnappPrice((snappPrice));
+            ((SrcDstFragment) fragment).setMibarimPrice(getString(R.string.shared_price), mibarimPrice, R.mipmap.mibarim_icon);
+        }
+    }
+
+    public void setSnappPrice(String snappPrice, int service) {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            if (service == 0) {
+                ((SrcDstFragment) fragment).setSnappPrice(getString(R.string.snapp_echo_price), snappPrice, R.mipmap.snapp_icon);
+            } else if (service == 1) {
+                ((SrcDstFragment) fragment).setSnappPrice(getString(R.string.snapp_rose_price), snappPrice, R.mipmap.snapp_icon);
+            } else if (service == 3) {
+                ((SrcDstFragment) fragment).setSnappPrice(getString(R.string.snapp_bike_price), snappPrice, R.mipmap.snapp_icon);
+            }
         }
 
     }
-    public void setTap30Price(String tap30Price)
-    {
+
+    public void setTap30Price(String tap30Price) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            ((SrcDstFragment) fragment).setTap30Price((tap30Price));
+            ((SrcDstFragment) fragment).setTap30Price(getString(R.string.tap30_price), tap30Price, R.mipmap.tap30_icon);
         }
     }
     public void setCarpinoPrice(String carpinoPrice)
@@ -245,9 +259,18 @@ public class MainAddMapFragment extends Fragment {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            ((SrcDstFragment) fragment).setCarpinoPrice((carpinoPrice));
+            ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_price), carpinoPrice, R.mipmap.carpino_icon);
         }
     }
+
+    public void setAlopeyk(String alopeykPrice) {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setAlopeykPrice(getString(R.string.alopeyk_price), alopeykPrice, R.mipmap.alopeyk_icon);
+        }
+    }
+
     public void SetWaitState() {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);

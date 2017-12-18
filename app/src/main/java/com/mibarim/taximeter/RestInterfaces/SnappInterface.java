@@ -15,7 +15,7 @@ import retrofit.http.POST;
  */
 
 public interface SnappInterface {
-    String URL_PATH_PRICE_SNAPP = "/v2/passenger/price";
+    String URL_PATH_PRICE_SNAPP = "/v2/passenger/price/s/1/99";
     String URL_AUTH = "/v1/auth";
 //    @POST(GetPriceService.URL_PATH_PRICE_SNAPP)
 //    @FormUrlEncoded

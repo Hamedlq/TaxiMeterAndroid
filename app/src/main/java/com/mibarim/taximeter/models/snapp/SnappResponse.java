@@ -1,8 +1,7 @@
 package com.mibarim.taximeter.models.snapp;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by armin on 7/13/17.
@@ -13,36 +12,46 @@ public class SnappResponse implements Serializable {
     public Data data;
     public class Data{
 
-        @SerializedName("final")
-        private String amount;
+        List<SnappPrices> prices;
 
-        private String distance;
-
-        private String message;
-
-        public String getAmount() {
-            return amount;
+        public List<SnappPrices> getPrices() {
+            return prices;
         }
 
-        public void setAmount(String amount) {
-            this.amount = amount;
+        public void setPrices(List<SnappPrices> prices) {
+            this.prices = prices;
         }
 
-        public String getDistance() {
-            return distance;
-        }
-
-        public void setDistance(String distance) {
-            this.distance = distance;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
+        //        @SerializedName("final")
+//        private String amount;
+//
+//        private String distance;
+//
+//        private String message;
+//
+//        public String getAmount() {
+//            return amount;
+//        }
+//
+//        public void setAmount(String amount) {
+//            this.amount = amount;
+//        }
+//
+//        public String getDistance() {
+//            return distance;
+//        }
+//
+//        public void setDistance(String distance) {
+//            this.distance = distance;
+//        }
+//
+//        public String getMessage() {
+//            return message;
+//        }
+//
+//        public void setMessage(String message) {
+//            this.message = message;
+//        }
     }
 
     public String getStatus() {
@@ -63,7 +72,7 @@ public class SnappResponse implements Serializable {
 
     public SnappResponse(){
         data = new Data();
-        data.setAmount("نامعلوم");
+//        data.setAmount("نامعلوم");
     }
 
 }

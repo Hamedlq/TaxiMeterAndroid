@@ -182,6 +182,7 @@
     <string name="choose_pic">انتخاب عکس</string>
     <string name="info_saved">اطلاعات ذخیره شد</string>
     <string name="please_select">لطفا یک مورد را انتخاب کنید</string>
+    <string name="snapp_badrequest_message">خطا</string>
     <string name="message">پیام...</string>
     <string name="fa_send">&#xf1d8;</string>
     <string name="write_detail">جزییات آدرس را وارد نمایید</string>
@@ -328,11 +329,14 @@
     <string name="ride_down">ثبت محل پیاده شدن</string>
     <string name="zero">0</string>
     <string name="shared_price">تاکسی اشتراکی می‌بریم</string>
-    <string name="private_price"> تاکسی تلفنی</string>
-    <string name="line_price">هزینه تاکسی خطی</string>
-    <string name="snapp_price"> اسنپ</string>
-    <string name="tap30_price"> تپسی</string>
-    <string name="carpino_price"> کارپینو</string>
+    <string name="private_price">تاکسی تلفنی</string>
+    <string name="line_price">تاکسی خطی</string>
+    <string name="snapp_echo_price">اسنپ اکو</string>
+    <string name="snapp_rose_price">اسنپ رز</string>
+    <string name="snapp_bike_price">اسنپ بایک</string>
+    <string name="tap30_price">تپسی</string>
+    <string name="carpino_price">کارپینو</string>
+    <string name="alopeyk_price">الو‌پیک</string>
     <string name="help_title">راهنما</string>
     <string name="hint_1">قیمت‌هایی که در این برنامه اعلام می‌شود از منابع مختلف استخراج می‌شود و با توجه به شرایط مختلف ممکن است معتبر نباشد</string>
     <string name="taxi_website"></string>

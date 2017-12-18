@@ -46,10 +46,10 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
-import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ratingApp;
 import com.mibarim.taximeter.services.AddressService;
@@ -64,8 +64,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -84,88 +82,99 @@ import retrofit.RetrofitError;
  */
 public class AddMapActivity extends BootstrapActivity implements AddMapFragment.OnMapClickedListener {
     static final String TAG = "AddMapActivity";
-
+    private static final String PERSONAL_INFO = "personalInfo";
+    private static final String LICENSE_INFO = "licenseInfo";
+    private static final String CAR_INFO = "carInfo";
+    private static final int GET_PERSONAL_INFO = 256;
+    public int sequenceNo;
+    public int SelectedPathRouteInRecommendPath = 1;
+    protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
+    // The minimum distance to change Updates in meters
+//    private static final long LOCATION_REFRESH_DISTANCE = 50; // 10 meters
+//
+//    // The minimum time between updates in milliseconds
+//    private static final long LOCATION_REFRESH_TIME = 1000; // 1 minute
     @Inject
     BootstrapServiceProvider serviceProvider;
     @Inject
     AddressService addressService;
     @Inject
     PriceService priceService;
-
-
-    // The minimum distance to change Updates in meters
-//    private static final long LOCATION_REFRESH_DISTANCE = 50; // 10 meters
-//
-//    // The minimum time between updates in milliseconds
-//    private static final long LOCATION_REFRESH_TIME = 1000; // 1 minute
-
+    boolean isSnappShown = false;
+    boolean isTap30Shown = false;
+    boolean isCarpinoShown = false;
+    boolean isMibarimShown = false;
+    boolean isTelephonyShown = false;
+    boolean isAlopeykShown = false;
+    boolean refreshingTokens = false;
+    ApiResponse recommendRoutes;
+    List<PathPoint> recommendPathPointList;
+    PathPrice tap30PathPriceResponse;
+    SharedPreferences prefs = null;
+    String[] stc = new String[3];
     private Handler mHandler;
     private int mInterval = 600000;
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+//                requesting(); //this function can change value of mInterval.
+            } catch (Exception e) {
+                Log.d(TAG, "Runable task" + e);
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                mHandler.postDelayed(mStatusChecker, mInterval);
+            }
+        }
+    };
     private int getInfoDelay = 1000;
-
-    private static final String PERSONAL_INFO = "personalInfo";
-    private static final String LICENSE_INFO = "licenseInfo";
-    private static final String CAR_INFO = "carInfo";
-    private static final int GET_PERSONAL_INFO = 256;
     private int RELOAD_REQUEST = 1234;
     private int TIME_SET = 1024;
     private int Drive_SET = 8191;
     private int Location_SET = 2010;
-
     private CharSequence title;
     private Toolbar toolbar;
-
     private String srcAdd;
     private String dstAdd;
-
-    public int sequenceNo;
-    ApiResponse recommendRoutes;
-    List<PathPoint> recommendPathPointList;
-    public int SelectedPathRouteInRecommendPath = 1;
-
     private String srcLatitude;
     private String srcLongitude;
     private String dstLatitude;
     private String dstLongitude;
-
     private String lastLatitude;
     private String lastLongitude;
-
+    Runnable mGettingInfo = new Runnable() {
+        @Override
+        public void run() {
+            gettingPathInfo();
+        }
+    };
     private ApiResponse cityLocations;
     private ApiResponse response;
     //private String pathPrice;
     private PathPrice pathPrice;
-
     private SnappResponse snappResponse;
-
-    private Tap30Response tap30Response;
-
     private CarpinoResponse carpinoResponse;
-
+    private AlopeykResponse alopeykResponse;
     private List<Location> wayPoints;
-
     private String authToken;
-
     private boolean isGettingPrice;
-
-    PathPrice tap30PathPriceResponse;
-
-
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    doBtnClicked();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
     //public Menu theMenu;
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
-
-    boolean fetchingSnappPrice = false;
-    boolean fetchingTap30Price = false;
-    boolean fetchingCarpinoPrice = false;
-    boolean fetchingMibarim = false;
-    boolean refreshingTokens = false;
-    SharedPreferences prefs = null;
-
-    String[] stc = new String[3];
-
-    protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -254,7 +263,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     }
 
-
     private void initScreen() {
         //userData.DeleteTime();
         SharedPreferences prefs = getSharedPreferences(
@@ -273,7 +281,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     }
-
 
     private void showBackBtn() {
         ActionBar actionBar = getSupportActionBar();
@@ -294,14 +301,12 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -320,11 +325,13 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                                 .commitAllowingStateLoss();
                         break;
                     case SelectPriceState:
-                        setSrcDstStateSelector(AddRouteStates.SelectOriginState);
-                        hideBackBtn();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.main_container, new MainAddMapFragment())
-                                .commitAllowingStateLoss();
+                        if(!isGettingPrice) {
+                            setSrcDstStateSelector(AddRouteStates.SelectOriginState);
+                            hideBackBtn();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.main_container, new MainAddMapFragment())
+                                    .commitAllowingStateLoss();
+                        }
                         break;
 
                     default:
@@ -351,7 +358,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         Intent intent = new Intent(this, HelpActivity.class);
         this.startActivity(intent);
     }
-
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -399,33 +405,20 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         builder.setMessage(getString(R.string.network_error)).setPositiveButton("???? ????", dialogClickListener).show();
     }
 
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    doBtnClicked();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
+    public AddRouteStates getSrcDstStateSelector() {
+        return stateSelector;
+    }
 
     public void setSrcDstStateSelector(AddRouteStates state) {
         stateSelector = state;
     }
 
-    public AddRouteStates getSrcDstStateSelector() {
-        return stateSelector;
+    public String getSrcAddress() {
+        return srcAdd;
     }
 
     public void setSrcAddress(String address) {
         srcAdd = address;
-    }
-
-    public String getSrcAddress() {
-        return srcAdd;
     }
 
     @Override
@@ -456,14 +449,13 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         return location;
     }
 
-    public void setDstAddress(String address) {
-        dstAdd = address;
-    }
-
     public String getDstAddress() {
         return dstAdd;
     }
 
+    public void setDstAddress(String address) {
+        dstAdd = address;
+    }
 
     @Override
     public AddRouteStates getRouteStates() {
@@ -507,14 +499,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }
     }
 
-    Runnable mGettingInfo = new Runnable() {
-        @Override
-        public void run() {
-            gettingPathInfo();
-        }
-    };
-
-
     void StartDelayedTask() {
         mHandler.postDelayed(mGettingInfo, getInfoDelay);
     }
@@ -525,12 +509,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }
     }
 
-
     private void SetPathPrice() {
         //I just remove refreshing token
-        if (fetchingCarpinoPrice || fetchingMibarim || fetchingSnappPrice || fetchingTap30Price) {
-            return;
-        }
 //
 //        if (snappResponse != null)
 //            pathPrice.SnappServicePrice = snappResponse.getData().getAmount();
@@ -540,42 +520,50 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 //            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        if (pathPrice != null) {
+        if (pathPrice != null && !isTelephonyShown) {
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
+            isTelephonyShown = true;
             removeWaitLayout();
         }
-        if (snappResponse != null) {
-            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getAmount());
+        if (pathPrice != null && !isMibarimShown) {
+            ((MainAddMapFragment) fragment).setMibarimPrice(pathPrice);
             removeWaitLayout();
+            isMibarimShown = true;
         }
-        /*if (tap30Response != null) {
-            ((MainAddMapFragment) fragment).setTap30Price(tap30Response.getData().getPrice());
+        if (snappResponse != null && !isSnappShown) {
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(0).getAmount(), 0);
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(1).getAmount(), 1);
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(3).getAmount(), 3);
             removeWaitLayout();
-        }*/
-
-        if (tap30PathPriceResponse != null) {
+            isSnappShown = true;
+        }
+        if (tap30PathPriceResponse != null && !isTap30Shown) {
             ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
             removeWaitLayout();
+            isTap30Shown = true;
         }
-
-        if (carpinoResponse != null) {
+        if (carpinoResponse != null && !isCarpinoShown) {
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
             removeWaitLayout();
+            isCarpinoShown = true;
         }
-        if (findViewById(R.id.waiting_layout).getVisibility() == View.VISIBLE) {
+        if (alopeykResponse != null && !isAlopeykShown) {
+            ((MainAddMapFragment) fragment).setAlopeyk(alopeykResponse.object.getPrice());
+            removeWaitLayout();
+            isAlopeykShown = true;
+        }
+        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && !isGettingPrice) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
-        } else {
-            if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        prefs.edit().putBoolean("btnClick", false).apply();
-                        setRate();
+        } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    prefs.edit().putBoolean("btnClick", false).apply();
+                    setRate();
 
-                    }
-                }, 2000);
-            }
+                }
+            }, 6000);
         }
         isGettingPrice = false;
 
@@ -650,7 +638,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
     }
 
-
     private void StartSetAddress() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
@@ -698,21 +685,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         mHandler = new Handler();
         startRepeatingTask();
     }
-
-    Runnable mStatusChecker = new Runnable() {
-        @Override
-        public void run() {
-            try {
-//                requesting(); //this function can change value of mInterval.
-            } catch (Exception e) {
-                Log.d(TAG, "Runable task" + e);
-            } finally {
-                // 100% guarantee that this always happens, even if
-                // your update method throws an exception
-                mHandler.postDelayed(mStatusChecker, mInterval);
-            }
-        }
-    };
 
     void startRepeatingTask() {
         mStatusChecker.run();
@@ -982,15 +954,18 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     private void startFetchingData() {
         isGettingPrice = true;
-        fetchingMibarim = true;
-        fetchingSnappPrice = true;
-        fetchingTap30Price = true;
-        fetchingCarpinoPrice = true;
+        isTelephonyShown = false;
+        isMibarimShown = false;
+        isSnappShown = false;
+        isTap30Shown = false;
+        isCarpinoShown = false;
+        isAlopeykShown = false;
         getPathPrice();
         getPathPriceSnapp(true);
 //        getPathPriceTap30(true);
         getPathPriceTap30_2();
         getPathPriceCarpino(true);
+        getPathPriceAlopeyk(true);
     }
 
     private void returnOk() {
@@ -1049,7 +1024,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-                fetchingMibarim = false;
                 SetPathPrice();
                 super.onFinally();
             }
@@ -1069,7 +1043,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-                fetchingSnappPrice = false;
                 SetPathPrice();
                 super.onFinally();
             }
@@ -1077,7 +1050,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
-                if (e instanceof RetrofitError /*&& ((RetrofitError) e).getResponse().getStatus() == 403*/) {
+
+                if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 400) {
+
+                } else if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeySnapp(new Callback() {
                             @Override
@@ -1140,7 +1116,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                tap30Response = priceService.getPathPriceTap30(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+//                tap30Response = priceService.getPathPriceTap30(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
 
 
                 return true;
@@ -1182,7 +1158,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-                fetchingTap30Price = false;
                 SetPathPrice();
                 super.onFinally();
             }
@@ -1196,7 +1171,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
 //        }
     }
-
 
 
     private void getPathPriceTap30_2() {
@@ -1230,14 +1204,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-                fetchingTap30Price = false;
                 SetPathPrice();
                 super.onFinally();
             }
         }.execute();
     }
-
-
 
 
     public void getPathPriceCarpino(final boolean tryAgainForAuthorize) {
@@ -1263,10 +1234,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
 
-                /*if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
+                if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
                     getPathPriceCarpino(false);
-                    Toast.makeText(AddMapActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                } else*/ if (e instanceof RetrofitError) {
+                } else if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override
@@ -1300,7 +1270,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-                fetchingCarpinoPrice = false;
                 SetPathPrice();
                 super.onFinally();
             }
@@ -1308,7 +1277,52 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
+            }
+
+        }.execute();
+    }
+
+    public void getPathPriceAlopeyk(final boolean tryAgainForAuthorize) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("alopeyk", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+
+//        final String authorization ="Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIwNDcyMjksImlzcyI6Imh0dHBzOi8vYXBpLmFsb3BleWsuY29tL2FwaS92Mi92ZXJpZnkiLCJpYXQiOjE1MTI2MzYxMTksImV4cCI6NTExMjYzNjExOSwibmJmIjoxNTEyNjM2MTE5LCJqdGkiOiJUaVhPaWlQY2ROVkUxdk9QIn0.hA_bl7d_VzSfBxjUTiLtPggtQ-iHBsCqKNP7-QMrqiE";
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                alopeykResponse = priceService.getPathPriceAlopeyk(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+
+                if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
+                    getPathPriceAlopeyk(false);
+                } else if (e instanceof RetrofitError) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyAlopeyk(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceAlopeyk(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
                 SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
             }
 
         }.execute();
@@ -1355,6 +1369,24 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 String carpino = priceService.carpinoUnauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("carpino", Context.MODE_PRIVATE).edit();
                 editor.putString("authorization", carpino);
+//                editor.putString("authorization",
+//                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
+
+    private void refreshAuthorizationKeyAlopeyk(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String alopeyk = priceService.alopeykUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("alopeyk", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", alopeyk);
 //                editor.putString("authorization",
 //                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
                 editor.apply();

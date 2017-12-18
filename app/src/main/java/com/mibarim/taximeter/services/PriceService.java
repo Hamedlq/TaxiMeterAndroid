@@ -1,13 +1,17 @@
 package com.mibarim.taximeter.services;
 
+import com.google.gson.Gson;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
+import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
+import com.squareup.okhttp.ResponseBody;
 
 import javax.inject.Named;
 
@@ -36,14 +40,18 @@ public class PriceService {
     @Named("carpino")
     private RestAdapter carpinoRestAdapter;
 
+    @Named("alopeyk")
+    private RestAdapter alopeykRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter) {
+
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
         this.tap30AuthRestAdapter = tap30AuthRestAdapter;
         this.tap30RestAdapter = tap30RestAdapter;
         this.carpinoRestAdapter = carpinoRestAdapter;
+        this.alopeykRestAdapter = alopeykRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -70,6 +78,10 @@ public class PriceService {
         return carpinoRestAdapter;
     }
 
+    public RestAdapter getAlopeykRestAdapter(){
+        return alopeykRestAdapter;
+    }
+
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
     }
@@ -92,6 +104,10 @@ public class PriceService {
 
     private com.mibarim.taximeter.RestInterfaces.CarpinoInterface getCarpinoService() {
         return getCarpinoRestAapter().create(com.mibarim.taximeter.RestInterfaces.CarpinoInterface.class);
+    }
+
+    private com.mibarim.taximeter.RestInterfaces.AlopeykInterface getAlopeykService() {
+        return getAlopeykRestAdapter().create(com.mibarim.taximeter.RestInterfaces.AlopeykInterface.class);
     }
 
 
@@ -179,6 +195,15 @@ public class PriceService {
         return carpinoResponse;
     }
 
+    public AlopeykResponse getPathPriceAlopeyk(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization){
+        AlopeykRequest alopeykRequest = new AlopeykRequest();
+        alopeykRequest.setAddresses(srcLatitude, srcLongitude, "origin");
+        alopeykRequest.setAddresses(dstLatitude, dstLongitude, "destination");
+        AlopeykResponse alopeykResponse = getAlopeykService().GetAlopeykService(alopeykRequest, authorization);
+
+        return alopeykResponse;
+    }
+
 //    public String getSnappAuthorizationKey() {
 //        String authorization;
 //        SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
@@ -215,6 +240,19 @@ public class PriceService {
 //        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
 //        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
         return tokenGenerator.getCarpinoToken();
+    }
+
+    public String alopeykUnauthorizationint(String authorization) {
+        tmTokensModel tokenGenerator = new tmTokensModel();
+        if (!authorization.matches(""))
+            tokenGenerator.getToken("alopeyk", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("alopeyk", tmTokensModel.tokenStatus.NOT_SET, authorization);
+
+//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
+//        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
+//        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
+        return tokenGenerator.getAlopeykToken();
     }
 
     public String snappUnauthorizationint(String authorization) {

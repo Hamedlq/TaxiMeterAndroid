@@ -14,7 +14,6 @@ import retrofit.http.POST;
  */
 
 public interface Tap30Interface {
-//    String URL_PATH_PRICE_TAP30 = "/api/v1/map/info/destination";
     String URL_PATH_PRICE_TAP30 = "/api/v1/map/info/destination";
 
     @POST(Tap30Interface.URL_PATH_PRICE_TAP30)

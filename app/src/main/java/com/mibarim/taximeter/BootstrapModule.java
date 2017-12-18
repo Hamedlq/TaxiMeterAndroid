@@ -109,8 +109,9 @@ public class BootstrapModule {
                                      @Named("snappAuth") RestAdapter snappAuthRestAdapter,
                                      @Named("tap30") RestAdapter tap30RestAdapter,
                                      @Named("tap30Auth") RestAdapter tap30AuthRestAdapter,
-                                     @Named("carpino") RestAdapter carpinoRestAdapter) {
-        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter,carpinoRestAdapter);
+                                     @Named("carpino") RestAdapter carpinoRestAdapter,
+                                     @Named("alopeyk") RestAdapter alopeykRestAdapter) {
+        return new PriceService(restAdapter,snappRestAdapter,snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter,carpinoRestAdapter, alopeykRestAdapter);
     }
 
     @Provides
@@ -280,6 +281,23 @@ public class BootstrapModule {
             throw new RuntimeException(e);
         }
     }
+
+    @Provides
+    @Named("alopeyk")
+    RestAdapter provideRestAdapterAlopeyk(RestErrorHandler restErrorHandler,@Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson){
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint("https://api.alopeyk.com")
+//                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
 
 
     private static OkHttpClient getUnsafeOkHttpClient() {

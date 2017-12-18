@@ -42,6 +42,10 @@ public class GenerateToken {
                 model.setCarpinoToken(token);
                 model.setCarpinoTokenStatus(tokenStatus);
                 break;
+            case "alopeyk":
+                model.setAlopeykToken(token);
+                model.setAlopeykTokenStatus(tokenStatus);
+                break;
             case "all":
                 model.setSnappToken(token);
                 model.setSnappTokenStatus(tokenStatus);
@@ -63,6 +67,8 @@ public class GenerateToken {
             model.setTap30TokenStatus(mainObject.getInt("Tap30TokenStatus"));
             model.setCarpinoToken(mainObject.getString("CarpinoToken"));
             model.setCarpinoTokenStatus(mainObject.getInt("CarpinoTokenStatus"));
+            model.setAlopeykToken(mainObject.getString("AloPeykToken"));
+            model.setAlopeykTokenStatus(mainObject.getInt("AloPeykTokenStatus"));
         } catch (Exception e) {
 
         }

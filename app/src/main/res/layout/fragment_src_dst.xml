@@ -5,381 +5,112 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ir.adad.client.Banner
-        android:id="@+id/banner_ad_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp" />-->
+        android:layout_height="match_parent">
 
-    <!--<LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/banner_ad_view"
-        android:background="@drawable/services_background"
-        android:orientation="vertical">-->
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/services_background"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/waiting_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ProgressBar
-                android:id="@+id/waiting_flag"
-                style="@style/FlagSpinner"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:paddingBottom="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/price_layout"
+        <ir.adad.client.Banner
+            android:id="@+id/banner_ad_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/banner_ad_view"
+            android:background="#0000"
             android:orientation="vertical">
 
-
             <LinearLayout
-                android:id="@+id/price_layout_line"
-                android:layout_width="match_parent"
+                android:id="@+id/waiting_layout"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
+                android:background="@drawable/services_background"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/mibarim_icon" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/line_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_line"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/waiting_flag"
+                    style="@style/FlagSpinner"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:paddingBottom="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/price_layout_snapp"
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/snapp_icon" />
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:id="@+id/bottom_sheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-                    <TextView
+
+                    <ImageView
+                        android:id="@+id/up_down_arrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/up_arrow" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/price_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/snapp_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_snapp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
+                        android:background="@drawable/services_background" />
 
                 </LinearLayout>
-            </LinearLayout>
+
+            </android.support.design.widget.CoordinatorLayout>
+
 
             <LinearLayout
-                android:id="@+id/price_layout_tap30"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/tap30_icon" />
-
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/tap30_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_tap30"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/price_layout_carpino"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/carpino_icon" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/carpino_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_carpino"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/price_layout_shared"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/mibarim_icon" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/shared_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_shared"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/price_layout_private"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/taxitehran" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/private_price"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:id="@+id/price_private"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/toman"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/text_black" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
         </LinearLayout>
 
-        <LinearLayout
+        <Button
+            android:id="@+id/do_source_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:background="@color/button_background_pressed_start"
+            android:text="@string/do_source"
+            android:textColor="@android:color/white" />
 
-            <Button
-                android:id="@+id/do_source_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@color/button_background_pressed_start"
-                android:text="@string/do_source"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="15dp"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/my_location"
+        <LinearLayout
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/roundedwhitebutton"
-            android:src="@drawable/ic_location" />
-    </LinearLayout>
+            android:layout_above="@+id/do_source_btn"
+            android:layout_alignParentStart="true"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/my_location"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/roundedwhitebutton"
+                android:src="@drawable/ic_location" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

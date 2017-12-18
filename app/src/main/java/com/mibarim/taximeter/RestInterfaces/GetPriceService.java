@@ -21,7 +21,6 @@ public interface GetPriceService {
                              @Field("DstLng") String DstLng
     );
 
-
     @POST(Constants.Http.URL_TAP30_PATH_PRICE_FROM_SERVER)
     @FormUrlEncoded
     PathPrice GetTap30Price(@Field("SrcLat") String SrcLat,
@@ -29,7 +28,6 @@ public interface GetPriceService {
                             @Field("DstLat") String DstLat,
                             @Field("DstLng") String DstLng
     );
-
 
 
 }

@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:name="com.mibarim.main.ui.fragments.MapFragment"
         android:id="@+id/map_fragment"
+        android:name="com.mibarim.main.ui.fragments.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_map" />
@@ -16,6 +16,7 @@
         android:name="com.mibarim.main.ui.fragments.addRouteFragments.AddressFlagFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
         tools:layout="@layout/fragment_address_flag" />
 
 
@@ -40,14 +41,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />-->
 
-<!--
-    <FrameLayout
-        android:id="@+id/info_submit_fragment"
-        android:name="com.mibarim.main.ui.fragments.InfoMessageFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_info_message"/>
--->
+    <!--
+        <FrameLayout
+            android:id="@+id/info_submit_fragment"
+            android:name="com.mibarim.main.ui.fragments.InfoMessageFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_info_message"/>
+    -->
 
 
 </RelativeLayout>
