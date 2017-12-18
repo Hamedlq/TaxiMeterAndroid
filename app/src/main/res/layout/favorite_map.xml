@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mapFav"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/address_layout_fav"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/address_block"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/src_address_editText_fav"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="سرچ کنید"
+                android:paddingBottom="5dp"
+                android:paddingTop="0dp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <com.beardedhen.androidbootstrap.AwesomeTextView
+            android:id="@+id/fa_dst_fav"
+            style="@style/wrapping_fa_text"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            app:bootstrapBrand="success"
+            app:fontAwesomeIcon="fa_search" />
+
+        <!--
+                <TextView
+                    android:id="@+id/src_address_label"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/roundedbutton"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/source"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/dst_address_label"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/roundedbutton"
+                    android:paddingRight="5dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/destination"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+        -->
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/roundicon"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp"/>
+
+    <Button
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        android:text="انتخاب آدرس"
+        android:layout_margin="10dp"
+        android:id="@+id/fav_choose"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"/>
+
+
+  </FrameLayout>

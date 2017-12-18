@@ -55,6 +55,10 @@
             android:name="ir.adad.client.AdadActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent"/>
+        <activity android:name=".favorite.favorite_place"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".favorite.favorite_map" />
 
 
         <!-- Replace with your Fabric Crashlytics key from Fabric.io -->

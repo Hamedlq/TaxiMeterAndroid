@@ -1,5 +1,6 @@
 package com.mibarim.taximeter;
 
+import com.mibarim.taximeter.favorite.favorite_map;
 import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.ui.activities.AboutUsActivity;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;

@@ -86,6 +86,9 @@ public class SrcDstFragment extends Fragment {
     private Animation animation;
     private boolean isCollapsed;
 
+    @Bind(R.id.fav_place)
+    protected ImageView fav_place;
+
     public SrcDstFragment() {
     }
 
@@ -411,6 +414,14 @@ public class SrcDstFragment extends Fragment {
                 }
             }
         });
+
+        fav_place.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AddMapActivity)getActivity()).gotoFavorite();
+            }
+        });
+
         setAllBlocksInvisible();
         if (getActivity() instanceof AddMapActivity) {
             switch (((AddMapActivity) getActivity()).getSrcDstStateSelector()) {

@@ -351,4 +351,9 @@
     <string name="like_to_open">"آیا تمایل به باز کردن این برنامه دارید؟"</string>
     <string name="rate_header">به کرایه‌چی امتیاز بده</string>
     <string name="rate_footer">اگه کرایه‌چی رو دوست داری با امتیازت که چند ثانیه بیشتر طول نمی‌کشه ازش حمایت کن :)</string>
+    <string name="empty_text2">شما آدرس منتخب ندارید.با استفاده از گزینه \u002B در این صفحه</string>
+    <string name="empty_text1">اینجا آدرس های منتخب</string>
+    <string name="empty_text3">خود را می توانید ببیند</string>
+    <string name="empty_text4">می توانید آدرس های منتخب خود را برای دسترسی راحت تر</string>
+    <string name="empty_text5">در آینده اضافه کنید</string>
 </resources>

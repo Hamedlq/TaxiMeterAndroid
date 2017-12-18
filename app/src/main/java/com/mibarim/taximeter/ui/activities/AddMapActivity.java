@@ -3,6 +3,7 @@ package com.mibarim.taximeter.ui.activities;
 
 import android.accounts.OperationCanceledException;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.Constants;
 import com.mibarim.taximeter.core.LocationService;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
+import com.mibarim.taximeter.favorite.favorite_place;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
 import com.mibarim.taximeter.models.Address.AddressResult;
@@ -58,6 +61,7 @@ import com.mibarim.taximeter.ui.AlertDialogTheme;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
+import com.mibarim.taximeter.ui.fragments.SrcDstFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 import com.mibarim.taximeter.util.Toaster;
 import com.squareup.otto.Subscribe;
@@ -70,6 +74,8 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
+
+import static android.R.attr.fragment;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 //import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
@@ -133,6 +139,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private int TIME_SET = 1024;
     private int Drive_SET = 8191;
     private int Location_SET = 2010;
+    private int FAV_SET = 9999;
+
     private CharSequence title;
     private Toolbar toolbar;
     private String srcAdd;
@@ -159,6 +167,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
+
+
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -175,6 +185,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private String trafficAddress;
+    public String thelat;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -211,6 +223,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         /*ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -260,6 +273,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
 
         prefs = getSharedPreferences("taximeter", MODE_PRIVATE);
+
 
     }
 
@@ -325,7 +339,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                                 .commitAllowingStateLoss();
                         break;
                     case SelectPriceState:
-                        if(!isGettingPrice) {
+                        if (!isGettingPrice) {
                             setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                             hideBackBtn();
                             fragmentManager.beginTransaction()
@@ -366,14 +380,17 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             switch (getSrcDstStateSelector()) {
                 case SelectOriginState:
                     finish();
+
                     break;
                 case SelectDestinationState:
+
                     setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                     hideBackBtn();
 //                    if ()
                     fragmentManager.beginTransaction()
                             .replace(R.id.main_container, new MainAddMapFragment())
                             .commitAllowingStateLoss();
+
                     break;
                 case SelectPriceState:
                     if (!isGettingPrice) {
@@ -383,15 +400,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                                 .replace(R.id.main_container, new MainAddMapFragment())
                                 .commitAllowingStateLoss();
                     }
+
                     break;
-/*
-            case "REQUESTING":
-                goToDestination();
-                break;
-            case "EVENT_LIST_SELECTED":
-                goToSource();
-                break;
-*/
+
                 default:
                     this.finishAffinity();
             }
@@ -556,10 +567,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
+            prefs.edit().putBoolean("btnClick", false).apply();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    prefs.edit().putBoolean("btnClick", false).apply();
                     setRate();
 
                 }
@@ -572,6 +583,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     public void removeWaitLayout() {
         LinearLayout Wait_layout = (LinearLayout) findViewById(R.id.waiting_layout);
         Wait_layout.setVisibility(View.GONE);
+
+
     }
 
     private void SetWaitState() {
@@ -741,7 +754,12 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             String PlaceId = data.getStringExtra("PlaceId");
             getPlaceDetail(PlaceId);
         }
+        if (requestCode == FAV_SET && resultCode == RESULT_OK) {
+            MoveMapFragment(data.getStringExtra("latFav"), data.getStringExtra("lngFav"));
+        }
+
     }
+
 
     private void RebuildSrcDstFragment() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -835,6 +853,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
                     showBackBtn();
                     RebuildDstFragment();
+//                    prefs.edit().putString("favoriteSet","dst").apply();
 
 //                    if (prefs.getInt("rateApp", 1) > 0) {
 //                        setRate();
@@ -848,6 +867,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     SetWaitState();
                     startFetchingData();
                     prefs.edit().putBoolean("btnClick", true).apply();
+                    ImageView fav_place = (ImageView) findViewById(R.id.fav_place);
+                    fav_place.setVisibility(View.GONE);
+//                    prefs.edit().putString("favoriteSet","src").apply();
                     //Adad.showInterstitialAd(this);
                     //returnOk();
                     break;
@@ -870,6 +892,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     public void setRate() {
 
+        Log.i("Rate", prefs.getInt("rateApp", 0) + "");
         prefs.edit().putInt("rateApp", (prefs.getInt("rateApp", 0) + 1)).apply();
         if (prefs.getInt("fibo", 3) == prefs.getInt("rateApp", 0)) {
 
@@ -974,9 +997,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         finish();
     }
 
+    public void gotoFavorite() {
+        Intent intent = new Intent(AddMapActivity.this, favorite_place.class);
+        startActivityForResult(intent, FAV_SET);
+    }
 
     public void gotoLocationActivity() {
         Intent intent = new Intent(this, LocationSearchActivity.class);
+        intent.putExtra("checkActivity", 0);
         this.startActivityForResult(intent, Location_SET);
     }
 
@@ -989,7 +1017,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 final FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
                 ((MainAddMapFragment) fragment).MoveMap(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
-                Log.i("MyLocation", String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()));
             }
         } else {
             AlertDialogTheme alertDialog = new AlertDialogTheme(AddMapActivity.this);
@@ -1400,4 +1427,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private interface Callback {
         void dosth();
     }
+
+
 }

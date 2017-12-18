@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <!--android:layout_below="@+id/appbar"-->
+
+
+        <!-- A RecyclerView with some commonly used attributes -->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fav_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eeeeee"
+            android:scrollbars="vertical" />
+
+
+    <!--<TextView
+        android:id="@android:id/empty"
+        style="@style/ListSubtitleText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_trip"
+        android:textColor="@color/primary_dark"
+        android:visibility="gone" />-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favorite_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/colorPrimary"
+        />
+
+    <include layout="@layout/empty_fav"
+        android:id="@+id/empty_fav_image"
+        android:visibility="gone"/>
+
+</RelativeLayout>
