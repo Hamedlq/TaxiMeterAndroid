@@ -106,6 +106,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 //    @Override
@@ -137,6 +138,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         mLocationOverlay.enableMyLocation();
 
 */
+
         return mapViewLayout;
     }
 
@@ -167,6 +169,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                     mCallback.setDstLatLng(dstLat, dstLng);
                     mCallback.onMapStopDrag(dstLat, dstLng);
                 }
+                ((AddMapActivity)getActivity()).setFavoriteOnMap();
                 break;
             default:
                 break;
@@ -333,7 +336,6 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 doAction();
             }
         });
-
 
     }
 

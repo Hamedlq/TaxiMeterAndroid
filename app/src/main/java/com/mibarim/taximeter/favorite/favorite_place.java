@@ -162,6 +162,10 @@ public class favorite_place extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("latFav","0");
+        resultIntent.putExtra("lngFav", "0");
+        setResult(AddMapActivity.RESULT_OK, resultIntent);
         finish();
     }
 }

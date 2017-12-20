@@ -16,7 +16,7 @@
         android:name="com.mibarim.main.ui.fragments.addRouteFragments.AddressFlagFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="10dp"
         tools:layout="@layout/fragment_address_flag" />
 
 

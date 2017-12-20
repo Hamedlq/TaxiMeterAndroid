@@ -16,8 +16,12 @@ import android.widget.TextView;
 
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
+import com.mibarim.taximeter.dataBase.DataBaseFav;
+import com.mibarim.taximeter.favorite.favoriteModel;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,6 +58,7 @@ public class AddressFlagFragment extends Fragment {
     protected View src_dst_divide;
 
 
+
     public AddressFlagFragment() {
     }
 
@@ -62,13 +67,20 @@ public class AddressFlagFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BootstrapApplication.component().inject(this);
+
+
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_address_flag, container, false);
+        ((AddMapActivity)getActivity()).setFavoriteOnMap();
         return layout;
+
+
     }
 
 
@@ -79,6 +91,7 @@ public class AddressFlagFragment extends Fragment {
         if (((AddMapActivity) getActivity()).getSrcDstStateSelector() == AddRouteStates.SelectOriginState) {
             sourceState();
             src_address_editText.setText(((AddMapActivity) getActivity()).getSrcAddress());
+
         } else if (((AddMapActivity) getActivity()).getSrcDstStateSelector() == AddRouteStates.SelectDestinationState) {
             destinationState();
             src_address_editText.setText(((AddMapActivity) getActivity()).getSrcAddress());
@@ -90,14 +103,75 @@ public class AddressFlagFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    ((AddMapActivity)getActivity()).gotoLocationActivity();
+                    ((AddMapActivity) getActivity()).gotoLocationActivity();
                     return true;
                 }
                 return false;
             }
         });
 
+//        favMap1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((AddMapActivity) getActivity()).MoveMapFragment(items.get(0).getLat(), items.get(0).getLng());
+//            }
+//        });
+//
+//        favMap2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((AddMapActivity) getActivity()).MoveMapFragment(items.get(1).getLat(), items.get(1).getLng());
+//            }
+//        });
+//
+//        favMap3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((AddMapActivity) getActivity()).MoveMapFragment(items.get(2).getLat(), items.get(2).getLng());
+//            }
+//        });
+
+
     }
+
+//    public void favOnMainMap() {
+//        favMap = (LinearLayout) getActivity().findViewById(R.id.favorite_on_map);
+//        favMap1 = (LinearLayout) getActivity().findViewById(R.id.favorite_on_map_first);
+//        favMap2 = (LinearLayout) getActivity().findViewById(R.id.favorite_on_map_second);
+//        favMap3 = (LinearLayout) getActivity().findViewById(R.id.favorite_on_map_third);
+//        favText1 = (TextView) getActivity().findViewById(R.id.text_fav_on_map_first);
+//        favText2 = (TextView) getActivity().findViewById(R.id.text_fav_on_map_second);
+//        favText3 = (TextView) getActivity().findViewById(R.id.text_fav_on_map_third);
+//
+//        db = new DataBaseFav(getActivity());
+//        items = db.getAllItems();
+//        if (items.size() == 0)
+//            favMap.setVisibility(View.GONE);
+//        else if (items.size() == 1) {
+//            favMap.setVisibility(View.VISIBLE);
+//            favMap1.setVisibility(View.VISIBLE);
+//            favMap2.setVisibility(View.GONE);
+//            favMap3.setVisibility(View.GONE);
+//            favText1.setText(items.get(0).getCardText());
+//        } else if (items.size() == 2) {
+//            favMap.setVisibility(View.VISIBLE);
+//            favMap1.setVisibility(View.VISIBLE);
+//            favMap2.setVisibility(View.VISIBLE);
+//            favMap3.setVisibility(View.GONE);
+//            favText1.setText(items.get(0).getCardText());
+//            favText2.setText(items.get(1).getCardText());
+//        } else {
+//            favMap.setVisibility(View.VISIBLE);
+//            favMap1.setVisibility(View.VISIBLE);
+//            favMap2.setVisibility(View.VISIBLE);
+//            favMap3.setVisibility(View.VISIBLE);
+//            favText1.setText(items.get(0).getCardText());
+//            favText2.setText(items.get(1).getCardText());
+//            favText3.setText(items.get(2).getCardText());
+//        }
+//
+//
+//    }
 
     private void ReturnHomeState() {
         wait_layout.setVisibility(View.GONE);
@@ -129,7 +203,7 @@ public class AddressFlagFragment extends Fragment {
         address_layout.setVisibility(View.GONE);
     }
 
-    private void InvisibleAllFlag(){
+    private void InvisibleAllFlag() {
         src_mid_flag.setVisibility(View.GONE);
         dst_mid_flag.setVisibility(View.GONE);
         home_mid_flag.setVisibility(View.GONE);

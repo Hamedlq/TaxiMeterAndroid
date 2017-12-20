@@ -7,10 +7,10 @@
 
 
     <RelativeLayout
-        android:layout_below="@+id/toolbar"
         android:id="@+id/flag_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
@@ -73,9 +73,9 @@
         android:id="@+id/wait_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:orientation="horizontal">
 
         <ProgressBar
             android:id="@+id/waiting_flag"
@@ -93,10 +93,9 @@
         android:id="@+id/address_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/address_block"
         android:paddingLeft="10dp"
         android:paddingRight="5dp">
@@ -176,5 +175,7 @@
         -->
 
     </RelativeLayout>
+
+
 
 </RelativeLayout>

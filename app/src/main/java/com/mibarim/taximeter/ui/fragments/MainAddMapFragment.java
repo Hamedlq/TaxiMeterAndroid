@@ -14,6 +14,7 @@ import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.ui.activities.AddMapActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class MainAddMapFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ButterKnife.bind(this, layout);
+
     }
 
     private void initScreen() {
@@ -69,6 +71,7 @@ public class MainAddMapFragment extends Fragment {
 //        fragmentManager.beginTransaction()
 //                .replace(R.id.info_submit_fragment, new InfoMessageFragment())
 //                .commit();
+
     }
 
     public void RebuildAddressFragment() {

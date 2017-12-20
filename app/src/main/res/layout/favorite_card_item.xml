@@ -15,16 +15,21 @@
     android:id="@+id/linear_fav"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:id="@+id/fav_delete"
+        >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_delete"
-            android:layout_gravity="start"
-            android:layout_centerVertical="true"
-            android:id="@+id/fav_delete"
-            />
+            android:layout_gravity="end|center"
 
+            />
+    </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,6 +50,7 @@
             android:src="@drawable/ic_star"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
             />
 
     <View

@@ -53,13 +53,13 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
 
         public RelativeLayout fav_linear;
         public TextView fav_text;
-        public ImageView delete;
+        public LinearLayout delete;
         public ViewHolder(View itemView) {
             super(itemView);
 
             fav_linear = (RelativeLayout) itemView.findViewById(R.id.linear_fav);
             fav_text = (TextView) itemView.findViewById(R.id.fav_card_text);
-            delete = (ImageView)itemView.findViewById(R.id.fav_delete);
+            delete = (LinearLayout) itemView.findViewById(R.id.fav_delete);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

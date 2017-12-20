@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -38,7 +39,9 @@ import com.mibarim.taximeter.BootstrapServiceProvider;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.Constants;
 import com.mibarim.taximeter.core.LocationService;
+import com.mibarim.taximeter.dataBase.DataBaseFav;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
+import com.mibarim.taximeter.favorite.favoriteModel;
 import com.mibarim.taximeter.favorite.favorite_place;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
@@ -76,6 +79,7 @@ import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
 
 import static android.R.attr.fragment;
+import static android.R.attr.itemTextAppearance;
 
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 //import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
@@ -167,6 +171,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
+    private LinearLayout fav_on_map;
+    private TextView fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
+    private DataBaseFav db;
+    private List<favoriteModel> items;
 
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -274,7 +282,184 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
         prefs = getSharedPreferences("taximeter", MODE_PRIVATE);
 
+        setFavoriteOnMap();
+    }
 
+
+    public void setFavoriteOnMap() {
+        Log.i("testfav", "testing");
+        fav_on_map = (LinearLayout) findViewById(R.id.fav_on_map);
+        fav_on_map1 = (TextView) findViewById(R.id.fav_on_map1);
+        fav_on_map2 = (TextView) findViewById(R.id.fav_on_map2);
+        fav_on_map3 = (TextView) findViewById(R.id.fav_on_map3);
+        fav_on_map4 = (TextView) findViewById(R.id.fav_on_map4);
+        fav_on_map5 = (TextView) findViewById(R.id.fav_on_map5);
+        db = new DataBaseFav(this);
+        items = db.getAllItems();
+        switch (items.size()) {
+            case 0:
+                fav_on_map.setVisibility(View.GONE);
+                break;
+            case 1:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.GONE);
+                fav_on_map3.setVisibility(View.GONE);
+                fav_on_map4.setVisibility(View.GONE);
+                fav_on_map5.setVisibility(View.GONE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                break;
+            case 2:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.VISIBLE);
+                fav_on_map3.setVisibility(View.GONE);
+                fav_on_map4.setVisibility(View.GONE);
+                fav_on_map5.setVisibility(View.GONE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                if (items.get(1).getCardText().length() <= 10)
+                    fav_on_map2.setText(items.get(1).getCardText());
+                else
+                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                break;
+            case 3:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.VISIBLE);
+                fav_on_map3.setVisibility(View.VISIBLE);
+                fav_on_map4.setVisibility(View.GONE);
+                fav_on_map5.setVisibility(View.GONE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                if (items.get(1).getCardText().length() <= 10)
+                    fav_on_map2.setText(items.get(1).getCardText());
+                else
+                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                if (items.get(2).getCardText().length() <= 10)
+                    fav_on_map3.setText(items.get(2).getCardText());
+                else
+                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
+                break;
+            case 4:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.VISIBLE);
+                fav_on_map3.setVisibility(View.VISIBLE);
+                fav_on_map4.setVisibility(View.VISIBLE);
+                fav_on_map5.setVisibility(View.GONE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                if (items.get(1).getCardText().length() <= 10)
+                    fav_on_map2.setText(items.get(1).getCardText());
+                else
+                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                if (items.get(2).getCardText().length() <= 10)
+                    fav_on_map3.setText(items.get(2).getCardText());
+                else
+                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
+                if (items.get(3).getCardText().length() <= 10)
+                    fav_on_map4.setText(items.get(3).getCardText());
+                else
+                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
+                break;
+            case 5:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.VISIBLE);
+                fav_on_map3.setVisibility(View.VISIBLE);
+                fav_on_map4.setVisibility(View.VISIBLE);
+                fav_on_map5.setVisibility(View.VISIBLE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                if (items.get(1).getCardText().length() <= 10)
+                    fav_on_map2.setText(items.get(1).getCardText());
+                else
+                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                if (items.get(2).getCardText().length() <= 10)
+                    fav_on_map3.setText(items.get(2).getCardText());
+                else
+                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
+                if (items.get(3).getCardText().length() <= 10)
+                    fav_on_map4.setText(items.get(3).getCardText());
+                else
+                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
+                if (items.get(4).getCardText().length() <= 10)
+                    fav_on_map5.setText(items.get(4).getCardText());
+                else
+                    fav_on_map5.setText(items.get(4).getCardText().substring(0, 10) + "...");
+                break;
+            default:
+                fav_on_map.setVisibility(View.VISIBLE);
+                fav_on_map1.setVisibility(View.VISIBLE);
+                fav_on_map2.setVisibility(View.VISIBLE);
+                fav_on_map3.setVisibility(View.VISIBLE);
+                fav_on_map4.setVisibility(View.VISIBLE);
+                fav_on_map5.setVisibility(View.VISIBLE);
+                if (items.get(0).getCardText().length() <= 10)
+                    fav_on_map1.setText(items.get(0).getCardText());
+                else
+                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                if (items.get(1).getCardText().length() <= 10)
+                    fav_on_map2.setText(items.get(1).getCardText());
+                else
+                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                if (items.get(2).getCardText().length() <= 10)
+                    fav_on_map3.setText(items.get(2).getCardText());
+                else
+                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
+                if (items.get(3).getCardText().length() <= 10)
+                    fav_on_map4.setText(items.get(3).getCardText());
+                else
+                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
+                if (items.get(4).getCardText().length() <= 10)
+                    fav_on_map5.setText(items.get(4).getCardText());
+                else
+                    fav_on_map5.setText(items.get(4).getCardText().substring(0, 10) + "...");
+                break;
+        }
+
+        fav_on_map1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoveMapFragment(items.get(0).getLat(), items.get(0).getLng());
+            }
+        });
+        fav_on_map2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoveMapFragment(items.get(1).getLat(), items.get(1).getLng());
+            }
+        });
+        fav_on_map3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoveMapFragment(items.get(2).getLat(), items.get(2).getLng());
+            }
+        });
+        fav_on_map4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoveMapFragment(items.get(3).getLat(), items.get(3).getLng());
+            }
+        });
+        fav_on_map5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoveMapFragment(items.get(4).getLat(), items.get(4).getLng());
+            }
+        });
     }
 
     private void initScreen() {
@@ -293,7 +478,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         mHandler = new Handler();
         //Adad.prepareInterstitialAd();
 
-
+//        setFavoriteOnMap();
     }
 
     private void showBackBtn() {
@@ -380,9 +565,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             switch (getSrcDstStateSelector()) {
                 case SelectOriginState:
                     finish();
-
                     break;
-                case SelectDestinationState:
+                case SelectDestinationState: {
 
                     setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                     hideBackBtn();
@@ -390,8 +574,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     fragmentManager.beginTransaction()
                             .replace(R.id.main_container, new MainAddMapFragment())
                             .commitAllowingStateLoss();
-
                     break;
+                }
                 case SelectPriceState:
                     if (!isGettingPrice) {
                         setSrcDstStateSelector(AddRouteStates.SelectOriginState);
@@ -399,6 +583,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         fragmentManager.beginTransaction()
                                 .replace(R.id.main_container, new MainAddMapFragment())
                                 .commitAllowingStateLoss();
+
                     }
 
                     break;
@@ -755,7 +940,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             getPlaceDetail(PlaceId);
         }
         if (requestCode == FAV_SET && resultCode == RESULT_OK) {
-            MoveMapFragment(data.getStringExtra("latFav"), data.getStringExtra("lngFav"));
+            setFavoriteOnMap();
+            if (!(data.getStringExtra("latFav").equals("0") && data.getStringExtra("lngFav").equals("0")))
+                MoveMapFragment(data.getStringExtra("latFav"), data.getStringExtra("lngFav"));
         }
 
     }
@@ -785,7 +972,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         ((MainAddMapFragment) fragment).RebuildDstFragment(lat, lng);
     }
 
-    private void MoveMapFragment(String lat, String lng) {
+    public void MoveMapFragment(String lat, String lng) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
         ((MainAddMapFragment) fragment).MoveMap(lat, lng);
@@ -869,6 +1056,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     prefs.edit().putBoolean("btnClick", true).apply();
                     ImageView fav_place = (ImageView) findViewById(R.id.fav_place);
                     fav_place.setVisibility(View.GONE);
+                    LinearLayout favmap = (LinearLayout) findViewById(R.id.fav_on_map);
+                    favmap.setVisibility(View.GONE);
 //                    prefs.edit().putString("favoriteSet","src").apply();
                     //Adad.showInterstitialAd(this);
                     //returnOk();
