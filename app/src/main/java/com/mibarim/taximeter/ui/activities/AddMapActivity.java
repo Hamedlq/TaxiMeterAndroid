@@ -171,8 +171,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
-    private LinearLayout fav_on_map;
-    private TextView fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
+    private LinearLayout fav_on_map, fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
+    private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
     private DataBaseFav db;
     private List<favoriteModel> items;
 
@@ -289,11 +289,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     public void setFavoriteOnMap() {
         Log.i("testfav", "testing");
         fav_on_map = (LinearLayout) findViewById(R.id.fav_on_map);
-        fav_on_map1 = (TextView) findViewById(R.id.fav_on_map1);
-        fav_on_map2 = (TextView) findViewById(R.id.fav_on_map2);
-        fav_on_map3 = (TextView) findViewById(R.id.fav_on_map3);
-        fav_on_map4 = (TextView) findViewById(R.id.fav_on_map4);
-        fav_on_map5 = (TextView) findViewById(R.id.fav_on_map5);
+        fav_on_map1 = (LinearLayout) findViewById(R.id.fav_on_map1);
+        fav_on_map_text1 = (TextView) findViewById(R.id.fav_on_map_text1);
+        fav_on_map2 = (LinearLayout) findViewById(R.id.fav_on_map2);
+        fav_on_map_text2 = (TextView) findViewById(R.id.fav_on_map_text2);
+        fav_on_map3 = (LinearLayout) findViewById(R.id.fav_on_map3);
+        fav_on_map_text3 = (TextView) findViewById(R.id.fav_on_map_text3);
+        fav_on_map4 = (LinearLayout) findViewById(R.id.fav_on_map4);
+        fav_on_map_text4 = (TextView) findViewById(R.id.fav_on_map_text4);
+        fav_on_map5 = (LinearLayout) findViewById(R.id.fav_on_map5);
+        fav_on_map_text5 = (TextView) findViewById(R.id.fav_on_map_text5);
         db = new DataBaseFav(this);
         items = db.getAllItems();
         switch (items.size()) {
@@ -307,10 +312,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.GONE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
                 break;
             case 2:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -319,14 +321,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.GONE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
-                if (items.get(1).getCardText().length() <= 10)
-                    fav_on_map2.setText(items.get(1).getCardText());
-                else
-                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text2.setText(items.get(1).getCardText());
                 break;
             case 3:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -335,18 +331,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
-                if (items.get(1).getCardText().length() <= 10)
-                    fav_on_map2.setText(items.get(1).getCardText());
-                else
-                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
-                if (items.get(2).getCardText().length() <= 10)
-                    fav_on_map3.setText(items.get(2).getCardText());
-                else
-                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text2.setText(items.get(1).getCardText());
+                fav_on_map_text3.setText(items.get(2).getCardText());
                 break;
             case 4:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -355,22 +342,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.GONE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
-                if (items.get(1).getCardText().length() <= 10)
-                    fav_on_map2.setText(items.get(1).getCardText());
-                else
-                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
-                if (items.get(2).getCardText().length() <= 10)
-                    fav_on_map3.setText(items.get(2).getCardText());
-                else
-                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
-                if (items.get(3).getCardText().length() <= 10)
-                    fav_on_map4.setText(items.get(3).getCardText());
-                else
-                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text2.setText(items.get(1).getCardText());
+                fav_on_map_text3.setText(items.get(2).getCardText());
+                fav_on_map_text4.setText(items.get(3).getCardText());
                 break;
             case 5:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -379,26 +354,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.VISIBLE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
-                if (items.get(1).getCardText().length() <= 10)
-                    fav_on_map2.setText(items.get(1).getCardText());
-                else
-                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
-                if (items.get(2).getCardText().length() <= 10)
-                    fav_on_map3.setText(items.get(2).getCardText());
-                else
-                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
-                if (items.get(3).getCardText().length() <= 10)
-                    fav_on_map4.setText(items.get(3).getCardText());
-                else
-                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
-                if (items.get(4).getCardText().length() <= 10)
-                    fav_on_map5.setText(items.get(4).getCardText());
-                else
-                    fav_on_map5.setText(items.get(4).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text2.setText(items.get(1).getCardText());
+                fav_on_map_text3.setText(items.get(2).getCardText());
+                fav_on_map_text4.setText(items.get(3).getCardText());
+                fav_on_map_text5.setText(items.get(4).getCardText());
                 break;
             default:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -407,26 +367,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.VISIBLE);
-                if (items.get(0).getCardText().length() <= 10)
-                    fav_on_map1.setText(items.get(0).getCardText());
-                else
-                    fav_on_map1.setText(items.get(0).getCardText().substring(0, 10) + "...");
-                if (items.get(1).getCardText().length() <= 10)
-                    fav_on_map2.setText(items.get(1).getCardText());
-                else
-                    fav_on_map2.setText(items.get(1).getCardText().substring(0, 10) + "...");
-                if (items.get(2).getCardText().length() <= 10)
-                    fav_on_map3.setText(items.get(2).getCardText());
-                else
-                    fav_on_map3.setText(items.get(2).getCardText().substring(0, 10) + "...");
-                if (items.get(3).getCardText().length() <= 10)
-                    fav_on_map4.setText(items.get(3).getCardText());
-                else
-                    fav_on_map4.setText(items.get(3).getCardText().substring(0, 10) + "...");
-                if (items.get(4).getCardText().length() <= 10)
-                    fav_on_map5.setText(items.get(4).getCardText());
-                else
-                    fav_on_map5.setText(items.get(4).getCardText().substring(0, 10) + "...");
+                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text2.setText(items.get(1).getCardText());
+                fav_on_map_text3.setText(items.get(2).getCardText());
+                fav_on_map_text4.setText(items.get(3).getCardText());
+                fav_on_map_text5.setText(items.get(4).getCardText());
                 break;
         }
 

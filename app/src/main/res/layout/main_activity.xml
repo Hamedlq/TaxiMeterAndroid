@@ -26,63 +26,172 @@
             android:layout_below="@+id/toolbar"
             >
 
-
-            <TextView
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
                 android:id="@+id/fav_on_map1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="-10dp"
-                android:gravity="center"
-                android:textSize="15sp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                >
 
-
-            <TextView
-                android:id="@+id/fav_on_map2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="-10dp"
-                android:gravity="center"
-                android:textSize="15sp"/>
+                <ImageView
+                    android:layout_marginStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star2"
+                    />
 
             <TextView
-                android:id="@+id/fav_on_map3"
-                android:layout_width="0dp"
+                android:id="@+id/fav_on_map_text1"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_star"
+                android:layout_marginStart="2dp"
                 android:drawablePadding="-10dp"
                 android:gravity="center"
                 android:textSize="15sp"
-                android:maxLines="1"/>
+                android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
-            <TextView
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:id="@+id/fav_on_map2"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                >
+
+                <ImageView
+                    android:layout_marginStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star2"
+                    />
+
+                <TextView
+                    android:id="@+id/fav_on_map_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:drawablePadding="-10dp"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:id="@+id/fav_on_map3"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                >
+
+                <ImageView
+                    android:layout_marginStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star2"
+                    />
+
+                <TextView
+                    android:id="@+id/fav_on_map_text3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:drawablePadding="-10dp"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
                 android:id="@+id/fav_on_map4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="-10dp"
-                android:gravity="center"
-                android:textSize="15sp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp">
 
-            <TextView
-                android:id="@+id/fav_on_map5"
+                <ImageView
+                    android:layout_marginStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star2"
+                    />
+
+                <TextView
+                    android:id="@+id/fav_on_map_text4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:drawablePadding="-10dp"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="-10dp"
-                android:gravity="center"
-                android:textSize="15sp"/>
+                android:layout_gravity="center"
+                android:id="@+id/fav_on_map5"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                >
+
+                <ImageView
+                    android:layout_marginStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star2"
+                    />
+
+                <TextView
+                    android:id="@+id/fav_on_map_text5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:drawablePadding="-10dp"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
