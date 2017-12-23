@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mibarim.taximeter.R;
@@ -40,48 +41,78 @@ public class PricesAdapter extends RecyclerView.Adapter<PricesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final PricesAdapter.ViewHolder holder, int position) {
         PriceListModel model = listModel.get(position);
-        switch (model.getServiceName()){
-            case "اسنپ اکو":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "اسنپ رز":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "اسنپ بایک":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "تپسی":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.tap30_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "کارپینو":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "الو\u200Cپیک":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.alopeyk_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "تاکسی اشتراکی می\u200Cبریم":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.mibarim_icon);
-                holder.servicePrice.setText(model.getPrice());
-                break;
-            case "تاکسی تلفنی":
-                holder.serviceName.setText(model.getServiceName());
-                holder.serviceIcon.setImageResource(R.mipmap.taxitehran);
-                holder.servicePrice.setText(model.getPrice());
-                break;
+        if (model != null) {
+            switch (model.getServiceName()) {
+                case "اسنپ اکو":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "اسنپ رز":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "اسنپ بایک":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.snapp_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "تپسی":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.tap30_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "کارپینو":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "الو\u200Cپیک":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.alopeyk_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "ماکسیم اقتصادی":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.maxim_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "ماکسیم لوکس":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.maxim_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "ماکسیم بانوان":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.maxim_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "ماکسیم تجاری":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.maxim_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "تاکسی اشتراکی می\u200Cبریم":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.mibarim_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "تاکسی تلفنی تهران":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.taxitehran);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+            }
+        } else {
+
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
     }
 
     @Override
@@ -93,6 +124,7 @@ public class PricesAdapter extends RecyclerView.Adapter<PricesAdapter.ViewHolder
 
         public TextView serviceName, servicePrice;
         public ImageView serviceIcon;
+        LinearLayout recyclerView;
 
         public ViewHolder(View v) {
             super(v);

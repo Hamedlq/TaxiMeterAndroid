@@ -46,6 +46,10 @@ public class GenerateToken {
                 model.setAlopeykToken(token);
                 model.setAlopeykTokenStatus(tokenStatus);
                 break;
+            case "maxim":
+                model.setMaximToken(token);
+                model.setMaximTokenStatus(tokenStatus);
+                break;
             case "all":
                 model.setSnappToken(token);
                 model.setSnappTokenStatus(tokenStatus);
@@ -53,6 +57,10 @@ public class GenerateToken {
                 model.setTap30TokenStatus(tokenStatus);
                 model.setCarpinoToken(token);
                 model.setCarpinoTokenStatus(tokenStatus);
+                model.setAlopeykToken(token);
+                model.setAlopeykTokenStatus(tokenStatus);
+                model.setMaximToken(token);
+                model.setMaximTokenStatus(tokenStatus);
         }
     }
 
@@ -69,6 +77,8 @@ public class GenerateToken {
             model.setCarpinoTokenStatus(mainObject.getInt("CarpinoTokenStatus"));
             model.setAlopeykToken(mainObject.getString("AloPeykToken"));
             model.setAlopeykTokenStatus(mainObject.getInt("AloPeykTokenStatus"));
+            model.setMaximToken(mainObject.getString("MaximToken"));
+            model.setMaximTokenStatus(mainObject.getInt("MaximTokenStatus"));
         } catch (Exception e) {
 
         }

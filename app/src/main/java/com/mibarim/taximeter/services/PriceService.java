@@ -1,17 +1,20 @@
 package com.mibarim.taximeter.services;
 
-import com.google.gson.Gson;
+import com.mibarim.taximeter.RestInterfaces.MaximInterface;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
+import com.mibarim.taximeter.models.maxim.MaximRequest;
+import com.mibarim.taximeter.models.maxim.MaximResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
-import com.squareup.okhttp.ResponseBody;
+
+import java.util.List;
 
 import javax.inject.Named;
 
@@ -43,8 +46,11 @@ public class PriceService {
     @Named("alopeyk")
     private RestAdapter alopeykRestAdapter;
 
+    @Named("maxim")
+    private RestAdapter maximRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter) {
+
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
@@ -52,6 +58,7 @@ public class PriceService {
         this.tap30RestAdapter = tap30RestAdapter;
         this.carpinoRestAdapter = carpinoRestAdapter;
         this.alopeykRestAdapter = alopeykRestAdapter;
+        this.maximRestAdapter = maximRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -82,6 +89,10 @@ public class PriceService {
         return alopeykRestAdapter;
     }
 
+    public RestAdapter getMaximRestAdapter(){
+        return maximRestAdapter;
+    }
+
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
     }
@@ -108,6 +119,10 @@ public class PriceService {
 
     private com.mibarim.taximeter.RestInterfaces.AlopeykInterface getAlopeykService() {
         return getAlopeykRestAdapter().create(com.mibarim.taximeter.RestInterfaces.AlopeykInterface.class);
+    }
+
+    private com.mibarim.taximeter.RestInterfaces.MaximInterface getMaximkService() {
+        return getMaximRestAdapter().create(com.mibarim.taximeter.RestInterfaces.MaximInterface.class);
     }
 
 
@@ -204,6 +219,16 @@ public class PriceService {
         return alopeykResponse;
     }
 
+    public List<MaximResponse> getPathPriceMaxim(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization){
+        MaximRequest maximRequest = new MaximRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+        List<MaximResponse> maximResponse = getMaximkService().getMaximPrice(maximRequest.latitude, maximRequest.longitude,
+                maximRequest.startLatitude, maximRequest.startLongitude, maximRequest.endLatitude, maximRequest.endLongitude,
+                maximRequest.startQuick, maximRequest.endQuick, authorization, maximRequest.locale, maximRequest.tariffClass,
+                maximRequest.platform, maximRequest.version);
+
+        return maximResponse;
+    }
+
 //    public String getSnappAuthorizationKey() {
 //        String authorization;
 //        SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
@@ -235,10 +260,6 @@ public class PriceService {
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
             tokenGenerator.getToken("carpino", tmTokensModel.tokenStatus.NOT_SET, authorization);
-
-//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
-//        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
-//        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
         return tokenGenerator.getCarpinoToken();
     }
 
@@ -248,11 +269,16 @@ public class PriceService {
             tokenGenerator.getToken("alopeyk", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
             tokenGenerator.getToken("alopeyk", tmTokensModel.tokenStatus.NOT_SET, authorization);
-
-//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
-//        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
-//        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
         return tokenGenerator.getAlopeykToken();
+    }
+
+    public String maximUnauthorizationint(String authorization) {
+        tmTokensModel tokenGenerator = new tmTokensModel();
+        if (!authorization.matches(""))
+            tokenGenerator.getToken("maxim", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("maxim", tmTokensModel.tokenStatus.NOT_SET, authorization);
+        return tokenGenerator.getMaximToken();
     }
 
     public String snappUnauthorizationint(String authorization) {

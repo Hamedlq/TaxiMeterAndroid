@@ -37,6 +37,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+
 /**
  * Created by Hamed on 3/4/2016.
  */
@@ -77,6 +78,8 @@ public class SrcDstFragment extends Fragment {
     protected ImageView my_location;
     @Bind(R.id.bottom_sheet)
     protected LinearLayout bottom_sheet;
+    @Bind(R.id.fav_place)
+    protected ImageView fav_place;
     BottomSheetBehavior bottomSheetBehavior;
     onItemClickListener onItemClickListener;
     private List<PriceListModel> priceModel;
@@ -85,9 +88,6 @@ public class SrcDstFragment extends Fragment {
     private OpeningDialogTheme dialog;
     private Animation animation;
     private boolean isCollapsed;
-
-    @Bind(R.id.fav_place)
-    protected ImageView fav_place;
 
     public SrcDstFragment() {
     }
@@ -116,238 +116,199 @@ public class SrcDstFragment extends Fragment {
                 if (isCollapsed)
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 else {
-                    switch (list.get(position).getServiceName()) {
-                        case "اسنپ اکو":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("اسنپ", "آیا تمایل به باز کردن این برنامه دارید؟");
+                    String serviceName = list.get(position).getServiceName();
+                    if (serviceName.contains("اسنپ")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("اسنپ", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "اسنپ رز":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("اسنپ", "آیا تمایل به باز کردن این برنامه دارید؟");
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("تپسی")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("تپسی", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("taxi.tap30.passenger");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "اسنپ بایک":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("اسنپ", "آیا تمایل به باز کردن این برنامه دارید؟");
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("کارپینو")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("کارپینو", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "تپسی":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("تپسی", "آیا تمایل به باز کردن این برنامه دارید؟");
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("الو")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("الو\u200Cپیک", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.alopeyk.customer");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("taxi.tap30.passenger");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "taxi.tap30.passenger")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.alopeyk.customer")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "کارپینو":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("کارپینو", "آیا تمایل به باز کردن این برنامه دارید؟");
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("ماکسیم")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("ماکسیم", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.taxsee.taxsee");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.taxsee.taxsee")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "الو\u200Cپیک":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("الو\u200Cپیک", "آیا تمایل به باز کردن این برنامه دارید؟");
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("می‌بریم")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("تاکسی اشتراکی می\u200Cبریم", "آیا تمایل به باز کردن این برنامه دارید؟");
 
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.mibarim.main");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
                                     try {
-                                        i = manager.getLaunchIntentForPackage("com.alopeyk.customer");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.alopeyk.customer")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
-                        case "تاکسی اشتراکی می\u200Cبریم":
-                            dialog = new OpeningDialogTheme(getActivity());
-                            dialog.show();
-                            dialog.setText("تاکسی اشتراکی می\u200Cبریم", "آیا تمایل به باز کردن این برنامه دارید؟");
-
-                            dialog.yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i;
-                                    PackageManager manager = getActivity().getPackageManager();
-                                    dialog.dismiss();
-                                    try {
-                                        i = manager.getLaunchIntentForPackage("com.mibarim.main");
-                                        if (i == null)
-                                            throw new PackageManager.NameNotFoundException();
-                                        i.addCategory(Intent.CATEGORY_LAUNCHER);
-                                        startActivity(i);
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        try {
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
-                                        } catch (Exception e1) {
-                                            Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                            });
-                            dialog.no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            break;
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
                     }
                 }
             }
@@ -385,8 +346,9 @@ public class SrcDstFragment extends Fragment {
 
             }
         });
+
         int pixle = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                100, getResources().getDisplayMetrics());
+                230, getResources().getDisplayMetrics());
         bottomSheetBehavior.setPeekHeight(pixle);
 
         upDown.setOnClickListener(new View.OnClickListener() {
@@ -418,7 +380,7 @@ public class SrcDstFragment extends Fragment {
         fav_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((AddMapActivity)getActivity()).gotoFavorite();
+                ((AddMapActivity) getActivity()).gotoFavorite();
             }
         });
 
@@ -443,6 +405,14 @@ public class SrcDstFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         my_location.setVisibility(View.VISIBLE);
+    }
+
+    public boolean closeBottomSheet(){
+        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return false;
+        }
+        return true;
     }
 
     private void setAllBlocksInvisible() {
@@ -474,7 +444,15 @@ public class SrcDstFragment extends Fragment {
                 adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
             } else {
-                priceModel.add(1, model);
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (priceModel.get(i).getId() > 3) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
             if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -503,7 +481,19 @@ public class SrcDstFragment extends Fragment {
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            priceModel.add(1, model);
+            if (serviceName.matches(getString(R.string.snapp_echo_price)))
+                priceModel.add(0, model);
+            else {
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (priceModel.get(i).getId() > 4) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
+            }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -519,16 +509,18 @@ public class SrcDstFragment extends Fragment {
 
     public void setTap30Price(String serviceName, String price, int icon) {
 
-//        price_layout_tap30.setVisibility(View.VISIBLE);
-//        price_tap30.setText(tap30Price);
         PriceListModel model = new PriceListModel(serviceName, price, icon);
         if (adapter == null) {
             priceModel.add(new PriceListModel(serviceName, price, icon));
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            priceModel.add(1, model);
-            adapter.notifyDataSetChanged();
+            if (priceModel.get(0).getId() != 1)
+                priceModel.add(0, model);
+            else if (priceModel.size() > 1)
+                priceModel.add(1, model);
+            else
+                priceModel.add(model);
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
@@ -555,7 +547,14 @@ public class SrcDstFragment extends Fragment {
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            priceModel.add(0, model);
+            if (priceModel.get(0) != null && priceModel.get(0).getId() > 3)
+                priceModel.add(0, model);
+            else if (priceModel.get(1) != null && priceModel.get(1).getId() > 3)
+                priceModel.add(1, model);
+            else if (priceModel.size() > 2)
+                priceModel.add(2, model);
+            else
+                priceModel.add(model);
             adapter.notifyDataSetChanged();
         }
 
@@ -578,7 +577,15 @@ public class SrcDstFragment extends Fragment {
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            priceModel.add(1, model);
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (priceModel.get(i).getId() > 4) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -591,6 +598,35 @@ public class SrcDstFragment extends Fragment {
             upDown.startAnimation(animation);
     }
 
+    public void setMaximPrice(String serviceName, String price, int icon) {
+        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        if (adapter == null) {
+            priceModel.add(new PriceListModel(serviceName, price, icon));
+            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            priceLayout.setAdapter(adapter);
+        } else {
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (priceModel.get(i).getId() > 4) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+        if (bottom_sheet.getVisibility() != View.VISIBLE)
+            bottom_sheet.setVisibility(View.VISIBLE);
+
+        if (my_location.getVisibility() == View.VISIBLE)
+            my_location.setVisibility(View.GONE);
+
+        if (upDown.getAnimation() == null)
+            upDown.startAnimation(animation);
+
+    }
+
     public void setPrice(String serviceName, PathPrice pathPrice, int icon) {
         if (pathPrice == null || pathPrice.equals("")) {
 
@@ -601,7 +637,15 @@ public class SrcDstFragment extends Fragment {
                 adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
             } else {
-                priceModel.add(1, model);
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (priceModel.get(i).getId() > 4) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
             if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -625,7 +669,6 @@ public class SrcDstFragment extends Fragment {
 
         void onItemClicked(int position, List<PriceListModel> list);
     }
-
 //    @Override
 //    public boolean onTouch(View v, MotionEvent event) {
 //        if (event.getAction() == MotionEvent.ACTION_UP) {

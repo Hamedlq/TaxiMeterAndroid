@@ -3,7 +3,6 @@ package com.mibarim.taximeter.ui.activities;
 
 import android.accounts.OperationCanceledException;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -55,6 +54,7 @@ import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
+import com.mibarim.taximeter.models.maxim.MaximResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ratingApp;
@@ -80,7 +80,6 @@ import retrofit.RetrofitError;
 
 import static android.R.attr.fragment;
 import static android.R.attr.itemTextAppearance;
-
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 //import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
 
@@ -98,6 +97,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private static final int GET_PERSONAL_INFO = 256;
     public int sequenceNo;
     public int SelectedPathRouteInRecommendPath = 1;
+    public String thelat;
     protected AddRouteStates stateSelector;//SOURCE_SELECTED DESTINATION_SELECTED REQUESTING EVENT_LIST_SELECTED EVENT_SOURCE_SELECT EVENT_DESTINATION_SELECT
     // The minimum distance to change Updates in meters
 //    private static final long LOCATION_REFRESH_DISTANCE = 50; // 10 meters
@@ -116,12 +116,13 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     boolean isMibarimShown = false;
     boolean isTelephonyShown = false;
     boolean isAlopeykShown = false;
+    boolean isMaximShown = false;
     boolean refreshingTokens = false;
     ApiResponse recommendRoutes;
     List<PathPoint> recommendPathPointList;
     PathPrice tap30PathPriceResponse;
     SharedPreferences prefs = null;
-    String[] stc = new String[3];
+    String[] stc = new String[5];
     private Handler mHandler;
     private int mInterval = 600000;
     Runnable mStatusChecker = new Runnable() {
@@ -144,7 +145,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private int Drive_SET = 8191;
     private int Location_SET = 2010;
     private int FAV_SET = 9999;
-
     private CharSequence title;
     private Toolbar toolbar;
     private String srcAdd;
@@ -168,6 +168,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private SnappResponse snappResponse;
     private CarpinoResponse carpinoResponse;
     private AlopeykResponse alopeykResponse;
+    private List<MaximResponse> maximResponse;
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
@@ -175,8 +176,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
     private DataBaseFav db;
     private List<favoriteModel> items;
-
-
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -192,9 +191,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //public Menu theMenu;
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
-    private String trafficAddress;
-    public String thelat;
-
+    private SharedPreferences dstPrefs;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -246,6 +243,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         final SharedPreferences snappPreferences;
         final SharedPreferences tap30Preferences;
         final SharedPreferences carpinoPreferences;
+        final SharedPreferences alopeykPreferences;
+        final SharedPreferences maximPreferences;
         final tmTokensModel firstLoad = new tmTokensModel();
         snappPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
         stc[0] = snappPreferences.getString("authorization", "");
@@ -253,6 +252,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         stc[1] = tap30Preferences.getString("authorization", "");
         carpinoPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
         stc[2] = carpinoPreferences.getString("authorization", "");
+        alopeykPreferences = getSharedPreferences("alopeyk", Context.MODE_PRIVATE);
+        stc[3] = carpinoPreferences.getString("authorization", "");
+        maximPreferences = getSharedPreferences("maxim", Context.MODE_PRIVATE);
+        stc[4] = carpinoPreferences.getString("authorization", "");
         new SafeAsyncTask() {
 
             @Override
@@ -268,6 +271,12 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     SharedPreferences.Editor carpinoEditor = carpinoPreferences.edit();
                     carpinoEditor.putString("authorization", firstLoad.getCarpinoToken())
                             .apply();
+                    SharedPreferences.Editor alopeykEditor = alopeykPreferences.edit();
+                    alopeykEditor.putString("authorization", firstLoad.getAlopeykToken())
+                            .apply();
+                    SharedPreferences.Editor maximEditor = maximPreferences.edit();
+                    maximEditor.putString("authorization", firstLoad.getMaximToken())
+                            .apply();
                 }
                 return null;
             }
@@ -280,6 +289,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
         }.execute();
 
+        dstPrefs = getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
         prefs = getSharedPreferences("taximeter", MODE_PRIVATE);
 
         setFavoriteOnMap();
@@ -462,6 +472,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         finish();
                         break;
                     case SelectDestinationState:
+                        dstPrefs.edit().putString("DstLatitude", null).apply();
+                        dstPrefs.edit().putString("DstLongitude", null).apply();
                         setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                         hideBackBtn();
                         fragmentManager.beginTransaction()
@@ -470,11 +482,22 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         break;
                     case SelectPriceState:
                         if (!isGettingPrice) {
-                            setSrcDstStateSelector(AddRouteStates.SelectOriginState);
-                            hideBackBtn();
+                            setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
                             fragmentManager.beginTransaction()
                                     .replace(R.id.main_container, new MainAddMapFragment())
                                     .commitAllowingStateLoss();
+                            isAlopeykShown = true;
+                            isMaximShown = true;
+                            isTelephonyShown = true;
+                            isMibarimShown = true;
+                            isSnappShown = true;
+                            isCarpinoShown = true;
+                            isTap30Shown = true;
+                            pathPrice = null;
+                            snappResponse = null;
+                            tap30PathPriceResponse = null;
+                            alopeykResponse = null;
+                            carpinoResponse = null;
                         }
                         break;
 
@@ -506,29 +529,42 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
+        boolean isCollapse = false;
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             switch (getSrcDstStateSelector()) {
                 case SelectOriginState:
                     finish();
                     break;
-                case SelectDestinationState: {
-
+                case SelectDestinationState:
+                    dstPrefs.edit().putString("DstLatitude", null).apply();
+                    dstPrefs.edit().putString("DstLongitude", null).apply();
                     setSrcDstStateSelector(AddRouteStates.SelectOriginState);
                     hideBackBtn();
-//                    if ()
                     fragmentManager.beginTransaction()
                             .replace(R.id.main_container, new MainAddMapFragment())
                             .commitAllowingStateLoss();
                     break;
-                }
                 case SelectPriceState:
-                    if (!isGettingPrice) {
-                        setSrcDstStateSelector(AddRouteStates.SelectOriginState);
-                        hideBackBtn();
+                    Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+                    if (fragment instanceof SrcDstFragment)
+                        isCollapse = ((SrcDstFragment) fragment).closeBottomSheet();
+                    if (!isGettingPrice && isCollapse) {
+                        setSrcDstStateSelector(AddRouteStates.SelectDestinationState);
                         fragmentManager.beginTransaction()
                                 .replace(R.id.main_container, new MainAddMapFragment())
                                 .commitAllowingStateLoss();
-
+                        isAlopeykShown = true;
+                        isMaximShown = true;
+                        isTelephonyShown = true;
+                        isMibarimShown = true;
+                        isSnappShown = true;
+                        isCarpinoShown = true;
+                        isTap30Shown = true;
+                        pathPrice = null;
+                        snappResponse = null;
+                        tap30PathPriceResponse = null;
+                        alopeykResponse = null;
+                        carpinoResponse = null;
                     }
 
                     break;
@@ -537,7 +573,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     this.finishAffinity();
             }
         }
-        return super.onKeyUp(keyCode, event);
+        return isCollapse && super.onKeyUp(keyCode, event);
     }
 
     @Subscribe
@@ -661,39 +697,48 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 //            pathPrice.CarpinoPathPrice = carpinoResponse.getTotal();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
-        if (pathPrice != null && !isTelephonyShown) {
-            ((MainAddMapFragment) fragment).setPrice(pathPrice);
-            isTelephonyShown = true;
+
+        if (snappResponse != null && !isSnappShown) {
+            isSnappShown = true;
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(0).getAmount(), 0);
+            removeWaitLayout();
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(1).getAmount(), 1);
+            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(3).getAmount(), 3);
+        }
+        if (tap30PathPriceResponse != null && !isTap30Shown) {
+            isTap30Shown = true;
+            ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
+            removeWaitLayout();
+        }
+        if (carpinoResponse != null && !isCarpinoShown) {
+            isCarpinoShown = true;
+            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
             removeWaitLayout();
         }
         if (pathPrice != null && !isMibarimShown) {
+            isMibarimShown = true;
             ((MainAddMapFragment) fragment).setMibarimPrice(pathPrice);
             removeWaitLayout();
-            isMibarimShown = true;
-        }
-        if (snappResponse != null && !isSnappShown) {
-            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(0).getAmount(), 0);
-            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(1).getAmount(), 1);
-            ((MainAddMapFragment) fragment).setSnappPrice(snappResponse.data.getPrices().get(3).getAmount(), 3);
-            removeWaitLayout();
-            isSnappShown = true;
-        }
-        if (tap30PathPriceResponse != null && !isTap30Shown) {
-            ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
-            removeWaitLayout();
-            isTap30Shown = true;
-        }
-        if (carpinoResponse != null && !isCarpinoShown) {
-            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
-            removeWaitLayout();
-            isCarpinoShown = true;
         }
         if (alopeykResponse != null && !isAlopeykShown) {
+            isAlopeykShown = true;
             ((MainAddMapFragment) fragment).setAlopeyk(alopeykResponse.object.getPrice());
             removeWaitLayout();
-            isAlopeykShown = true;
         }
-        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && !isGettingPrice) {
+        if (maximResponse != null && !isMaximShown) {
+            isMaximShown = true;
+            ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(0).value, 0);
+            removeWaitLayout();
+            ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(1).value, 1);
+            ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(2).value, 2);
+            ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(3).value, 3);
+        }
+        if (pathPrice != null && !isTelephonyShown) {
+            isTelephonyShown = true;
+            ((MainAddMapFragment) fragment).setPrice(pathPrice);
+            removeWaitLayout();
+        }
+        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && !isGettingPrice) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
@@ -967,6 +1012,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     @Override
+    protected void onStop() {
+        SharedPreferences pref = getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+        pref.edit().putString("DstLatitude", null).apply();
+        pref.edit().putString("DstLongitude", null).apply();
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         stopRepeatingTask();
         super.onDestroy();
@@ -1113,16 +1166,17 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         isGettingPrice = true;
         isTelephonyShown = false;
         isMibarimShown = false;
+        isMaximShown = false;
         isSnappShown = false;
         isTap30Shown = false;
         isCarpinoShown = false;
         isAlopeykShown = false;
         getPathPrice();
         getPathPriceSnapp(true);
-//        getPathPriceTap30(true);
         getPathPriceTap30_2();
         getPathPriceCarpino(true);
         getPathPriceAlopeyk(true);
+        getPathPriceMaxim(true);
     }
 
     private void returnOk() {
@@ -1461,14 +1515,56 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
 
-                if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
-                    getPathPriceAlopeyk(false);
-                } else if (e instanceof RetrofitError) {
+                if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyAlopeyk(new Callback() {
                             @Override
                             public void dosth() {
                                 getPathPriceAlopeyk(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+            }
+
+        }.execute();
+    }
+
+    public void getPathPriceMaxim(final boolean tryAgainForAuthorize) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("maxim", Context.MODE_PRIVATE);
+        final String authorization = "52006e49fec87437";/*sharedPreferences.getString("authorization", "")*/
+        ;
+
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                maximResponse = priceService.getPathPriceMaxim(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+
+                if (e instanceof RetrofitError) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyMaxim(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceMaxim(false);
                             }
                         }, authorization);
                     }
@@ -1548,8 +1644,22 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 String alopeyk = priceService.alopeykUnauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("alopeyk", Context.MODE_PRIVATE).edit();
                 editor.putString("authorization", alopeyk);
-//                editor.putString("authorization",
-//                        "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg");
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
+
+    private void refreshAuthorizationKeyMaxim(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String maxim = priceService.maximUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("maxim", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", maxim);
                 editor.apply();
                 callback.dosth();
                 return true;

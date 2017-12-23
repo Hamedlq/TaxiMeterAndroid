@@ -9,20 +9,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,9 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -46,6 +38,9 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
@@ -63,35 +58,30 @@ import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;*/
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Hamed on 3/3/2016.
  */
 public class AddMapFragment extends Fragment implements OnMapReadyCallback {
 
-    private MapView mapView;
     protected GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
-    //private MyLocationNewOverlay mLocationOverlay;
-    //private ScaleBarOverlay mScaleBarOverlay;
-    private Context context;
-    private View mapViewLayout;
     List<Marker> markerList;
-    private Marker srcMarker;
-    private Marker dstMarker;
     List<Polyline> routeOverlayList;
-    private double minLat = 1000;
-    private double minLng = 1000;
-    private double maxLat = 0;
-    private double maxLng = 0;
     String srcLat;
     String srcLng;
     String dstLat;
     String dstLng;
-
     OnMapClickedListener mCallback;
+    private MapView mapView;
+    //private MyLocationNewOverlay mLocationOverlay;
+    //private ScaleBarOverlay mScaleBarOverlay;
+    private Context context;
+    private View mapViewLayout;
+    private Marker srcMarker;
+    private Marker dstMarker;
+    private double minLat = 1000;
+    private double minLng = 1000;
+    private double maxLat = 0;
+    private double maxLng = 0;
 
     public AddMapFragment() {
     }
@@ -142,7 +132,6 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         return mapViewLayout;
     }
 
-
     private void doAction() {
         switch (mCallback.getRouteStates()) {
             case SelectOriginState:
@@ -152,7 +141,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                     srcLat = theSrcLat;
                     srcLng = theSrcLng;
                     if (getActivity() != null) {
-                        SharedPreferences prefs = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+                        SharedPreferences prefs = context.getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
                         prefs.edit().putString("SrcLatitude", srcLat).apply();
                         prefs.edit().putString("SrcLongitude", srcLng).apply();
                     }
@@ -166,6 +155,9 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 if (!theDstLat.equals(dstLat) && !theDstLng.equals(dstLng)) {
                     dstLat = theDstLat;
                     dstLng = theDstLng;
+                    SharedPreferences prefs = context.getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+                    prefs.edit().putString("DstLatitude", dstLat).apply();
+                    prefs.edit().putString("DstLongitude", dstLng).apply();
                     mCallback.setDstLatLng(dstLat, dstLng);
                     mCallback.onMapStopDrag(dstLat, dstLng);
                 }
@@ -215,9 +207,16 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 .position(new LatLng(lat, lng))
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.mipmap.ic_from)));
-
-        LatLng dstPoint = new LatLng(lat, lng - 0.01);
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(dstPoint));
+        SharedPreferences pref = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+        dstLat = pref.getString("DstLatitude", null);
+        dstLng = pref.getString("DstLongitude", null);
+        if (dstLat == null && dstLng == null) {
+            LatLng dstPoint = new LatLng(lat, lng - 0.01);
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(dstPoint));
+        }else {
+            LatLng dstPoint = new LatLng(Double.valueOf(dstLat), Double.valueOf(dstLng));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(dstPoint));
+        }
     }
 
     public void DestinationState(String dstLat, String dstLng) {
@@ -255,7 +254,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.mipmap.ic_from)));
         LatLng dstPoint = new LatLng(lat, lng - 0.01);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dstPoint, 14.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(dstPoint));
     }
 
 /*
@@ -302,7 +301,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                 // Get the location
                 Location location = LocationService.getLocationManager(context).getLocation();
                 LatLng startPoint;
-                SharedPreferences prefs = getActivity().getSharedPreferences(
+                SharedPreferences prefs = context.getSharedPreferences(
                         "com.mibarim.main", Context.MODE_PRIVATE);
                 String latitude = prefs.getString("SrcLatitude", "35.717110");
                 String longitude = prefs.getString("SrcLongitude", "51.426830");
@@ -313,7 +312,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                     Double lng = Double.valueOf(longitude);
                     startPoint = new LatLng(lat, lng);
                 }
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startPoint, 14.0f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(startPoint));
                 mCallback.setSrcLatLng(String.valueOf(startPoint.latitude), String.valueOf(startPoint.longitude));
                 //SourceState();
                 break;
@@ -337,28 +336,6 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-    }
-
-
-    // Container Activity must implement this interface
-    public interface OnMapClickedListener {
-        public AddRouteStates getRouteStates();
-
-        public void onMapStartDrag();
-
-        public void onMapStopDrag(String latitude, String longitude);
-
-        public void setSrcLatLng(String latitude, String longitude);
-
-        public void setDstLatLng(String latitude, String longitude);
-
-        public LocationPoint getSrcLatLng();
-
-        public LocationPoint getDstLatLng();
-
-        public List<PathPoint> getRecommendPathPointList();
-
-        public int getSelectedPathPoint();
     }
 
     @Override
@@ -410,7 +387,6 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
 
         setMinMaxValues(Double.parseDouble(mCallback.getDstLatLng().Lat), Double.parseDouble(mCallback.getDstLatLng().Lng));
     }
-
 
     private void zoomToBoundry() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -514,6 +490,27 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         canvas.drawText(text, (canvas.getWidth() - bounds.width()) / 2, 7 * (canvas.getHeight() - bounds.height()) / 16, paint);
 
         return bm;
+    }
+
+    // Container Activity must implement this interface
+    public interface OnMapClickedListener {
+        public AddRouteStates getRouteStates();
+
+        public void onMapStartDrag();
+
+        public void onMapStopDrag(String latitude, String longitude);
+
+        public void setSrcLatLng(String latitude, String longitude);
+
+        public void setDstLatLng(String latitude, String longitude);
+
+        public LocationPoint getSrcLatLng();
+
+        public LocationPoint getDstLatLng();
+
+        public List<PathPoint> getRecommendPathPointList();
+
+        public int getSelectedPathPoint();
     }
 
 }

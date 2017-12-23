@@ -15,22 +15,41 @@ public class tmTokensModel implements Serializable {
     private String tap30Token;
     private String carpinoToken;
     private String alopeykToken;
+    private String maximToken;
 
     private int snappTokenStatus;
     private int tap30TokenStatus;
     private int carpinoTokenStatus;
     private int alopeykTokenStatus;
+    private int maximTokenStatus;
 
     public tmTokensModel() {
         snappToken = "";
         tap30Token = "";
         carpinoToken = "";
         alopeykToken = "";
+        maximToken = "";
 
     }
 
     public String getAlopeykToken() {
         return alopeykToken;
+    }
+
+    public String getMaximToken() {
+        return maximToken;
+    }
+
+    public void setMaximToken(String maximToken) {
+        this.maximToken = maximToken;
+    }
+
+    public int getMaximTokenStatus() {
+        return maximTokenStatus;
+    }
+
+    public void setMaximTokenStatus(int maximTokenStatus) {
+        this.maximTokenStatus = maximTokenStatus;
     }
 
     public void setAlopeykToken(String alopeykToken) {
@@ -122,6 +141,12 @@ public class tmTokensModel implements Serializable {
                     setAlopeykTokenStatus(model.alopeykTokenStatus);
                 } else return stc;
                 break;
+            case "maxim":
+                if (model.maximTokenStatus == 3) {
+                    setMaximToken(model.maximToken);
+                    setMaximTokenStatus(model.maximTokenStatus);
+                } else return stc;
+                break;
             case "all":
                 if (model.snappTokenStatus == 3) {
                     setSnappToken(model.snappToken);
@@ -138,6 +163,10 @@ public class tmTokensModel implements Serializable {
                 if (model.alopeykTokenStatus == 3) {
                     setAlopeykToken(model.alopeykToken);
                     setAlopeykTokenStatus(model.alopeykTokenStatus);
+                }
+                if (model.maximTokenStatus == 3) {
+                    setMaximToken(model.maximToken);
+                    setMaximTokenStatus(model.maximTokenStatus);
                 }
                 return null;
         }

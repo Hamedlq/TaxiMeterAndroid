@@ -1,7 +1,5 @@
 package com.mibarim.taximeter.models;
 
-import android.widget.ImageView;
-
 /**
  * Created by Arya on 12/9/2017.
  */
@@ -10,13 +8,34 @@ public class PriceListModel {
 
     private String serviceName;
     private String price;
-    private String id;
+
+    public int getId() {
+        return id;
+    }
+
+    private int id;
     private int icon;
 
-    public PriceListModel(String serviceName, String price, int icon){
+    public PriceListModel(String serviceName, String price, int icon) {
         this.serviceName = serviceName;
         this.price = price;
         this.icon = icon;
+        switch (serviceName) {
+            case "اسنپ اکو":
+                id = 1;
+                break;
+            case "تپسی":
+                id = 2;
+                break;
+            case "کارپینو":
+                id = 3;
+                break;
+            case "تاکسی اشتراکی می\u200Cبریم":
+                id = 4;
+                break;
+            default:
+                id = 5;
+        }
     }
 
     public String getPrice() {

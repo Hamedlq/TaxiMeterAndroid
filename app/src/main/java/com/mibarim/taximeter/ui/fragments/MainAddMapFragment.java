@@ -1,6 +1,5 @@
 package com.mibarim.taximeter.ui.fragments;
 
-import android.graphics.Path;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +11,8 @@ import android.widget.RelativeLayout;
 
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
-import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -257,8 +252,8 @@ public class MainAddMapFragment extends Fragment {
             ((SrcDstFragment) fragment).setTap30Price(getString(R.string.tap30_price), tap30Price, R.mipmap.tap30_icon);
         }
     }
-    public void setCarpinoPrice(String carpinoPrice)
-    {
+
+    public void setCarpinoPrice(String carpinoPrice) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
@@ -271,6 +266,22 @@ public class MainAddMapFragment extends Fragment {
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
             ((SrcDstFragment) fragment).setAlopeykPrice(getString(R.string.alopeyk_price), alopeykPrice, R.mipmap.alopeyk_icon);
+        }
+    }
+
+    public void setMaxim(String maximPrice, int service) {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            if (service == 0) {
+                ((SrcDstFragment) fragment).setMaximPrice(getString(R.string.maxim_echo_price), maximPrice.replace("تومان", ""), R.mipmap.maxim_icon);
+            } else if (service == 1) {
+                ((SrcDstFragment) fragment).setMaximPrice(getString(R.string.maxim_luxury_price), maximPrice.replace("تومان", ""), R.mipmap.maxim_icon);
+            } else if (service == 2) {
+                ((SrcDstFragment) fragment).setMaximPrice(getString(R.string.maxim_women_price), maximPrice.replace("تومان", ""), R.mipmap.maxim_icon);
+            } else if (service == 3) {
+                ((SrcDstFragment) fragment).setMaximPrice(getString(R.string.maxim_commercial_price), maximPrice.replace("تومان", ""), R.mipmap.maxim_icon);
+            }
         }
     }
 
