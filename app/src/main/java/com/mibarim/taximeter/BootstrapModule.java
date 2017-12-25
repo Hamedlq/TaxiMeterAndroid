@@ -9,6 +9,7 @@ import com.mibarim.taximeter.core.RestErrorHandler;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.services.PriceService;
+import com.mibarim.taximeter.services.ServiceOrderService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -140,6 +141,11 @@ public class BootstrapModule {
                                      @Named("alopeyk") RestAdapter alopeykRestAdapter,
                                      @Named("maxim") RestAdapter maximRestAdapter) {
         return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter, alopeykRestAdapter, maximRestAdapter);
+    }
+
+    @Provides
+    ServiceOrderService provideOrder(@Named("serviceOrder") RestAdapter serviceOrderAdapter){
+        return new ServiceOrderService(serviceOrderAdapter);
     }
 
     @Provides
@@ -336,6 +342,20 @@ public class BootstrapModule {
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
 //                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
+    @Provides
+    @Named("serviceOrder")
+    RestAdapter provideRestAdapterServiceOrder(RestAdapterRequestInterceptor restRequestInterceptor){
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint(Constants.Http.URL_BASE)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setClient(new OkClient(okHttpClient))
                 .build();
     }

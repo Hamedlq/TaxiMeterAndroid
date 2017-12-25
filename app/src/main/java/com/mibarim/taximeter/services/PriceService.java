@@ -229,28 +229,12 @@ public class PriceService {
         return maximResponse;
     }
 
-//    public String getSnappAuthorizationKey() {
-//        String authorization;
-//        SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
-//                "android_293ladfa12938176yfgsndf",
-//                "as;dfh98129-9111.*(U)jsflsdf");
-//        authorization = snappAuthResponse.getTokenType() + " " + snappAuthResponse.getAccessToken();
-//        return authorization;
-//
-//    }
-
     public String tap30Unauthorizationint(String authorization) {
         tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
             tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
             tokenGenerator.getToken("tap30", tmTokensModel.tokenStatus.NOT_SET, authorization);
-
-//        Tap30AuthResponse tap30AuthResponse = getTap30AuthService().authenticateUser("armin.zirak97@gmail.com", "12345678", "password",
-//                "android_293ladfa12938176yfgsndf",
-//                "as;dfh98129-9111.*(U)jsflsdf");
-//        authorization = tap30AuthResponse.getTokenType() + " " + tap30AuthResponse.getAccessToken();
-//        authorization = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjp7ImlkIjo4NjQ2OCwicHJvZmlsZUlkIjo4NjQ2OCwidXNlclBhc3NDcmVkZW50aWFsSWQiOjgyMjk1LCJpc0Nob3NlbkZvckluY2VudGl2ZSI6bnVsbCwiZGV2aWNlVG9rZW4iOiJOb0RldmljZVRva2VuWWV0IiwiZGV2aWNlVHlwZSI6IkFORFJPSUQiLCJyZWZlcnJhbENvZGUiOiIyT0FJQjciLCJyZWZlcnJlcklkIjpudWxsLCJyb2xlIjoiUEFTU0VOR0VSIiwiY3JlYXRlZEF0IjoiMjAxNi0wOC0xNFQxMzozNjoxMS44NTJaIiwidXBkYXRlZEF0IjoiMjAxNi0xMi0xNlQyMDo1MToxMy44MzdaIiwicHVzaHlEZXZpY2VUb2tlbiI6bnVsbCwidGVsZWdyYW1JZCI6bnVsbH0sImlhdCI6MTQ4MTkyMTQ5MCwiYXVkIjoiZG9yb3Noa2U6YXBwIiwiaXNzIjoiZG9yb3Noa2U6c2VydmVyIiwic3ViIjoiZG9yb3Noa2U6dG9rZW4ifQ.raEUrMSwJoRHUuCvy0oBHCapd8EebpzRNBqgFVSZXwiUueV5QfvQE-drhqIyFykwazZKKd5-KIfj9dmjeS3zAw";
         return tokenGenerator.getTap30Token();
     }
 

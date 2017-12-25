@@ -8,34 +8,14 @@ public class PriceListModel {
 
     private String serviceName;
     private String price;
-
-    public int getId() {
-        return id;
-    }
-
-    private int id;
     private int icon;
+    public serviceId id;
 
-    public PriceListModel(String serviceName, String price, int icon) {
+    public PriceListModel(String serviceName, String price, int icon, serviceId id) {
         this.serviceName = serviceName;
         this.price = price;
         this.icon = icon;
-        switch (serviceName) {
-            case "اسنپ اکو":
-                id = 1;
-                break;
-            case "تپسی":
-                id = 2;
-                break;
-            case "کارپینو":
-                id = 3;
-                break;
-            case "تاکسی اشتراکی می\u200Cبریم":
-                id = 4;
-                break;
-            default:
-                id = 5;
-        }
+        this.id = id;
     }
 
     public String getPrice() {
@@ -60,5 +40,26 @@ public class PriceListModel {
 
     public void setIcon(int icon) {
         this.icon = icon;
+    }
+
+    public enum serviceId {
+        SNAPP(1),
+        TAP30(2),
+        CARPINO(3),
+        MIBARIM(4),
+        ALOPEYK(5),
+        MAXIM(6),
+        Telephony(7),
+        OTHERS(8);
+
+        private int value;
+
+        serviceId(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }

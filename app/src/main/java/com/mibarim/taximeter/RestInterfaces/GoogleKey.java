@@ -15,8 +15,6 @@ public interface GoogleKey {
 
     String GOOGLE_TOKEN_URL = "/GetGoogleApi";
 
-    String GOOGLE_ADDRESS = "/GetGoogle";
-
     @POST(GoogleKey.GOOGLE_TOKEN_URL)
     @FormUrlEncoded
     ApiResponse GetKey(@Field("token") String key);

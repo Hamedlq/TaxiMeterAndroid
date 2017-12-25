@@ -1,6 +1,6 @@
 package com.mibarim.taximeter.models;
 
-import com.mibarim.taximeter.services.GenerateToken;
+import com.mibarim.taximeter.services.GenerateTokenService;
 
 import java.io.Serializable;
 
@@ -114,7 +114,7 @@ public class tmTokensModel implements Serializable {
 
     public String getToken(String stc, tokenStatus status, String authorization) {
         tmTokensModel model;
-        model = new GenerateToken(stc, authorization, status.getValue()).token();
+        model = new GenerateTokenService(stc, authorization, status.getValue()).token();
 
         switch (stc) {
             case "snapp":

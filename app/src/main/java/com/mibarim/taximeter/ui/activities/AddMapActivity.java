@@ -51,6 +51,7 @@ import com.mibarim.taximeter.models.Address.LocationPoint;
 import com.mibarim.taximeter.models.Address.PathPoint;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.ServiceOrderResponse;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
@@ -60,6 +61,7 @@ import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.ratingApp;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
+import com.mibarim.taximeter.services.ServiceOrderService;
 import com.mibarim.taximeter.ui.AlertDialogTheme;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
@@ -77,9 +79,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import retrofit.RetrofitError;
-
-import static android.R.attr.fragment;
-import static android.R.attr.itemTextAppearance;
 //import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 //import static com.mibarim.taximeter.core.Constants.Geocoding.GOOGLE_AUTOCOMPLETE_SERVICE_VALUE;
 
@@ -110,6 +109,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     AddressService addressService;
     @Inject
     PriceService priceService;
+    @Inject
+    ServiceOrderService serviceOrderService;
     boolean isSnappShown = false;
     boolean isTap30Shown = false;
     boolean isCarpinoShown = false;
@@ -172,10 +173,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
-    private LinearLayout fav_on_map, fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
-    private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
-    private DataBaseFav db;
-    private List<favoriteModel> items;
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -188,10 +185,19 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
         }
     };
+    private LinearLayout fav_on_map, fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
+    private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
+    private DataBaseFav db;
+    private List<favoriteModel> items;
     //public Menu theMenu;
     //private Tracker mTracker;
     //private TrafficAddressResponse trafficAddress;
     private SharedPreferences dstPrefs;
+    private List<String> priceOrderList;
+
+    public List<String> getPriceOrderList() {
+        return priceOrderList;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -286,6 +292,31 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onException(e);
                 if (e instanceof RetrofitError)
                     Toast.makeText(AddMapActivity.this, getString(R.string.server_not_responde), Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
+
+        new SafeAsyncTask() {
+
+            @Override
+            public Object call() throws Exception {
+                priceOrderList = serviceOrderService.getPriceOrder(new ServiceOrderResponse());
+                return null;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+                if (priceOrderList == null) {
+                    priceOrderList = new ArrayList<>();
+                    priceOrderList.add("1");
+                    priceOrderList.add("2");
+                    priceOrderList.add("3");
+                    priceOrderList.add("4");
+                    priceOrderList.add("5");
+                    priceOrderList.add("6");
+                    priceOrderList.add("7");
+                    priceOrderList.add("8");
+                }
             }
         }.execute();
 
@@ -1451,7 +1482,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
                 if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
                     getPathPriceCarpino(false);
-                } else if (e instanceof RetrofitError) {
+                } else if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
+                    getPathPriceCarpino(false);
+                else if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override
@@ -1501,8 +1534,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
         SharedPreferences sharedPreferences = getSharedPreferences("alopeyk", Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization", "");
-
-//        final String authorization ="Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIwNDcyMjksImlzcyI6Imh0dHBzOi8vYXBpLmFsb3BleWsuY29tL2FwaS92Mi92ZXJpZnkiLCJpYXQiOjE1MTI2MzYxMTksImV4cCI6NTExMjYzNjExOSwibmJmIjoxNTEyNjM2MTE5LCJqdGkiOiJUaVhPaWlQY2ROVkUxdk9QIn0.hA_bl7d_VzSfBxjUTiLtPggtQ-iHBsCqKNP7-QMrqiE";
 
         new SafeAsyncTask<Boolean>() {
             @Override
