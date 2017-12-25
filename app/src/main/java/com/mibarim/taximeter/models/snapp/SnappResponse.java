@@ -10,7 +10,7 @@ import java.util.List;
 public class SnappResponse implements Serializable {
     private String status;
     public Data data;
-    public class Data{
+    public class Data implements Serializable {
 
         List<SnappPrices> prices;
 
