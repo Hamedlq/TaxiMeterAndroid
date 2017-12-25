@@ -328,7 +328,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
 
     public void setFavoriteOnMap() {
-        Log.i("testfav", "testing");
         fav_on_map = (LinearLayout) findViewById(R.id.fav_on_map);
         fav_on_map1 = (LinearLayout) findViewById(R.id.fav_on_map1);
         fav_on_map_text1 = (TextView) findViewById(R.id.fav_on_map_text1);

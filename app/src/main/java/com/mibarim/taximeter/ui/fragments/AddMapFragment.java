@@ -161,7 +161,6 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
                     mCallback.setDstLatLng(dstLat, dstLng);
                     mCallback.onMapStopDrag(dstLat, dstLng);
                 }
-                ((AddMapActivity)getActivity()).setFavoriteOnMap();
                 break;
             default:
                 break;

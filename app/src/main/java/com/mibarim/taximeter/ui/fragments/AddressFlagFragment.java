@@ -77,7 +77,6 @@ public class AddressFlagFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_address_flag, container, false);
-        ((AddMapActivity)getActivity()).setFavoriteOnMap();
         return layout;
 
 

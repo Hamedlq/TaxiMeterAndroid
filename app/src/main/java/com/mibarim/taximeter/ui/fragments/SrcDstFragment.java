@@ -499,7 +499,15 @@ public class SrcDstFragment extends Fragment {
                     }
                 }
             else
-                priceModel.add(model);
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -631,7 +639,15 @@ public class SrcDstFragment extends Fragment {
                     }
                 }
             else
-                priceModel.add(model);
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
