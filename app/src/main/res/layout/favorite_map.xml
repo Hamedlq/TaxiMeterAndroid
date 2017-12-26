@@ -32,8 +32,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="سرچ کنید"
-                android:paddingBottom="5dp"
+                android:hint="جست و جو"
                 android:paddingTop="0dp"
                 android:textAlignment="center" />
 
