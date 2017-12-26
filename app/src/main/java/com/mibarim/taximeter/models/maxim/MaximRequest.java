@@ -1,10 +1,12 @@
 package com.mibarim.taximeter.models.maxim;
 
+import java.io.Serializable;
+
 /**
  * Created by Arya on 12/20/2017.
  */
 
-public class MaximRequest {
+public class MaximRequest implements Serializable {
 
     public String latitude;
     public String longitude;

@@ -49,8 +49,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 18
-        versionName "0.1"
+        versionCode 21
+        versionName "0.3"
 
         applicationVariants.all { variant ->
             variant.resValue "string", "version", variant.versionName
@@ -121,6 +121,10 @@ android {
     }
     productFlavors {
 
+        mibarim {
+            resValue "string", "rate_link", "bazaar://details?id=com.mibarim.taximeter"
+            resValue "string", "update_link", "http://mibarim.ir/androidapp/download/"
+        }
         cafeBazar {
             resValue "string", "rate_link", "bazaar://details?id=com.mibarim.taximeter"
             resValue "string", "update_link", "https://cafebazaar.ir/app/com.mibarim.taximeter/?l=fa"

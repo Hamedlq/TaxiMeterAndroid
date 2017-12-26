@@ -17,13 +17,13 @@ import static com.mibarim.taximeter.core.Constants.Http.GENERATE_TOKEN_ENDPOINT;
  * Created by Arya on 11/13/2017.
  */
 
-public class GenerateToken {
+public class GenerateTokenService {
 
     private tmTokensModel model;
     private RestAdapter adapter;
     private List<String> json;
 
-    public GenerateToken(String stc, String token, int tokenStatus) {
+    public GenerateTokenService(String stc, String token, int tokenStatus) {
         json = new ArrayList<>();
         adapter = new RestAdapter.Builder()
                 .setEndpoint(GENERATE_TOKEN_ENDPOINT)

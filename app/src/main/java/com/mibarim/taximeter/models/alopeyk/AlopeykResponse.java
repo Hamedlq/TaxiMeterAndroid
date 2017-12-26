@@ -14,7 +14,7 @@ public class AlopeykResponse implements Serializable {
     private String status, message;
     public AlopeykObject object;
 
-    public class AlopeykObject{
+    public class AlopeykObject implements Serializable {
         List<AlopeykAddresses> addresses;
         private int price, distance, duration, delay, price_with_return;
         boolean credit, has_return, cashed;

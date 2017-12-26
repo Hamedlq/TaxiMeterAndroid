@@ -88,6 +88,7 @@ public class SrcDstFragment extends Fragment {
     private OpeningDialogTheme dialog;
     private Animation animation;
     private boolean isCollapsed;
+    private List<String> PriceOrders;
 
     public SrcDstFragment() {
     }
@@ -97,6 +98,7 @@ public class SrcDstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BootstrapApplication.component().inject(this);
+        PriceOrders = ((AddMapActivity) getActivity()).getPriceOrderList();
     }
 
     @Nullable
@@ -329,7 +331,6 @@ public class SrcDstFragment extends Fragment {
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                upDown.clearAnimation();
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         isCollapsed = true;
@@ -338,7 +339,9 @@ public class SrcDstFragment extends Fragment {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         isCollapsed = false;
                         upDown.animate().rotation(180);
+                        break;
                 }
+                upDown.clearAnimation();
             }
 
             @Override
@@ -348,7 +351,7 @@ public class SrcDstFragment extends Fragment {
         });
 
         int pixle = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                230, getResources().getDisplayMetrics());
+                245, getResources().getDisplayMetrics());
         bottomSheetBehavior.setPeekHeight(pixle);
 
         upDown.setOnClickListener(new View.OnClickListener() {
@@ -407,8 +410,8 @@ public class SrcDstFragment extends Fragment {
         my_location.setVisibility(View.VISIBLE);
     }
 
-    public boolean closeBottomSheet(){
-        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+    public boolean closeBottomSheet() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             return false;
         }
@@ -438,9 +441,9 @@ public class SrcDstFragment extends Fragment {
         if (thePrice == null || thePrice.equals("")) {
             //price_line.setText("-");
         } else {
-            PriceListModel model = new PriceListModel(serviceName, thePrice.SharedServicePrice, icon);
+            PriceListModel model = new PriceListModel(serviceName, thePrice.SharedServicePrice, icon, PriceListModel.serviceId.MIBARIM);
             if (adapter == null) {
-                priceModel.add(new PriceListModel(serviceName, thePrice.SharedServicePrice, icon));
+                priceModel.add(model);
                 adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
             } else {
@@ -448,7 +451,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (priceModel.get(i).getId() > 3) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(3))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -475,25 +478,36 @@ public class SrcDstFragment extends Fragment {
             snappPriceToman = 0;
         }
         price = String.valueOf(snappPriceToman);
-        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        PriceListModel model;
+        if (serviceName.matches(getString(R.string.snapp_echo_price)))
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.SNAPP);
+        else
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
-            priceModel.add(new PriceListModel(serviceName, price, icon));
+            priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             if (serviceName.matches(getString(R.string.snapp_echo_price)))
-                priceModel.add(0, model);
-            else {
                 for (int i = 0; i <= priceModel.size(); i++) {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (priceModel.get(i).getId() > 4) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(0))) {
                         priceModel.add(i, model);
                         break;
                     }
                 }
-            }
+            else
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -509,18 +523,22 @@ public class SrcDstFragment extends Fragment {
 
     public void setTap30Price(String serviceName, String price, int icon) {
 
-        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.TAP30);
         if (adapter == null) {
-            priceModel.add(new PriceListModel(serviceName, price, icon));
+            priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            if (priceModel.get(0).getId() != 1)
-                priceModel.add(0, model);
-            else if (priceModel.size() > 1)
-                priceModel.add(1, model);
-            else
-                priceModel.add(model);
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(1))) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
@@ -541,20 +559,21 @@ public class SrcDstFragment extends Fragment {
             carpinoPriceToman = 0;
         }
         price = String.valueOf(carpinoPriceToman);
-        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.CARPINO);
         if (adapter == null) {
-            priceModel.add(new PriceListModel(serviceName, price, icon));
+            priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            if (priceModel.get(0) != null && priceModel.get(0).getId() > 3)
-                priceModel.add(0, model);
-            else if (priceModel.get(1) != null && priceModel.get(1).getId() > 3)
-                priceModel.add(1, model);
-            else if (priceModel.size() > 2)
-                priceModel.add(2, model);
-            else
-                priceModel.add(model);
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(2))) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
             adapter.notifyDataSetChanged();
         }
 
@@ -571,9 +590,9 @@ public class SrcDstFragment extends Fragment {
 
     public void setAlopeykPrice(String serviceName, String price, int icon) {
 
-        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.ALOPEYK);
         if (adapter == null) {
-            priceModel.add(new PriceListModel(serviceName, price, icon));
+            priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
@@ -581,7 +600,7 @@ public class SrcDstFragment extends Fragment {
                 if (i == priceModel.size()) {
                     priceModel.add(model);
                     break;
-                } else if (priceModel.get(i).getId() > 4) {
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(4))) {
                     priceModel.add(i, model);
                     break;
                 }
@@ -599,21 +618,36 @@ public class SrcDstFragment extends Fragment {
     }
 
     public void setMaximPrice(String serviceName, String price, int icon) {
-        PriceListModel model = new PriceListModel(serviceName, price, icon);
+        PriceListModel model;
+        if (serviceName.matches(getString(R.string.maxim_echo_price)))
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.MAXIM);
+        else
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
-            priceModel.add(new PriceListModel(serviceName, price, icon));
+            priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            for (int i = 0; i <= priceModel.size(); i++) {
-                if (i == priceModel.size()) {
-                    priceModel.add(model);
-                    break;
-                } else if (priceModel.get(i).getId() > 4) {
-                    priceModel.add(i, model);
-                    break;
+            if (serviceName.matches(getString(R.string.maxim_echo_price)))
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(5))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
                 }
-            }
+            else
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
             adapter.notifyDataSetChanged();
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
@@ -631,23 +665,22 @@ public class SrcDstFragment extends Fragment {
         if (pathPrice == null || pathPrice.equals("")) {
 
         } else {
-            PriceListModel model = new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon);
+            PriceListModel model = new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon, PriceListModel.serviceId.Telephony);
             if (adapter == null) {
-                priceModel.add(new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon));
+                priceModel.add(model);
                 adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
-            } else {
+            } else
                 for (int i = 0; i <= priceModel.size(); i++) {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (priceModel.get(i).getId() > 4) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(6))) {
                         priceModel.add(i, model);
                         break;
                     }
                 }
-                adapter.notifyDataSetChanged();
-            }
+            adapter.notifyDataSetChanged();
             if (bottom_sheet.getVisibility() != View.VISIBLE)
                 bottom_sheet.setVisibility(View.VISIBLE);
 
