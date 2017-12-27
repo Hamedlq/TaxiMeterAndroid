@@ -10,6 +10,7 @@ import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.GoogleAutocompleteService;
 import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.services.ServiceOrderService;
+import com.mibarim.taximeter.services.UserInfoService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -146,6 +147,11 @@ public class BootstrapModule {
     @Provides
     ServiceOrderService provideOrder(@Named("serviceOrder") RestAdapter serviceOrderAdapter){
         return new ServiceOrderService(serviceOrderAdapter);
+    }
+
+    @Provides
+    UserInfoService provideUserInfo(@Named("userInfo") RestAdapter userInfoAdapter){
+        return new UserInfoService(userInfoAdapter);
     }
 
     @Provides
@@ -349,6 +355,20 @@ public class BootstrapModule {
     @Provides
     @Named("serviceOrder")
     RestAdapter provideRestAdapterServiceOrder(RestAdapterRequestInterceptor restRequestInterceptor){
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint(Constants.Http.URL_BASE)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
+    @Provides
+    @Named("userInfo")
+    RestAdapter provideRestAdapterUserInfo(RestAdapterRequestInterceptor restRequestInterceptor){
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
