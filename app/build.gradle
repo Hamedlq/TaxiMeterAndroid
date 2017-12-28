@@ -12,15 +12,24 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin' version '0.5.0'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 
 repositories {
     maven { url 'https://github.com/donnfelker/mvn-repo/raw/master/' }
     mavenLocal()
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
+
+    maven { url 'https://maven.google.com' }
+
 }
 
 //def computeVersionCode() {
@@ -75,6 +84,11 @@ android {
         // Stops the Gradle plugin's automatic rasterization of vectors
         //generatedDensities = []
         //vectorDrawables.useSupportLibrary = true
+
+
+        manifestPlaceholders = [onesignal_app_id: "c1dd8fe8-293f-44f2-b59e-12bbcd6b713c",
+                                // Project number pulled from dashboard, local value is ignored.
+                                onesignal_google_project_number: "REMOTE"]
 
     }
 
@@ -199,6 +213,9 @@ dependencies {
     }
 
     compile 'com.squareup.okhttp:okhttp:2.7.2'
+
+    compile 'com.onesignal:OneSignal:[3.6.0, 3.99.99]'
+
 
     //androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.4'
