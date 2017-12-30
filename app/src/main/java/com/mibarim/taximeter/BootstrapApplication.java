@@ -8,6 +8,7 @@ import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.mibarim.taximeter.util.FontsOverride;
+import com.onesignal.OneSignal;
 
 import ir.adad.client.Adad;
 
@@ -29,6 +30,11 @@ public abstract class BootstrapApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
 
         init();
 

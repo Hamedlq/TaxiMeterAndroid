@@ -2,7 +2,6 @@ package com.mibarim.taximeter.RestInterfaces;
 
 import com.mibarim.taximeter.models.ApiResponse;
 
-import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -11,11 +10,11 @@ import retrofit.http.POST;
  * Created by Arya on 12/2/2017.
  */
 
-public interface GoogleKey {
+public interface GoogleKeyInterface {
 
     String GOOGLE_TOKEN_URL = "/GetGoogleApi";
 
-    @POST(GoogleKey.GOOGLE_TOKEN_URL)
+    @POST(GoogleKeyInterface.GOOGLE_TOKEN_URL)
     @FormUrlEncoded
     ApiResponse GetKey(@Field("token") String key);
 }
