@@ -93,6 +93,11 @@ public class PricesAdapter extends RecyclerView.Adapter<PricesAdapter.ViewHolder
                     holder.serviceIcon.setImageResource(R.mipmap.maxim_icon);
                     holder.servicePrice.setText(model.getPrice());
                     break;
+                case "تاچ سی":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.touchsi_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
                 case "تاکسی اشتراکی می\u200Cبریم":
                     holder.serviceName.setText(model.getServiceName());
                     holder.serviceIcon.setImageResource(R.mipmap.mibarim_icon);

@@ -253,6 +253,16 @@ public class MainAddMapFragment extends Fragment {
         }
     }
 
+    public void setTouchsiPrice(String touchsiPrice){
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+        if (fragment instanceof SrcDstFragment) {
+            touchsiPrice = touchsiPrice.replace("تومان","");
+            touchsiPrice = touchsiPrice.replace(",","");
+            ((SrcDstFragment) fragment).setTouchsiPrice(getString(R.string.tochsi_price), touchsiPrice , R.mipmap.touchsi_icon);
+        }
+    }
+
     public void setCarpinoPrice(String carpinoPrice) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);

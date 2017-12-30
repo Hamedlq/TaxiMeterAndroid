@@ -1,6 +1,6 @@
 package com.mibarim.taximeter.services;
 
-import com.mibarim.taximeter.RestInterfaces.MaximInterface;
+import com.mibarim.taximeter.RestInterfaces.TochsiInterface;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
@@ -13,6 +13,8 @@ import com.mibarim.taximeter.models.snapp.SnappRequest;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
+import com.mibarim.taximeter.models.tochsi.TochsiResponse;
+import com.mibarim.taximeter.models.tochsi.TouchsiRequest;
 
 import java.util.List;
 
@@ -49,8 +51,11 @@ public class PriceService {
     @Named("maxim")
     private RestAdapter maximRestAdapter;
 
+    @Named("tochsi")
+    private RestAdapter tochsiRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter) {
+
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter,RestAdapter tochsiRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
@@ -59,6 +64,7 @@ public class PriceService {
         this.carpinoRestAdapter = carpinoRestAdapter;
         this.alopeykRestAdapter = alopeykRestAdapter;
         this.maximRestAdapter = maximRestAdapter;
+        this.tochsiRestAdapter = tochsiRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -93,6 +99,10 @@ public class PriceService {
         return maximRestAdapter;
     }
 
+    public RestAdapter getTochsiRestAdapter() {
+        return tochsiRestAdapter;
+    }
+
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
     }
@@ -124,7 +134,9 @@ public class PriceService {
     private com.mibarim.taximeter.RestInterfaces.MaximInterface getMaximkService() {
         return getMaximRestAdapter().create(com.mibarim.taximeter.RestInterfaces.MaximInterface.class);
     }
-
+    private com.mibarim.taximeter.RestInterfaces.TochsiInterface getTochsiService(){
+        return getTochsiRestAdapter().create(com.mibarim.taximeter.RestInterfaces.TochsiInterface.class);
+    }
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
         ApiResponse res = getService().GetPathPrice(
@@ -227,6 +239,13 @@ public class PriceService {
                 maximRequest.platform, maximRequest.version);
 
         return maximResponse;
+    }
+    public TochsiResponse getPathPriceTochsi(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude){
+        TouchsiRequest touchsiRequest = new TouchsiRequest(srcLatitude,srcLongitude,dstLatitude,dstLongitude);
+        TochsiResponse tochsiResponse = getTochsiService().tochsiPrice(touchsiRequest);
+
+        return tochsiResponse;
+
     }
 
     public String tap30Unauthorizationint(String authorization) {

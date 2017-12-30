@@ -58,6 +58,7 @@ import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.maxim.MaximResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.tmTokensModel;
+import com.mibarim.taximeter.models.tochsi.TochsiResponse;
 import com.mibarim.taximeter.ratingApp;
 import com.mibarim.taximeter.services.AddressService;
 import com.mibarim.taximeter.services.PriceService;
@@ -114,6 +115,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     boolean isSnappShown = false;
     boolean isTap30Shown = false;
     boolean isCarpinoShown = false;
+    boolean isTouchsiShown = false;
     boolean isMibarimShown = false;
     boolean isTelephonyShown = false;
     boolean isAlopeykShown = false;
@@ -170,6 +172,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private CarpinoResponse carpinoResponse;
     private AlopeykResponse alopeykResponse;
     private List<MaximResponse> maximResponse;
+    private TochsiResponse tochsiResponse;
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
@@ -522,12 +525,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             isMibarimShown = true;
                             isSnappShown = true;
                             isCarpinoShown = true;
+                            isTouchsiShown = true;
                             isTap30Shown = true;
                             pathPrice = null;
                             snappResponse = null;
                             tap30PathPriceResponse = null;
                             alopeykResponse = null;
                             carpinoResponse = null;
+                            tochsiResponse = null;
                         }
                         break;
 
@@ -589,12 +594,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         isMibarimShown = true;
                         isSnappShown = true;
                         isCarpinoShown = true;
+                        isTouchsiShown = true;
                         isTap30Shown = true;
                         pathPrice = null;
                         snappResponse = null;
                         tap30PathPriceResponse = null;
                         alopeykResponse = null;
                         carpinoResponse = null;
+                        tochsiResponse = null;
                     }
 
                     break;
@@ -740,6 +747,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
             removeWaitLayout();
         }
+        if (tochsiResponse != null && !isTouchsiShown ) {
+            isTouchsiShown = true;
+            ((MainAddMapFragment) fragment).setTouchsiPrice(tochsiResponse.value.getPrice());
+            removeWaitLayout();
+        }
         if (carpinoResponse != null && !isCarpinoShown) {
             isCarpinoShown = true;
             ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
@@ -768,7 +780,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
             removeWaitLayout();
         }
-        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && !isGettingPrice) {
+        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && tochsiResponse == null && !isGettingPrice) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
@@ -1201,12 +1213,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         isTap30Shown = false;
         isCarpinoShown = false;
         isAlopeykShown = false;
+        isTouchsiShown = false;
         getPathPrice();
         getPathPriceSnapp(true);
         getPathPriceTap30_2();
         getPathPriceCarpino(true);
         getPathPriceAlopeyk(true);
         getPathPriceMaxim(true);
+        getPathPriceTouchsi(true);
     }
 
     private void returnOk() {
@@ -1614,6 +1628,34 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
         }.execute();
     }
+    public void getPathPriceTouchsi(final boolean tryAgainForAuthorize) {
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                tochsiResponse = priceService.getPathPriceTochsi(srcLatitude, srcLongitude,dstLatitude, dstLongitude);
+                return true;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+               SetPathPrice();
+                super.onFinally();
+            }
+
+            @Override
+            protected void onSuccess(final Boolean res) throws Exception {
+                super.onSuccess(res);
+
+            }
+
+        }.execute();
+    }
 
     private void refreshAuthorizationKeySnapp(final Callback callback, final String authorization) {
         refreshingTokens = true;
@@ -1683,7 +1725,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     private void refreshAuthorizationKeyMaxim(final Callback callback, final String authorization) {
-        new SafeAsyncTask<Boolean>() {
+            new SafeAsyncTask<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {

@@ -139,8 +139,9 @@ public class BootstrapModule {
                                      @Named("tap30Auth") RestAdapter tap30AuthRestAdapter,
                                      @Named("carpino") RestAdapter carpinoRestAdapter,
                                      @Named("alopeyk") RestAdapter alopeykRestAdapter,
-                                     @Named("maxim") RestAdapter maximRestAdapter) {
-        return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter, alopeykRestAdapter, maximRestAdapter);
+                                     @Named("maxim") RestAdapter maximRestAdapter,
+                                     @Named("tochsi") RestAdapter tochsiRestAdapter) {
+        return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter, alopeykRestAdapter, maximRestAdapter,tochsiRestAdapter);
     }
 
     @Provides
@@ -338,6 +339,21 @@ public class BootstrapModule {
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
                 .setEndpoint("http://cabinet.taximaxim.ir")
+//                .setErrorHandler(restErrorHandler)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setConverter(new DynamicJsonConverter())//problem in bood!!
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+    @Provides
+    @Named("tochsi")
+    RestAdapter provideRestAdapterTochsi(RestErrorHandler restErrorHandler,@Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint("https://tchp.mshdiau.ac.ir")
 //                .setErrorHandler(restErrorHandler)
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
