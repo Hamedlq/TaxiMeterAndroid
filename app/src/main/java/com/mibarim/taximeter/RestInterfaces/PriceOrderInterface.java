@@ -10,9 +10,9 @@ import retrofit.http.POST;
  * Created by Arya on 12/25/2017.
  */
 
-public interface PriceOrder {
+public interface PriceOrderInterface {
     String URL_GET_PRICE_ORDER = "/GetOrder";
 
-    @POST(PriceOrder.URL_GET_PRICE_ORDER)
+    @POST(PriceOrderInterface.URL_GET_PRICE_ORDER)
     ApiResponse getOrder(@Body ServiceOrderResponse model);
 }

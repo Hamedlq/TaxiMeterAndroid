@@ -49,8 +49,9 @@ public class PriceListModel {
         MIBARIM(4),
         ALOPEYK(5),
         MAXIM(6),
-        Telephony(7),
-        OTHERS(8);
+        TOUCHSI(7),
+        Telephony(8),
+        OTHERS(9);
 
         private int value;
 

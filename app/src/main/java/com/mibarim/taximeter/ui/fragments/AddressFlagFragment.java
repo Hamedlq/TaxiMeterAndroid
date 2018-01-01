@@ -43,8 +43,6 @@ public class AddressFlagFragment extends Fragment {
     @Bind(R.id.flag_layout)
     protected RelativeLayout flag_layout;
 
-    @Bind(R.id.wait_layout)
-    protected LinearLayout wait_layout;
 
     @Bind(R.id.src_mid_flag)
     protected TextView src_mid_flag;
@@ -173,7 +171,6 @@ public class AddressFlagFragment extends Fragment {
 //    }
 
     private void ReturnHomeState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.VISIBLE);
         dst_address_editText.setVisibility(View.VISIBLE);
@@ -186,7 +183,6 @@ public class AddressFlagFragment extends Fragment {
     }
 
     private void ReturnWorkState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.GONE);
         dst_address_editText.setVisibility(View.GONE);
@@ -198,7 +194,6 @@ public class AddressFlagFragment extends Fragment {
 
     private void priceState() {
         flag_layout.setVisibility(View.GONE);
-        wait_layout.setVisibility(View.GONE);
         address_layout.setVisibility(View.GONE);
     }
 
@@ -210,7 +205,6 @@ public class AddressFlagFragment extends Fragment {
     }
 
     private void HomeState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.GONE);
         dst_address_editText.setVisibility(View.GONE);
@@ -221,7 +215,6 @@ public class AddressFlagFragment extends Fragment {
     }
 
     private void WorkState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.VISIBLE);
         dst_address_editText.setVisibility(View.VISIBLE);
@@ -235,18 +228,14 @@ public class AddressFlagFragment extends Fragment {
     }
 
     public void waitingState() {
-        InvisibleAllFlag();
         flag_layout.setVisibility(View.VISIBLE);
-        wait_layout.setVisibility(View.VISIBLE);
     }
 
     private void requestingState() {
         flag_layout.setVisibility(View.GONE);
-        wait_layout.setVisibility(View.GONE);
     }
 
     private void sourceState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.GONE);
         dst_address_editText.setVisibility(View.GONE);
@@ -257,7 +246,6 @@ public class AddressFlagFragment extends Fragment {
     }
 
     private void destinationState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.VISIBLE);
         dst_address_editText.setVisibility(View.VISIBLE);
@@ -270,7 +258,6 @@ public class AddressFlagFragment extends Fragment {
     }
 
     private void eventSourceState() {
-        wait_layout.setVisibility(View.GONE);
         flag_layout.setVisibility(View.VISIBLE);
         src_dst_divide.setVisibility(View.VISIBLE);
         dst_address_editText.setVisibility(View.VISIBLE);

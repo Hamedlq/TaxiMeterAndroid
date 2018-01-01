@@ -77,25 +77,6 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/wait_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/waiting_flag"
-            style="@style/FlagSpinner"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginBottom="125dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp" />
-
-    </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/address_layout"

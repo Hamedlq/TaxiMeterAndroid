@@ -1,8 +1,9 @@
 package com.mibarim.taximeter.services;
 
-import com.mibarim.taximeter.RestInterfaces.MaximInterface;
+import com.mibarim.taximeter.RestInterfaces.TochsiInterface;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
+import com.mibarim.taximeter.models.UserInfoModel;
 import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
@@ -13,6 +14,8 @@ import com.mibarim.taximeter.models.snapp.SnappRequest;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
+import com.mibarim.taximeter.models.tochsi.TochsiResponse;
+import com.mibarim.taximeter.models.tochsi.TouchsiRequest;
 
 import java.util.List;
 
@@ -49,8 +52,11 @@ public class PriceService {
     @Named("maxim")
     private RestAdapter maximRestAdapter;
 
+    @Named("tochsi")
+    private RestAdapter tochsiRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter) {
+
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter,RestAdapter tochsiRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
@@ -59,6 +65,7 @@ public class PriceService {
         this.carpinoRestAdapter = carpinoRestAdapter;
         this.alopeykRestAdapter = alopeykRestAdapter;
         this.maximRestAdapter = maximRestAdapter;
+        this.tochsiRestAdapter = tochsiRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -93,6 +100,10 @@ public class PriceService {
         return maximRestAdapter;
     }
 
+    public RestAdapter getTochsiRestAdapter() {
+        return tochsiRestAdapter;
+    }
+
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
         return getRestAdapter().create(com.mibarim.taximeter.RestInterfaces.GetPriceService.class);
     }
@@ -124,14 +135,17 @@ public class PriceService {
     private com.mibarim.taximeter.RestInterfaces.MaximInterface getMaximkService() {
         return getMaximRestAdapter().create(com.mibarim.taximeter.RestInterfaces.MaximInterface.class);
     }
+    private com.mibarim.taximeter.RestInterfaces.TochsiInterface getTochsiService(){
+        return getTochsiRestAdapter().create(com.mibarim.taximeter.RestInterfaces.TochsiInterface.class);
+    }
 
-
-    public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
+    public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String userId) {
         ApiResponse res = getService().GetPathPrice(
                 srcLatitude,
                 srcLongitude,
                 dstLatitude,
-                dstLongitude
+                dstLongitude,
+                userId
         );
         return res;
     }
@@ -147,49 +161,22 @@ public class PriceService {
         return res;
     }
 
-//    private String authorization = "Bearer 89Z5DFMFJB7gYX3Njvr7mMT9MVgwU8UfN5Iv89wrs";
+    public PathPrice GetSnappPriceFromServer(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
+        PathPrice res = getService().GetSnappPrice(
+                srcLatitude,
+                srcLongitude,
+                dstLatitude,
+                dstLongitude
+        );
+        return res;
+    }
+
 
     public SnappResponse getPathPriceSnapp(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization) {
 
         SnappRequest snappRequest = new SnappRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude, 1, 0, 0, false, false, "2");
-//        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(new SnappRequest(srcLatitude,srcLongitude,dstLatitude,dstLongitude,1,0,0,false,false,"2").toString());
-
-
-//        try {
         SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(snappRequest, authorization);
         return snappApiResponse;
-//        }catch (Exception e)
-//        {
-//            SnappAuthResponse snappAuthResponse = getSnappAuthService().authenticateUser("armin.zirak97@gmail.com","12345678","password",
-//                    "android_293ladfa12938176yfgsndf",
-//                    "as;dfh98129-9111.*(U)jsflsdf");
-//            authorization = snappAuthResponse.getTokenType() + " " + snappAuthResponse.getAccessToken();
-//            return getPathPriceSnapp(srcLatitude,srcLongitude,dstLatitude,dstLongitude);
-////            Log.d("wait","wait");
-////            if (e instanceof RetrofitError)
-//
-//        }
-//        if (snappApiResponse.getStatus().equals("401"))
-//        {
-
-//
-//        }
-//        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(new SnappRequest());
-//        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(authorization,
-//                srcLatitude,srcLongitude,
-//                dstLatitude,dstLongitude,1,0,0,false,false,"2");
-//        HashMap hashMap = new HashMap();
-//        hashMap.put("origin_lat",srcLatitude);
-//        hashMap.put("origin_lng",srcLongitude);
-//        hashMap.put("destination_lat",dstLatitude);
-//        hashMap.put("destination_lng",dstLongitude);
-//        hashMap.put("service_type" , 1);
-//        hashMap.put("sub_service_type", 0);
-//        hashMap.put("destination_place_id",0);
-//        hashMap.put("round_trip", false);
-//        hashMap.put("services", false);
-//        hashMap.put("tag",2);
-//        SnappResponse snappApiResponse = getSnappService().GetPathPriceSnapp(authorization,hashMap);
 
     }
 
@@ -227,6 +214,13 @@ public class PriceService {
                 maximRequest.platform, maximRequest.version);
 
         return maximResponse;
+    }
+    public TochsiResponse getPathPriceTochsi(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude){
+        TouchsiRequest touchsiRequest = new TouchsiRequest(srcLatitude,srcLongitude,dstLatitude,dstLongitude);
+        TochsiResponse tochsiResponse = getTochsiService().tochsiPrice(touchsiRequest);
+
+        return tochsiResponse;
+
     }
 
     public String tap30Unauthorizationint(String authorization) {

@@ -1,6 +1,6 @@
 package com.mibarim.taximeter.services;
 
-import com.mibarim.taximeter.RestInterfaces.GoogleKey;
+import com.mibarim.taximeter.RestInterfaces.GoogleKeyInterface;
 import com.mibarim.taximeter.core.Constants;
 import com.mibarim.taximeter.models.ApiResponse;
 
@@ -31,9 +31,9 @@ public class GoogleAutocompleteService {
         return restAdapter;
     }
 
-    private GoogleKey getTokenService() {
+    private GoogleKeyInterface getTokenService() {
 
-        return getRestAdapter().create(GoogleKey.class);
+        return getRestAdapter().create(GoogleKeyInterface.class);
     }
 
     public String getKey(String key){

@@ -1,6 +1,6 @@
 package com.mibarim.taximeter.services;
 
-import com.mibarim.taximeter.RestInterfaces.PriceOrder;
+import com.mibarim.taximeter.RestInterfaces.PriceOrderInterface;
 import com.mibarim.taximeter.models.ServiceOrderResponse;
 
 import org.json.JSONException;
@@ -26,8 +26,8 @@ public class ServiceOrderService {
         this.restAdapter = restAdapter;
     }
 
-    private PriceOrder getPriceOrderInterface(){
-        return restAdapter.create(PriceOrder.class);
+    private PriceOrderInterface getPriceOrderInterface(){
+        return restAdapter.create(PriceOrderInterface.class);
     }
 
     private List<String> getMessage(ServiceOrderResponse response){

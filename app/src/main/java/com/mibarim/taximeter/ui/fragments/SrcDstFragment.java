@@ -451,7 +451,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(3))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -493,7 +493,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(0))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -503,7 +503,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -533,7 +533,7 @@ public class SrcDstFragment extends Fragment {
                 if (i == priceModel.size()) {
                     priceModel.add(model);
                     break;
-                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(1))) {
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                     priceModel.add(i, model);
                     break;
                 }
@@ -549,7 +549,34 @@ public class SrcDstFragment extends Fragment {
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
     }
+    public void setTouchsiPrice(String serviceName, String price, int icon) {
 
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.TOUCHSI);
+        if (adapter == null) {
+            priceModel.add(model);
+            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            priceLayout.setAdapter(adapter);
+        } else {
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+        if (bottom_sheet.getVisibility() != View.VISIBLE)
+            bottom_sheet.setVisibility(View.VISIBLE);
+
+        if (my_location.getVisibility() == View.VISIBLE)
+            my_location.setVisibility(View.GONE);
+
+        if (upDown.getAnimation() == null)
+            upDown.startAnimation(animation);
+    }
     public void setCarpinoPrice(String serviceName, String price, int icon) {
         int carpinoPriceToman;
         try {
@@ -569,7 +596,7 @@ public class SrcDstFragment extends Fragment {
                 if (i == priceModel.size()) {
                     priceModel.add(model);
                     break;
-                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(2))) {
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                     priceModel.add(i, model);
                     break;
                 }
@@ -600,7 +627,7 @@ public class SrcDstFragment extends Fragment {
                 if (i == priceModel.size()) {
                     priceModel.add(model);
                     break;
-                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(4))) {
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                     priceModel.add(i, model);
                     break;
                 }
@@ -633,7 +660,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(5))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -643,7 +670,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(7))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(8))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -675,7 +702,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(6))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
