@@ -46,14 +46,14 @@ public final class Constants {
 
 
         /**
-         * Base URL for all requests
+         * Base for all requests
          */
 //        public static final String URL_BASE = "http://localhost:50226";
 //        public static final String URL_BASE = "http://mibarim.ir/CoreApi";
 //          public static final String URL_BASE = "http://CoreApi.mibarim.ir/";
 //        public static final String URL_BASE = "http://mibarim.ir/testApp";
-//        public static final String URL_BASE = "http://mibarimapp.com/testApp";
-        public static final String URL_BASE = "http://Kerayechi.mibarimapp.com";
+        public static final String URL_BASE = "http://mibarimapp.com/testApp";
+//        public static final String URL_BASE = "http://Kerayechi.mibarimapp.com";
 
 
         /**

@@ -44,8 +44,10 @@ public class ServiceOrderService {
             Orders.add(3, json.getString("MibarimOrder"));
             Orders.add(4, json.getString("AlopeykOrder"));
             Orders.add(5, json.getString("MaximOrder"));
-            Orders.add(6, json.getString("TelephonyOrder"));
-            Orders.add(7, json.getString("OthersOrder"));
+            Orders.add(6, json.getString("TouchsiOrder"));
+            Orders.add(7, json.getString("QonqaOrder"));
+            Orders.add(8, json.getString("TelephonyOrder"));
+            Orders.add(9, json.getString("OthersOrder"));
             return Orders;
         } catch (JSONException e) {
             return null;

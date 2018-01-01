@@ -209,7 +209,7 @@ public class AddMapFragment extends Fragment implements OnMapReadyCallback {
         SharedPreferences pref = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
         dstLat = pref.getString("DstLatitude", null);
         dstLng = pref.getString("DstLongitude", null);
-        if (dstLat == null && dstLng == null) {
+        if (dstLat == null || dstLng == null) {
             LatLng dstPoint = new LatLng(lat, lng - 0.01);
             mMap.animateCamera(CameraUpdateFactory.newLatLng(dstPoint));
         }else {

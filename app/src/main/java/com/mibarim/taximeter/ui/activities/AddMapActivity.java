@@ -58,6 +58,7 @@ import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.maxim.MaximResponse;
+import com.mibarim.taximeter.models.qonqa.QonqaResponse;
 import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.tmTokensModel;
 import com.mibarim.taximeter.models.tochsi.TochsiResponse;
@@ -116,12 +117,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     ServiceOrderService serviceOrderService;
     boolean isSnappShown = false;
     boolean isTap30Shown = false;
-    boolean isCarpinoShown = false;
+    boolean isCarpinoNormalShown = false;
+    boolean isCarpinoVanShown = false;
+    boolean isCarpinoWomenShown = false;
+    boolean isCarpinoVipShown = false;
     boolean isTouchsiShown = false;
     boolean isMibarimShown = false;
     boolean isTelephonyShown = false;
     boolean isAlopeykShown = false;
     boolean isMaximShown = false;
+    boolean isQonqaShown = false;
     boolean refreshingTokens = false;
     ApiResponse recommendRoutes;
     List<PathPoint> recommendPathPointList;
@@ -172,8 +177,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     //private String pathPrice;
     private PathPrice pathPrice;
     private SnappResponse snappResponse;
-    private CarpinoResponse carpinoResponse;
+    private CarpinoResponse[] carpinoResponse;
     private AlopeykResponse alopeykResponse;
+    private QonqaResponse qonqaResponse;
     private List<MaximResponse> maximResponse;
     private TochsiResponse tochsiResponse;
     private List<Location> wayPoints;
@@ -203,6 +209,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     };
 
     public List<String> getPriceOrderList() {
+        carpinoResponse = new CarpinoResponse[4];
         return priceOrderList;
     }
 
@@ -251,7 +258,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }*/
-
+        SharedPreferences pref = getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+        pref.edit().putString("DstLatitude", null).apply();
+        pref.edit().putString("DstLongitude", null).apply();
         initScreen();
         final SharedPreferences snappPreferences;
         final SharedPreferences tap30Preferences;
@@ -323,6 +332,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     priceOrderList.add("6");
                     priceOrderList.add("7");
                     priceOrderList.add("8");
+                    priceOrderList.add("9");
                 }
             }
         }.execute();
@@ -531,7 +541,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             isTelephonyShown = true;
                             isMibarimShown = true;
                             isSnappShown = true;
-                            isCarpinoShown = true;
+                            isQonqaShown = true;
+                            isCarpinoNormalShown = true;
+                            isCarpinoVanShown = true;
+                            isCarpinoWomenShown = true;
+                            isCarpinoVipShown = true;
                             isTouchsiShown = true;
                             isTap30Shown = true;
                             pathPrice = null;
@@ -540,6 +554,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             alopeykResponse = null;
                             carpinoResponse = null;
                             tochsiResponse = null;
+                            maximResponse = null;
+                            qonqaResponse = null;
                         }
                         break;
 
@@ -600,7 +616,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         isTelephonyShown = true;
                         isMibarimShown = true;
                         isSnappShown = true;
-                        isCarpinoShown = true;
+                        isQonqaShown = true;
+                        isCarpinoNormalShown = true;
+                        isCarpinoVanShown = true;
+                        isCarpinoWomenShown = true;
+                        isCarpinoVipShown = true;
                         isTouchsiShown = true;
                         isTap30Shown = true;
                         pathPrice = null;
@@ -609,6 +629,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         alopeykResponse = null;
                         carpinoResponse = null;
                         tochsiResponse = null;
+                        maximResponse = null;
+                        qonqaResponse = null;
                     }
 
                     break;
@@ -753,15 +775,29 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setTap30Price(tap30PathPriceResponse.Tap30PathPrice);
             removeWaitLayout();
         }
-        if (tochsiResponse != null && !isTouchsiShown ) {
+        if (tochsiResponse != null && !isTouchsiShown) {
             isTouchsiShown = true;
             ((MainAddMapFragment) fragment).setTouchsiPrice(tochsiResponse.value.getPrice());
             removeWaitLayout();
         }
-        if (carpinoResponse != null && !isCarpinoShown) {
-            isCarpinoShown = true;
-            ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse.getPayable());
+        if (carpinoResponse != null) {
+            if (carpinoResponse[0] != null && !isCarpinoNormalShown) {
+                ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[0].getPayable(), 0);
+                isCarpinoNormalShown = true;
+            }
             removeWaitLayout();
+            if (carpinoResponse[1] != null && !isCarpinoVanShown) {
+                ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[1].getPayable(), 1);
+                isCarpinoVanShown = true;
+            }
+            if (carpinoResponse[2] != null && !isCarpinoWomenShown) {
+                ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[2].getPayable(), 2);
+                isCarpinoWomenShown = true;
+            }
+            if (carpinoResponse[3] != null && !isCarpinoVipShown) {
+                ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[3].getPayable(), 3);
+                isCarpinoVipShown = true;
+            }
         }
         if (pathPrice != null && !isMibarimShown) {
             isMibarimShown = true;
@@ -781,12 +817,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(2).value, 2);
             ((MainAddMapFragment) fragment).setMaxim(maximResponse.get(3).value, 3);
         }
+        if (qonqaResponse != null && !isQonqaShown) {
+            isQonqaShown = true;
+            ((MainAddMapFragment) fragment).setQonqa(qonqaResponse.getCost());
+        }
         if (pathPrice != null && !isTelephonyShown) {
             isTelephonyShown = true;
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
             removeWaitLayout();
         }
-        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && tochsiResponse == null && !isGettingPrice) {
+        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && tochsiResponse == null && qonqaResponse == null && !isGettingPrice) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
@@ -1061,9 +1101,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
     @Override
     public void onDestroy() {
-        SharedPreferences pref = getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
-        pref.edit().putString("DstLatitude", null).apply();
-        pref.edit().putString("DstLongitude", null).apply();
         stopRepeatingTask();
         super.onDestroy();
     }
@@ -1212,16 +1249,24 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         isMaximShown = false;
         isSnappShown = false;
         isTap30Shown = false;
-        isCarpinoShown = false;
+        isQonqaShown = false;
+        isCarpinoNormalShown = false;
+        isCarpinoVanShown = false;
+        isCarpinoWomenShown = false;
+        isCarpinoVipShown = false;
         isAlopeykShown = false;
         isTouchsiShown = false;
         getPathPrice();
         getPathPriceSnapp(true);
         getPathPriceTap30_2();
-        getPathPriceCarpino(true);
+        getPathPriceCarpino(true, "NORMAL");
+        getPathPriceCarpino(true, "VAN");
+        getPathPriceCarpino(true, "WOMEN");
+        getPathPriceCarpino(true, "VIP");
         getPathPriceAlopeyk(true);
         getPathPriceMaxim(true);
         getPathPriceTouchsi(true);
+        getPathPriceQonqa(true);
     }
 
     private void returnOk() {
@@ -1255,6 +1300,20 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             AlertDialogTheme alertDialog = new AlertDialogTheme(AddMapActivity.this);
             alertDialog.show();
         }
+    }
+
+    public boolean isTabriz() {
+        double srcLat = Double.parseDouble(srcLatitude);
+        double srcLng = Double.parseDouble(srcLongitude);
+        double dstLat = Double.parseDouble(dstLatitude);
+        double dstLng = Double.parseDouble(dstLongitude);
+        if (srcLat < 38.188843 && srcLat > 37.988124 && srcLng < 46.499364 && srcLng > 46.091843)
+            if (dstLat < 38.188843 && dstLat > 37.988124 && dstLng < 46.499364 && dstLng > 46.091843)
+                return true;
+            else
+                return false;
+        else
+            return false;
     }
 
     private void getPathPrice() {
@@ -1439,15 +1498,23 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
 
-    public void getPathPriceCarpino(final boolean tryAgainForAuthorize) {
+    public void getPathPriceCarpino(final boolean tryAgainForAuthorize, final String serviceType) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
-        final String authorization = sharedPreferences.getString("authorization", "");
+        final String authorization = "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..Hb70jPIkCucWtWac.cA5Cq-zKxjOJxRZ3flr-APyccWYMV0BQdpWjyovrzLb9i9x88KijP_1bfJNqYFQNpd9U53Y-0SwWwnCc9HaQ4M_9f3Hj4Wt9jGZU1872kaNLj0cMZvElgnCOoKisi7-RzhgsGX2hD-YTd8gTvZmzC3Tx2vL2dh0K0S3nn_Xtlr6XLY93EBVAv1fIo9lqXvd2N6HUJR5vZWv82lbAVTzgCqR2L-erEMEe6MJLQCjAcMZUiCBEvNnnMzU_xOU54L48qo2nrXrKZWjZvfKLrCiBZxr0q23JipflAbjmjUEwrPqcLN4K7UJIOR8jZ2GyRn2l582hZ15VDewFLIJjzuGnmBGALe2Moi4Asyw_J0198-GisoLlyIt6XtQVtC_WyMMBiWfUAj_FLpK2VTYWE_EJojl_4gXt3KCDrC96aGIM_rHSMb8URf3Hl7LVs-HM4MFiXhNNQMEpxJe9BwsjUihN4vH7gBePossXxTMdR_uR9X1Pe-4HV_Pf-H8LwjBpuOJEjlxfU2zLI0FtauFnbfcOX8rVMVLUUYr9Zq2H5GohATDiskdW7GhY2hVxTKAla2ckAtkczIZ8FgY2jdUHIWgE.BjAjLdc9-amNYBQz05X3cg";
+//                sharedPreferences.getString("authorization", "");
 
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                carpinoResponse = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                if (serviceType.matches("NORMAL"))
+                    carpinoResponse[0] = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, serviceType, authorization);
+                else if (serviceType.matches("VAN"))
+                    carpinoResponse[1] = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, serviceType, authorization);
+                else if (serviceType.matches("WOMEN"))
+                    carpinoResponse[2] = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, serviceType, authorization);
+                else if (serviceType.matches("VIP"))
+                    carpinoResponse[3] = priceService.getPathPriceCarpino(srcLatitude, srcLongitude, dstLatitude, dstLongitude, serviceType, authorization);
                 return true;
             }
 
@@ -1456,15 +1523,15 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onException(e);
 
                 if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
-                    getPathPriceCarpino(false);
+                    getPathPriceCarpino(false, serviceType);
                 } else if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
-                    getPathPriceCarpino(false);
+                    getPathPriceCarpino(false, serviceType);
                 else if (e instanceof RetrofitError) {
                     if (tryAgainForAuthorize) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override
                             public void dosth() {
-                                getPathPriceCarpino(false);
+                                getPathPriceCarpino(false, serviceType);
                             }
                         }, authorization);
                     }
@@ -1530,9 +1597,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     public void getPathPriceMaxim(final boolean tryAgainForAuthorize) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("maxim", Context.MODE_PRIVATE);
-        final String authorization = "52006e49fec87437";/*sharedPreferences.getString("authorization", "")*/
-        ;
-
+        final String authorization = sharedPreferences.getString("authorization", "");
 
         new SafeAsyncTask<Boolean>() {
             @Override
@@ -1563,19 +1628,15 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onFinally();
             }
 
-            @Override
-            protected void onSuccess(final Boolean res) throws Exception {
-                super.onSuccess(res);
-            }
-
         }.execute();
     }
+
     public void getPathPriceTouchsi(final boolean tryAgainForAuthorize) {
 
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                tochsiResponse = priceService.getPathPriceTochsi(srcLatitude, srcLongitude,dstLatitude, dstLongitude);
+                tochsiResponse = priceService.getPathPriceTochsi(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
                 return true;
             }
 
@@ -1586,7 +1647,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
             @Override
             protected void onFinally() throws RuntimeException {
-               SetPathPrice();
+                SetPathPrice();
                 super.onFinally();
             }
 
@@ -1594,6 +1655,44 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
 
+            }
+
+        }.execute();
+    }
+
+    public void getPathPriceQonqa(final boolean tryAgainForAuthorize) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("qonqa", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (isTabriz())
+                    qonqaResponse = priceService.getPathPriceQonqa(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+
+                if (e instanceof RetrofitError) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyQonqa(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceQonqa(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                SetPathPrice();
+                super.onFinally();
             }
 
         }.execute();
@@ -1663,13 +1762,29 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     private void refreshAuthorizationKeyMaxim(final Callback callback, final String authorization) {
-            new SafeAsyncTask<Boolean>() {
+        new SafeAsyncTask<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {
                 String maxim = priceService.maximUnauthorizationint(authorization);
                 SharedPreferences.Editor editor = getSharedPreferences("maxim", Context.MODE_PRIVATE).edit();
                 editor.putString("authorization", maxim);
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
+
+    private void refreshAuthorizationKeyQonqa(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String qonqa = priceService.qonqaUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("maxim", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", qonqa);
                 editor.apply();
                 callback.dosth();
                 return true;

@@ -16,12 +16,14 @@ public class tmTokensModel implements Serializable {
     private String carpinoToken;
     private String alopeykToken;
     private String maximToken;
+    private String qonqaToken;
 
     private int snappTokenStatus;
     private int tap30TokenStatus;
     private int carpinoTokenStatus;
     private int alopeykTokenStatus;
     private int maximTokenStatus;
+    private int qonqaTokenStatus;
 
     public tmTokensModel() {
         snappToken = "";
@@ -29,11 +31,33 @@ public class tmTokensModel implements Serializable {
         carpinoToken = "";
         alopeykToken = "";
         maximToken = "";
+        qonqaToken = "";
 
+
+    }
+
+    public String getQonqaToken() {
+        return qonqaToken;
+    }
+
+    public void setQonqaToken(String qonqaToken) {
+        this.qonqaToken = qonqaToken;
+    }
+
+    public int getQonqaTokenStatus() {
+        return qonqaTokenStatus;
+    }
+
+    public void setQonqaTokenStatus(int qonqaTokenStatus) {
+        this.qonqaTokenStatus = qonqaTokenStatus;
     }
 
     public String getAlopeykToken() {
         return alopeykToken;
+    }
+
+    public void setAlopeykToken(String alopeykToken) {
+        this.alopeykToken = alopeykToken;
     }
 
     public String getMaximToken() {
@@ -50,10 +74,6 @@ public class tmTokensModel implements Serializable {
 
     public void setMaximTokenStatus(int maximTokenStatus) {
         this.maximTokenStatus = maximTokenStatus;
-    }
-
-    public void setAlopeykToken(String alopeykToken) {
-        this.alopeykToken = alopeykToken;
     }
 
     public int getAlopeykTokenStatus() {
@@ -145,6 +165,12 @@ public class tmTokensModel implements Serializable {
                 if (model.maximTokenStatus == 3) {
                     setMaximToken(model.maximToken);
                     setMaximTokenStatus(model.maximTokenStatus);
+                } else return stc;
+                break;
+            case "qonqa":
+                if (model.qonqaTokenStatus == 3) {
+                    setMaximToken(model.qonqaToken);
+                    setMaximTokenStatus(model.qonqaTokenStatus);
                 } else return stc;
                 break;
             case "all":

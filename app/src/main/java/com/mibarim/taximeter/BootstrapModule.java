@@ -141,17 +141,21 @@ public class BootstrapModule {
                                      @Named("carpino") RestAdapter carpinoRestAdapter,
                                      @Named("alopeyk") RestAdapter alopeykRestAdapter,
                                      @Named("maxim") RestAdapter maximRestAdapter,
-                                     @Named("tochsi") RestAdapter tochsiRestAdapter) {
-        return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter, tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter, alopeykRestAdapter, maximRestAdapter,tochsiRestAdapter);
+                                     @Named("tochsi") RestAdapter tochsiRestAdapter,
+                                     @Named("qonqa") RestAdapter qonqaRestAdapter) {
+        return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter,
+                tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter,
+                alopeykRestAdapter, maximRestAdapter, tochsiRestAdapter,
+                qonqaRestAdapter);
     }
 
     @Provides
-    ServiceOrderService provideOrder(@Named("serviceOrder") RestAdapter serviceOrderAdapter){
+    ServiceOrderService provideOrder(@Named("serviceOrder") RestAdapter serviceOrderAdapter) {
         return new ServiceOrderService(serviceOrderAdapter);
     }
 
     @Provides
-    UserInfoService provideUserInfo(@Named("userInfo") RestAdapter userInfoAdapter){
+    UserInfoService provideUserInfo(@Named("userInfo") RestAdapter userInfoAdapter) {
         return new UserInfoService(userInfoAdapter);
     }
 
@@ -261,7 +265,7 @@ public class BootstrapModule {
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
-                .setEndpoint("https://api.carpino.io/")
+                .setEndpoint("https://api.carpino.info/")
 //                .setErrorHandler(restErrorHandler)
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -309,7 +313,7 @@ public class BootstrapModule {
             });
 
             return new RestAdapter.Builder()
-                    .setEndpoint("https://api.carpino.io/")
+                    .setEndpoint("https://api.carpino.info/")
 //                .setErrorHandler(restErrorHandler)
                     .setRequestInterceptor(restRequestInterceptor)
                     .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -339,22 +343,21 @@ public class BootstrapModule {
 
     @Provides
     @Named("maxim")
-    RestAdapter provideRestAdapterMaxim(RestErrorHandler restErrorHandler, RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
+    RestAdapter provideRestAdapterMaxim(RestAdapterRequestInterceptor restRequestInterceptor) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
                 .setEndpoint("http://cabinet.taximaxim.ir")
-//                .setErrorHandler(restErrorHandler)
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-//                .setConverter(new DynamicJsonConverter())//problem in bood!!
                 .setClient(new OkClient(okHttpClient))
                 .build();
     }
+
     @Provides
     @Named("tochsi")
-    RestAdapter provideRestAdapterTochsi(RestErrorHandler restErrorHandler,@Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
+    RestAdapter provideRestAdapterTochsi(RestErrorHandler restErrorHandler, @Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
@@ -370,7 +373,7 @@ public class BootstrapModule {
 
     @Provides
     @Named("serviceOrder")
-    RestAdapter provideRestAdapterServiceOrder(RestAdapterRequestInterceptor restRequestInterceptor){
+    RestAdapter provideRestAdapterServiceOrder(RestAdapterRequestInterceptor restRequestInterceptor) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
@@ -384,12 +387,26 @@ public class BootstrapModule {
 
     @Provides
     @Named("userInfo")
-    RestAdapter provideRestAdapterUserInfo(RestAdapterRequestInterceptor restRequestInterceptor){
+    RestAdapter provideRestAdapterUserInfo(RestAdapterRequestInterceptor restRequestInterceptor) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
                 .setEndpoint(Constants.Http.URL_BASE)
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
+    @Provides
+    @Named("qonqa")
+    RestAdapter provideRestAdapterQonqa(@Named("json") RestAdapterRequestInterceptor restRequestInterceptor) {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint("http://147.135.163.161")
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setClient(new OkClient(okHttpClient))

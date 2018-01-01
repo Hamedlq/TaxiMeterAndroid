@@ -1,6 +1,8 @@
 package com.mibarim.taximeter.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import com.mibarim.taximeter.ui.OpeningDialogTheme;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -104,6 +107,10 @@ public class SrcDstFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final String dstLat, dstLng;
+        SharedPreferences preferences = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
+        dstLat = preferences.getString("DstLatitude", null);
+        dstLng = preferences.getString("DstLongitude", null);
         isCollapsed = true;
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_src_dst, container, false);
         priceLayout = (RecyclerView) layout.findViewById(R.id.price_layout);
@@ -128,15 +135,13 @@ public class SrcDstFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Intent i;
-                                PackageManager manager = getActivity().getPackageManager();
                                 dialog.dismiss();
                                 try {
-                                    i = manager.getLaunchIntentForPackage("cab.snapp.passenger");
-                                    if (i == null)
-                                        throw new PackageManager.NameNotFoundException();
-                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    Uri location = Uri.parse("geo:" + dstLat + "," + dstLng + "?q=" + dstLat + "," + dstLng);
+                                    i = new Intent(Intent.ACTION_VIEW, location);
+                                    i.setPackage("cab.snapp.passenger");
                                     startActivity(i);
-                                } catch (PackageManager.NameNotFoundException e) {
+                                } catch (IllegalFormatException e) {
                                     try {
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "cab.snapp.passenger")));
                                     } catch (Exception e1) {
@@ -192,15 +197,13 @@ public class SrcDstFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Intent i;
-                                PackageManager manager = getActivity().getPackageManager();
                                 dialog.dismiss();
                                 try {
-                                    i = manager.getLaunchIntentForPackage("com.radnik.carpino.passenger");
-                                    if (i == null)
-                                        throw new PackageManager.NameNotFoundException();
-                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    Uri location = Uri.parse("geo:" + dstLat + "," + dstLng + "?q=" + dstLat + "," + dstLng);
+                                    i = new Intent(Intent.ACTION_VIEW, location);
+                                    i.setPackage("com.radnik.carpino.passenger");
                                     startActivity(i);
-                                } catch (PackageManager.NameNotFoundException e) {
+                                } catch (IllegalArgumentException e) {
                                     try {
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.radnik.carpino.passenger")));
                                     } catch (Exception e1) {
@@ -299,6 +302,38 @@ public class SrcDstFragment extends Fragment {
                                 } catch (PackageManager.NameNotFoundException e) {
                                     try {
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.mibarim.main")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                    } else if (serviceName.contains("قونقا")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("قونقا", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.qonqa.qonqa");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    try {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.qonqa.qonqa")));
                                     } catch (Exception e1) {
                                         Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
                                     }
@@ -503,7 +538,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -549,6 +584,7 @@ public class SrcDstFragment extends Fragment {
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
     }
+
     public void setTouchsiPrice(String serviceName, String price, int icon) {
 
         PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.TOUCHSI);
@@ -577,6 +613,7 @@ public class SrcDstFragment extends Fragment {
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
     }
+
     public void setCarpinoPrice(String serviceName, String price, int icon) {
         int carpinoPriceToman;
         try {
@@ -586,21 +623,36 @@ public class SrcDstFragment extends Fragment {
             carpinoPriceToman = 0;
         }
         price = String.valueOf(carpinoPriceToman);
-        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.CARPINO);
+        PriceListModel model;
+        if (serviceName.matches(getString(R.string.carpino_normal_price)))
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.CARPINO);
+        else
+            model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
             priceModel.add(model);
             adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
-            for (int i = 0; i <= priceModel.size(); i++) {
-                if (i == priceModel.size()) {
-                    priceModel.add(model);
-                    break;
-                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
-                    priceModel.add(i, model);
-                    break;
+            if (serviceName.matches(getString(R.string.carpino_normal_price)))
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
                 }
-            }
+            else
+                for (int i = 0; i <= priceModel.size(); i++) {
+                    if (i == priceModel.size()) {
+                        priceModel.add(model);
+                        break;
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
+                        priceModel.add(i, model);
+                        break;
+                    }
+                }
             adapter.notifyDataSetChanged();
         }
 
@@ -670,7 +722,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(8))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -686,6 +738,35 @@ public class SrcDstFragment extends Fragment {
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
 
+    }
+
+    public void setQonqaPrice(String serviceName, String price, int icon) {
+
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.QONQA);
+        if (adapter == null) {
+            priceModel.add(model);
+            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            priceLayout.setAdapter(adapter);
+        } else {
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+        if (bottom_sheet.getVisibility() != View.VISIBLE)
+            bottom_sheet.setVisibility(View.VISIBLE);
+
+        if (my_location.getVisibility() == View.VISIBLE)
+            my_location.setVisibility(View.GONE);
+
+        if (upDown.getAnimation() == null)
+            upDown.startAnimation(animation);
     }
 
     public void setPrice(String serviceName, PathPrice pathPrice, int icon) {

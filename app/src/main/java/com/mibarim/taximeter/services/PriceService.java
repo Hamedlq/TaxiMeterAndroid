@@ -1,16 +1,16 @@
 package com.mibarim.taximeter.services;
 
-import com.mibarim.taximeter.RestInterfaces.TochsiInterface;
 import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.models.PathPrice;
-import com.mibarim.taximeter.models.UserInfoModel;
 import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
 import com.mibarim.taximeter.models.maxim.MaximRequest;
 import com.mibarim.taximeter.models.maxim.MaximResponse;
-import com.mibarim.taximeter.models.snapp.SnappResponse;
+import com.mibarim.taximeter.models.qonqa.QonqaRequest;
+import com.mibarim.taximeter.models.qonqa.QonqaResponse;
 import com.mibarim.taximeter.models.snapp.SnappRequest;
+import com.mibarim.taximeter.models.snapp.SnappResponse;
 import com.mibarim.taximeter.models.tap30.Tap30Request;
 import com.mibarim.taximeter.models.tap30.Tap30Response;
 import com.mibarim.taximeter.models.tmTokensModel;
@@ -20,7 +20,6 @@ import com.mibarim.taximeter.models.tochsi.TouchsiRequest;
 import java.util.List;
 
 import javax.inject.Named;
-
 
 import retrofit.RestAdapter;
 
@@ -55,8 +54,10 @@ public class PriceService {
     @Named("tochsi")
     private RestAdapter tochsiRestAdapter;
 
+    @Named("qonqa")
+    private RestAdapter qonqaRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter,RestAdapter tochsiRestAdapter) {
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter, RestAdapter tochsiRestAdapter, RestAdapter qonqaRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
@@ -66,6 +67,7 @@ public class PriceService {
         this.alopeykRestAdapter = alopeykRestAdapter;
         this.maximRestAdapter = maximRestAdapter;
         this.tochsiRestAdapter = tochsiRestAdapter;
+        this.qonqaRestAdapter = qonqaRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -92,16 +94,20 @@ public class PriceService {
         return carpinoRestAdapter;
     }
 
-    public RestAdapter getAlopeykRestAdapter(){
+    public RestAdapter getAlopeykRestAdapter() {
         return alopeykRestAdapter;
     }
 
-    public RestAdapter getMaximRestAdapter(){
+    public RestAdapter getMaximRestAdapter() {
         return maximRestAdapter;
     }
 
     public RestAdapter getTochsiRestAdapter() {
         return tochsiRestAdapter;
+    }
+
+    RestAdapter getQonqaRestAdapter() {
+        return qonqaRestAdapter;
     }
 
     private com.mibarim.taximeter.RestInterfaces.GetPriceService getService() {
@@ -135,8 +141,13 @@ public class PriceService {
     private com.mibarim.taximeter.RestInterfaces.MaximInterface getMaximkService() {
         return getMaximRestAdapter().create(com.mibarim.taximeter.RestInterfaces.MaximInterface.class);
     }
-    private com.mibarim.taximeter.RestInterfaces.TochsiInterface getTochsiService(){
+
+    private com.mibarim.taximeter.RestInterfaces.TochsiInterface getTochsiService() {
         return getTochsiRestAdapter().create(com.mibarim.taximeter.RestInterfaces.TochsiInterface.class);
+    }
+
+    private com.mibarim.taximeter.RestInterfaces.QonqaInterface getQonqaService() {
+        return getQonqaRestAdapter().create(com.mibarim.taximeter.RestInterfaces.QonqaInterface.class);
     }
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String userId) {
@@ -188,16 +199,14 @@ public class PriceService {
 
     }
 
-    public CarpinoResponse getPathPriceCarpino(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization) {
-        //Temporary
-//        String auth = "Bearer eiJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..RdBoecrRFVTkHtcY.fuDxt5CjN-1821TaQsa0MJLnDjgWNuJjlS7uUdrnfMx_zHgjwJ51wcanmtdJ1R15H-_OS46RZ3TsFTrGRHJmFa8wLTBrDLMV7tCBRFkrqxfzv41rKbKj5RPMthfb8ei4POAl9U3bx9BtQRsDaZMhbhMyG_xtjNwHZTeq44coPyP96z6YDZGlGe3Q_RQNamDZG6XPXXpeiX0EynDn08dFNWhTqmpgW39ghyGPnYNxu6cS42CWUILoyyWsC3PxxR3-pf2vkf81t7flZis0Q1Adw7nTKAUSZganzbBJgCBj-3MMhj2zRUXYDVPf-QiClFuTywJed-CIYaGgyNTVAtlyNsVRRKbfnlXomTG4dTGblHzefI6WtK7uSa49YtAL0OFEgdfECZ79HBmop5YmZAMTnT4kjc1FvyVIdrtMtDeXNZcF_8ZtAkE6usb5-ya59TObTLr8JKjKkbBBPGQMwh5-vbQCFB8CF1N2D3VhwfSvEkmgCAqGR54ffnCpWgIrw3qs9gKpJIT7hMm7XjPsqxRyFWnAWey9tPOtd19Up8gjl3-gVxod6K21utpENjhytjMTqceElFxkdPnHhbkBx6ie.UD2tOle36RCdxzXoyhO8Lg";
+    public CarpinoResponse getPathPriceCarpino(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String serviceType, String authorization) {
         String origin = srcLatitude + "," + srcLongitude;
         String destination = dstLatitude + "," + dstLongitude;
-        CarpinoResponse carpinoResponse = getCarpinoService().GetPathPriceCarpino(origin, destination, "0,0", "NORMAL", "SINGLE", "0", authorization);
+        CarpinoResponse carpinoResponse = getCarpinoService().GetPathPriceCarpino(origin, destination, "0,0", serviceType, "SINGLE", "0", authorization);
         return carpinoResponse;
     }
 
-    public AlopeykResponse getPathPriceAlopeyk(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization){
+    public AlopeykResponse getPathPriceAlopeyk(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization) {
         AlopeykRequest alopeykRequest = new AlopeykRequest();
         alopeykRequest.setAddresses(srcLatitude, srcLongitude, "origin");
         alopeykRequest.setAddresses(dstLatitude, dstLongitude, "destination");
@@ -206,7 +215,7 @@ public class PriceService {
         return alopeykResponse;
     }
 
-    public List<MaximResponse> getPathPriceMaxim(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization){
+    public List<MaximResponse> getPathPriceMaxim(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization) {
         MaximRequest maximRequest = new MaximRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
         List<MaximResponse> maximResponse = getMaximkService().getMaximPrice(maximRequest.latitude, maximRequest.longitude,
                 maximRequest.startLatitude, maximRequest.startLongitude, maximRequest.endLatitude, maximRequest.endLongitude,
@@ -215,12 +224,18 @@ public class PriceService {
 
         return maximResponse;
     }
-    public TochsiResponse getPathPriceTochsi(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude){
-        TouchsiRequest touchsiRequest = new TouchsiRequest(srcLatitude,srcLongitude,dstLatitude,dstLongitude);
+
+    public TochsiResponse getPathPriceTochsi(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
+        TouchsiRequest touchsiRequest = new TouchsiRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
         TochsiResponse tochsiResponse = getTochsiService().tochsiPrice(touchsiRequest);
 
         return tochsiResponse;
 
+    }
+
+    public QonqaResponse getPathPriceQonqa(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization) {
+        QonqaRequest qonqaRequest = new QonqaRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+        return getQonqaService().getPathPriceQonqa("calculate_travel", authorization, qonqaRequest);
     }
 
     public String tap30Unauthorizationint(String authorization) {
@@ -256,6 +271,15 @@ public class PriceService {
             tokenGenerator.getToken("maxim", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
             tokenGenerator.getToken("maxim", tmTokensModel.tokenStatus.NOT_SET, authorization);
+        return tokenGenerator.getMaximToken();
+    }
+
+    public String qonqaUnauthorizationint(String authorization) {
+        tmTokensModel tokenGenerator = new tmTokensModel();
+        if (!authorization.matches(""))
+            tokenGenerator.getToken("qonqa", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("qonqa", tmTokensModel.tokenStatus.NOT_SET, authorization);
         return tokenGenerator.getMaximToken();
     }
 

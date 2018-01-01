@@ -63,7 +63,22 @@ public class PricesAdapter extends RecyclerView.Adapter<PricesAdapter.ViewHolder
                     holder.serviceIcon.setImageResource(R.mipmap.tap30_icon);
                     holder.servicePrice.setText(model.getPrice());
                     break;
-                case "کارپینو":
+                case "کارپینو عمومی":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "کارپینو تشریفات":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "کارپینو ون":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "کارپینو بانوان":
                     holder.serviceName.setText(model.getServiceName());
                     holder.serviceIcon.setImageResource(R.mipmap.carpino_icon);
                     holder.servicePrice.setText(model.getPrice());
@@ -96,6 +111,11 @@ public class PricesAdapter extends RecyclerView.Adapter<PricesAdapter.ViewHolder
                 case "تاچ سی":
                     holder.serviceName.setText(model.getServiceName());
                     holder.serviceIcon.setImageResource(R.mipmap.touchsi_icon);
+                    holder.servicePrice.setText(model.getPrice());
+                    break;
+                case "قونقا":
+                    holder.serviceName.setText(model.getServiceName());
+                    holder.serviceIcon.setImageResource(R.mipmap.qonqa_icon);
                     holder.servicePrice.setText(model.getPrice());
                     break;
                 case "تاکسی اشتراکی می\u200Cبریم":

@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.models.PathPrice;
-import com.mibarim.taximeter.ui.activities.AddMapActivity;
 
 import butterknife.ButterKnife;
 
@@ -253,21 +252,29 @@ public class MainAddMapFragment extends Fragment {
         }
     }
 
-    public void setTouchsiPrice(String touchsiPrice){
+    public void setTouchsiPrice(String touchsiPrice) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            touchsiPrice = touchsiPrice.replace("تومان","");
-            touchsiPrice = touchsiPrice.replace(",","");
-            ((SrcDstFragment) fragment).setTouchsiPrice(getString(R.string.tochsi_price), touchsiPrice , R.mipmap.touchsi_icon);
+            touchsiPrice = touchsiPrice.replace("تومان", "");
+            touchsiPrice = touchsiPrice.replace(",", "");
+            ((SrcDstFragment) fragment).setTouchsiPrice(getString(R.string.tochsi_price), touchsiPrice, R.mipmap.touchsi_icon);
         }
     }
 
-    public void setCarpinoPrice(String carpinoPrice) {
+    public void setCarpinoPrice(String carpinoPrice, int service) {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
         if (fragment instanceof SrcDstFragment) {
-            ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_price), carpinoPrice, R.mipmap.carpino_icon);
+            if (service == 0) {
+                ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_normal_price), carpinoPrice, R.mipmap.carpino_icon);
+            } else if (service == 1) {
+                ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_van_price), carpinoPrice, R.mipmap.carpino_icon);
+            } else if (service == 2) {
+                ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_women_price), carpinoPrice, R.mipmap.carpino_icon);
+            } else if (service == 3) {
+                ((SrcDstFragment) fragment).setCarpinoPrice(getString(R.string.carpino_vip_price), carpinoPrice, R.mipmap.carpino_icon);
+            }
         }
     }
 
@@ -292,6 +299,15 @@ public class MainAddMapFragment extends Fragment {
             } else if (service == 3) {
                 ((SrcDstFragment) fragment).setMaximPrice(getString(R.string.maxim_commercial_price), maximPrice.replace("تومان", ""), R.mipmap.maxim_icon);
             }
+        }
+    }
+
+    public void setQonqa(String qonqaPrice) {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setQonqaPrice(getString(R.string.qonqa_price), qonqaPrice, R.mipmap.qonqa_icon);
         }
     }
 
