@@ -1501,8 +1501,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     public void getPathPriceCarpino(final boolean tryAgainForAuthorize, final String serviceType) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
-        final String authorization = "Bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..Hb70jPIkCucWtWac.cA5Cq-zKxjOJxRZ3flr-APyccWYMV0BQdpWjyovrzLb9i9x88KijP_1bfJNqYFQNpd9U53Y-0SwWwnCc9HaQ4M_9f3Hj4Wt9jGZU1872kaNLj0cMZvElgnCOoKisi7-RzhgsGX2hD-YTd8gTvZmzC3Tx2vL2dh0K0S3nn_Xtlr6XLY93EBVAv1fIo9lqXvd2N6HUJR5vZWv82lbAVTzgCqR2L-erEMEe6MJLQCjAcMZUiCBEvNnnMzU_xOU54L48qo2nrXrKZWjZvfKLrCiBZxr0q23JipflAbjmjUEwrPqcLN4K7UJIOR8jZ2GyRn2l582hZ15VDewFLIJjzuGnmBGALe2Moi4Asyw_J0198-GisoLlyIt6XtQVtC_WyMMBiWfUAj_FLpK2VTYWE_EJojl_4gXt3KCDrC96aGIM_rHSMb8URf3Hl7LVs-HM4MFiXhNNQMEpxJe9BwsjUihN4vH7gBePossXxTMdR_uR9X1Pe-4HV_Pf-H8LwjBpuOJEjlxfU2zLI0FtauFnbfcOX8rVMVLUUYr9Zq2H5GohATDiskdW7GhY2hVxTKAla2ckAtkczIZ8FgY2jdUHIWgE.BjAjLdc9-amNYBQz05X3cg";
-//                sharedPreferences.getString("authorization", "");
+        final String authorization = sharedPreferences.getString("authorization", "");
 
         new SafeAsyncTask<Boolean>() {
             @Override

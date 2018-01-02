@@ -304,6 +304,8 @@ public class BootstrapModule {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+            okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
             okHttpClient.setSslSocketFactory(sslSocketFactory);
             okHttpClient.setHostnameVerifier(new HostnameVerifier() {
                 @Override
