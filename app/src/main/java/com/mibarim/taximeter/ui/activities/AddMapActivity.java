@@ -333,6 +333,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     priceOrderList.add("7");
                     priceOrderList.add("8");
                     priceOrderList.add("9");
+                    priceOrderList.add("10");
                 }
             }
         }.execute();
@@ -784,19 +785,22 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             if (carpinoResponse[0] != null && !isCarpinoNormalShown) {
                 ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[0].getPayable(), 0);
                 isCarpinoNormalShown = true;
+                removeWaitLayout();
             }
-            removeWaitLayout();
             if (carpinoResponse[1] != null && !isCarpinoVanShown) {
                 ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[1].getPayable(), 1);
                 isCarpinoVanShown = true;
+                removeWaitLayout();
             }
             if (carpinoResponse[2] != null && !isCarpinoWomenShown) {
                 ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[2].getPayable(), 2);
                 isCarpinoWomenShown = true;
+                removeWaitLayout();
             }
             if (carpinoResponse[3] != null && !isCarpinoVipShown) {
                 ((MainAddMapFragment) fragment).setCarpinoPrice(carpinoResponse[3].getPayable(), 3);
                 isCarpinoVipShown = true;
+                removeWaitLayout();
             }
         }
         if (pathPrice != null && !isMibarimShown) {

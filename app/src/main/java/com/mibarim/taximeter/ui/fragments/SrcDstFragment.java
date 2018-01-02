@@ -548,9 +548,6 @@ public class SrcDstFragment extends Fragment {
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
 
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
-
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
 
@@ -578,9 +575,6 @@ public class SrcDstFragment extends Fragment {
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
 
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
-
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
     }
@@ -606,9 +600,6 @@ public class SrcDstFragment extends Fragment {
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
-
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
 
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
@@ -659,9 +650,6 @@ public class SrcDstFragment extends Fragment {
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
 
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
-
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
 
@@ -688,9 +676,6 @@ public class SrcDstFragment extends Fragment {
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
-
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
 
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
@@ -732,9 +717,6 @@ public class SrcDstFragment extends Fragment {
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
 
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
-
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
 
@@ -761,9 +743,6 @@ public class SrcDstFragment extends Fragment {
         }
         if (bottom_sheet.getVisibility() != View.VISIBLE)
             bottom_sheet.setVisibility(View.VISIBLE);
-
-        if (my_location.getVisibility() == View.VISIBLE)
-            my_location.setVisibility(View.GONE);
 
         if (upDown.getAnimation() == null)
             upDown.startAnimation(animation);
@@ -792,9 +771,6 @@ public class SrcDstFragment extends Fragment {
             if (bottom_sheet.getVisibility() != View.VISIBLE)
                 bottom_sheet.setVisibility(View.VISIBLE);
 
-            if (my_location.getVisibility() == View.VISIBLE)
-                my_location.setVisibility(View.GONE);
-
             if (upDown.getAnimation() == null)
                 upDown.startAnimation(animation);
         }
@@ -803,6 +779,8 @@ public class SrcDstFragment extends Fragment {
 
     public void setWait() {
         setAllBlocksInvisible();
+        if (my_location.getVisibility() == View.VISIBLE)
+            my_location.setVisibility(View.GONE);
         wait_layout.setVisibility(View.VISIBLE);
     }
 

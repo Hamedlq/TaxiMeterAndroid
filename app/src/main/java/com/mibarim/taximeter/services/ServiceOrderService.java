@@ -34,9 +34,9 @@ public class ServiceOrderService {
         return getPriceOrderInterface().getOrder(response).Messages;
     }
 
-    public List<String> getPriceOrder(ServiceOrderResponse response){
+    public List<String> getPriceOrder(ServiceOrderResponse response) throws Exception{
         List<String> Orders = new ArrayList<>();
-        try {
+
             JSONObject json = new JSONObject(getMessage(response).get(0));
             Orders.add(0,json.getString("SnappOrder"));
             Orders.add(1, json.getString("Tap30Order"));
@@ -49,8 +49,5 @@ public class ServiceOrderService {
             Orders.add(8, json.getString("TelephonyOrder"));
             Orders.add(9, json.getString("OthersOrder"));
             return Orders;
-        } catch (JSONException e) {
-            return null;
-        }
     }
 }
