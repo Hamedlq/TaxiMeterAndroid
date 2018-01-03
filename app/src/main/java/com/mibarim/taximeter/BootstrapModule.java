@@ -134,6 +134,12 @@ public class BootstrapModule {
     }
 
     @Provides
+    @Named("null")
+    RestAdapterRequestInterceptor provideRestAdapterRequestInterceptorNull() {
+        return new RestAdapterRequestInterceptor(null);
+    }
+
+    @Provides
     PriceService providePriceService(RestAdapter restAdapter, @Named("snapp") RestAdapter snappRestAdapter,
                                      @Named("snappAuth") RestAdapter snappAuthRestAdapter,
                                      @Named("tap30") RestAdapter tap30RestAdapter,
@@ -276,7 +282,7 @@ public class BootstrapModule {
 
     @Provides
     @Named("carpino")
-    RestAdapter provideCarpinoRestAdapter(RestErrorHandler restErrorHandler, @Named("json") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
+    RestAdapter provideCarpinoRestAdapter(RestErrorHandler restErrorHandler, @Named("null") RestAdapterRequestInterceptor restRequestInterceptor, Gson gson) {
 
         try {
             // Create a trust manager that does not validate certificate chains

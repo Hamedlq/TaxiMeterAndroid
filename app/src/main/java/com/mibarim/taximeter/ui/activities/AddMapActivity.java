@@ -1261,7 +1261,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         isAlopeykShown = false;
         isTouchsiShown = false;
         getPathPrice();
-        getPathPriceSnapp(true);
+        getSnappPrice_Server();
         getPathPriceTap30_2();
         getPathPriceCarpino(true, "NORMAL");
         getPathPriceCarpino(true, "VAN");
@@ -1353,6 +1353,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
     }
 
+    @Deprecated
     public void getPathPriceSnapp(final boolean tryAgainForAuthorize) {
         SharedPreferences sharedPreferences = getSharedPreferences("snappAuth", Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization", "");
@@ -1525,12 +1526,12 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             protected void onException(final Exception e) throws RuntimeException {
                 super.onException(e);
 
-                if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
-                    getPathPriceCarpino(false, serviceType);
-                } else if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
-                    getPathPriceCarpino(false, serviceType);
-                else if (e instanceof RetrofitError) {
-                    if (tryAgainForAuthorize) {
+                if (tryAgainForAuthorize) {
+                    if (e instanceof RetrofitError && e.getMessage().matches("timeout")) {
+                        getPathPriceCarpino(false, serviceType);
+                    } else if (e instanceof RetrofitError && ((RetrofitError) e).getResponse().getStatus() == 500)
+                        getPathPriceCarpino(false, serviceType);
+                    else if (e instanceof RetrofitError) {
                         refreshAuthorizationKeyCarpino(new Callback() {
                             @Override
                             public void dosth() {
