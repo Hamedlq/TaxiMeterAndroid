@@ -51,8 +51,9 @@ public class PriceListModel {
         MAXIM(6),
         TOUCHSI(7),
         QONQA(8),
-        Telephony(9),
-        OTHERS(10);
+        CHEETAX(9),
+        Telephony(10),
+        OTHERS(11);
 
         private int value;
 

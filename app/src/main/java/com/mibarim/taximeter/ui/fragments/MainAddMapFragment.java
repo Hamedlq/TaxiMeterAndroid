@@ -311,6 +311,15 @@ public class MainAddMapFragment extends Fragment {
         }
     }
 
+    public void setCheetax(String cheetaxPrice) {
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);
+
+        if (fragment instanceof SrcDstFragment) {
+            ((SrcDstFragment) fragment).setCheetaxPrice(getString(R.string.cheetax_price), cheetaxPrice, R.mipmap.cheetax_icon);
+        }
+    }
+
     public void SetWaitState() {
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.route_src_dst_fragment);

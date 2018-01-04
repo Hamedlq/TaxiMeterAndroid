@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by Arya on 11/12/2017.
  */
 
-public class tmTokensModel implements Serializable {
+public class tmTokensModel {
 
 
     private String snappToken;
@@ -17,6 +17,7 @@ public class tmTokensModel implements Serializable {
     private String alopeykToken;
     private String maximToken;
     private String qonqaToken;
+    private String cheetaxToken;
 
     private int snappTokenStatus;
     private int tap30TokenStatus;
@@ -24,6 +25,7 @@ public class tmTokensModel implements Serializable {
     private int alopeykTokenStatus;
     private int maximTokenStatus;
     private int qonqaTokenStatus;
+    private int cheetaxTokenStatus;
 
     public tmTokensModel() {
         snappToken = "";
@@ -32,8 +34,25 @@ public class tmTokensModel implements Serializable {
         alopeykToken = "";
         maximToken = "";
         qonqaToken = "";
+        cheetaxToken = "";
 
 
+    }
+
+    public String getCheetaxToken() {
+        return cheetaxToken;
+    }
+
+    public void setCheetaxToken(String cheetaxToken) {
+        this.cheetaxToken = cheetaxToken;
+    }
+
+    public int getCheetaxTokenStatus() {
+        return cheetaxTokenStatus;
+    }
+
+    public void setCheetaxTokenStatus(int cheetaxTokenStatus) {
+        this.cheetaxTokenStatus = cheetaxTokenStatus;
     }
 
     public String getQonqaToken() {
@@ -169,8 +188,14 @@ public class tmTokensModel implements Serializable {
                 break;
             case "qonqa":
                 if (model.qonqaTokenStatus == 3) {
-                    setMaximToken(model.qonqaToken);
-                    setMaximTokenStatus(model.qonqaTokenStatus);
+                    setQonqaToken(model.qonqaToken);
+                    setQonqaTokenStatus(model.qonqaTokenStatus);
+                } else return stc;
+                break;
+            case "cheetax":
+                if (model.cheetaxTokenStatus == 3) {
+                    setCheetaxToken(model.cheetaxToken);
+                    setCheetaxTokenStatus(model.cheetaxTokenStatus);
                 } else return stc;
                 break;
             case "all":
