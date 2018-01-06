@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by Arya on 11/12/2017.
  */
 
-public class tmTokensModel {
+public class tmTokensModel implements Serializable{
 
 
     private String snappToken;

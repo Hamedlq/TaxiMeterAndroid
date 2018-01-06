@@ -326,9 +326,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onException(e);
                 if (priceOrderList == null) {
                     priceOrderList = new ArrayList<>();
-                    priceOrderList.add("1");
-                    priceOrderList.add("2");
                     priceOrderList.add("3");
+                    priceOrderList.add("2");
+                    priceOrderList.add("1");
                     priceOrderList.add("4");
                     priceOrderList.add("5");
                     priceOrderList.add("6");
