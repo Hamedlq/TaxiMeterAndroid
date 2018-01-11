@@ -11,7 +11,7 @@ public class TochsiResponse implements Serializable {
     boolean result;
     String message;
     public Value value;
-    public class Value{
+    public class Value implements Serializable{
         String payableAmount;
 
         public String getPrice() {
