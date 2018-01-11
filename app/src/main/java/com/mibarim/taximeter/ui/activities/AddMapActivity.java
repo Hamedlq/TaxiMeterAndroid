@@ -56,6 +56,7 @@ import com.mibarim.taximeter.models.ServiceOrderResponse;
 import com.mibarim.taximeter.models.UserInfoModel;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
+import com.mibarim.taximeter.models.cheetax.CheetaxResponse;
 import com.mibarim.taximeter.models.enums.AddRouteStates;
 import com.mibarim.taximeter.models.maxim.MaximResponse;
 import com.mibarim.taximeter.models.qonqa.QonqaResponse;
@@ -127,8 +128,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     boolean isAlopeykShown = false;
     boolean isMaximShown = false;
     boolean isQonqaShown = false;
+    boolean isCheetaxShown = false;
     boolean refreshingTokens = false;
-    ApiResponse recommendRoutes;
     List<PathPoint> recommendPathPointList;
     PathPrice tap30PathPriceResponse;
     PathPrice snappPathPriceResponse;
@@ -176,12 +177,14 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private ApiResponse response;
     //private String pathPrice;
     private PathPrice pathPrice;
+    @Deprecated
     private SnappResponse snappResponse;
     private CarpinoResponse[] carpinoResponse;
     private AlopeykResponse alopeykResponse;
     private QonqaResponse qonqaResponse;
     private List<MaximResponse> maximResponse;
     private TochsiResponse tochsiResponse;
+    private CheetaxResponse cheetaxResponse;
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
@@ -209,7 +212,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     };
 
     public List<String> getPriceOrderList() {
-        carpinoResponse = new CarpinoResponse[4];
         return priceOrderList;
     }
 
@@ -324,9 +326,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 super.onException(e);
                 if (priceOrderList == null) {
                     priceOrderList = new ArrayList<>();
-                    priceOrderList.add("1");
-                    priceOrderList.add("2");
                     priceOrderList.add("3");
+                    priceOrderList.add("2");
+                    priceOrderList.add("1");
                     priceOrderList.add("4");
                     priceOrderList.add("5");
                     priceOrderList.add("6");
@@ -334,6 +336,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                     priceOrderList.add("8");
                     priceOrderList.add("9");
                     priceOrderList.add("10");
+                    priceOrderList.add("11");
                 }
             }
         }.execute();
@@ -549,14 +552,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                             isCarpinoVipShown = true;
                             isTouchsiShown = true;
                             isTap30Shown = true;
+                            isCheetaxShown = true;
                             pathPrice = null;
-                            snappResponse = null;
+                            snappPathPriceResponse = null;
                             tap30PathPriceResponse = null;
                             alopeykResponse = null;
                             carpinoResponse = null;
                             tochsiResponse = null;
                             maximResponse = null;
                             qonqaResponse = null;
+                            cheetaxResponse = null;
                         }
                         break;
 
@@ -624,14 +629,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                         isCarpinoVipShown = true;
                         isTouchsiShown = true;
                         isTap30Shown = true;
+                        isCheetaxShown = true;
                         pathPrice = null;
-                        snappResponse = null;
                         tap30PathPriceResponse = null;
+                        snappPathPriceResponse = null;
                         alopeykResponse = null;
                         carpinoResponse = null;
                         tochsiResponse = null;
                         maximResponse = null;
                         qonqaResponse = null;
+                        cheetaxResponse = null;
                     }
 
                     break;
@@ -824,13 +831,19 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         if (qonqaResponse != null && !isQonqaShown) {
             isQonqaShown = true;
             ((MainAddMapFragment) fragment).setQonqa(qonqaResponse.getCost());
+            removeWaitLayout();
+        }
+        if (cheetaxResponse != null && !isCheetaxShown) {
+            isCheetaxShown = true;
+            ((MainAddMapFragment) fragment).setCheetax(cheetaxResponse.getPayableVal());
+            removeWaitLayout();
         }
         if (pathPrice != null && !isTelephonyShown) {
             isTelephonyShown = true;
             ((MainAddMapFragment) fragment).setPrice(pathPrice);
             removeWaitLayout();
         }
-        if (pathPrice == null && snappResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && tochsiResponse == null && qonqaResponse == null && !isGettingPrice) {
+        if (pathPrice == null && snappPathPriceResponse == null && tap30PathPriceResponse == null && carpinoResponse == null && alopeykResponse == null && maximResponse == null && tochsiResponse == null && qonqaResponse == null && cheetaxResponse == null && !isGettingPrice) {
             Toast.makeText(this, "خطا در محاسبه", Toast.LENGTH_SHORT).show();
             removeWaitLayout();
         } else if (prefs.getInt("rateApp", 0) >= 0 && prefs.getBoolean("btnClick", true)) {
@@ -1260,6 +1273,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         isCarpinoVipShown = false;
         isAlopeykShown = false;
         isTouchsiShown = false;
+        isCheetaxShown = false;
         getPathPrice();
         getSnappPrice_Server();
         getPathPriceTap30_2();
@@ -1271,6 +1285,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         getPathPriceMaxim(true);
         getPathPriceTouchsi(true);
         getPathPriceQonqa(true);
+        getPathPriceCheetax(true);
     }
 
     private void returnOk() {
@@ -1313,6 +1328,20 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         double dstLng = Double.parseDouble(dstLongitude);
         if (srcLat < 38.188843 && srcLat > 37.988124 && srcLng < 46.499364 && srcLng > 46.091843)
             if (dstLat < 38.188843 && dstLat > 37.988124 && dstLng < 46.499364 && dstLng > 46.091843)
+                return true;
+            else
+                return false;
+        else
+            return false;
+    }
+
+    public boolean isMashhad() {
+        double srcLat = Double.parseDouble(srcLatitude);
+        double srcLng = Double.parseDouble(srcLongitude);
+        double dstLat = Double.parseDouble(dstLatitude);
+        double dstLng = Double.parseDouble(dstLongitude);
+        if (srcLat < 36.404274 && srcLat > 36.195370 && srcLng < 59.723645 && srcLng > 59.438686)
+            if (dstLat < 36.404274 && dstLat > 36.195370 && dstLng < 59.723645 && dstLng > 59.438686)
                 return true;
             else
                 return false;
@@ -1507,7 +1536,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
 
         SharedPreferences sharedPreferences = getSharedPreferences("carpino", Context.MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization", "");
-
+        if (carpinoResponse == null)
+            carpinoResponse = new CarpinoResponse[4];
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -1702,6 +1732,44 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         }.execute();
     }
 
+    public void getPathPriceCheetax(final boolean tryAgainForAuthorize) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("cheetax", Context.MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", "");
+
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (isMashhad())
+                    cheetaxResponse = priceService.getPathPriceCheetax(srcLatitude, srcLongitude, dstLatitude, dstLongitude, authorization);
+                return true;
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+
+                if (e instanceof RetrofitError) {
+                    if (tryAgainForAuthorize) {
+                        refreshAuthorizationKeyCheetax(new Callback() {
+                            @Override
+                            public void dosth() {
+                                getPathPriceCheetax(false);
+                            }
+                        }, authorization);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFinally() throws RuntimeException {
+                SetPathPrice();
+                super.onFinally();
+            }
+
+        }.execute();
+    }
+
     private void refreshAuthorizationKeySnapp(final Callback callback, final String authorization) {
         refreshingTokens = true;
         new SafeAsyncTask<Boolean>() {
@@ -1787,8 +1855,24 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             @Override
             public Boolean call() throws Exception {
                 String qonqa = priceService.qonqaUnauthorizationint(authorization);
-                SharedPreferences.Editor editor = getSharedPreferences("maxim", Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getSharedPreferences("qonqa", Context.MODE_PRIVATE).edit();
                 editor.putString("authorization", qonqa);
+                editor.apply();
+                callback.dosth();
+                return true;
+            }
+        }.execute();
+
+    }
+
+    private void refreshAuthorizationKeyCheetax(final Callback callback, final String authorization) {
+        new SafeAsyncTask<Boolean>() {
+
+            @Override
+            public Boolean call() throws Exception {
+                String cheetax = priceService.cheetaxUnauthorizationint(authorization);
+                SharedPreferences.Editor editor = getSharedPreferences("cheetax", Context.MODE_PRIVATE).edit();
+                editor.putString("authorization", cheetax);
                 editor.apply();
                 callback.dosth();
                 return true;

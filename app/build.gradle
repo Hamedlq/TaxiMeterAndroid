@@ -58,8 +58,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 22
-        versionName "0.4"
+        versionCode 24
+        versionName "0.41"
 
         applicationVariants.all { variant ->
             variant.resValue "string", "version", variant.versionName

@@ -5,6 +5,8 @@ import com.mibarim.taximeter.models.PathPrice;
 import com.mibarim.taximeter.models.alopeyk.AlopeykRequest;
 import com.mibarim.taximeter.models.alopeyk.AlopeykResponse;
 import com.mibarim.taximeter.models.carpino.CarpinoResponse;
+import com.mibarim.taximeter.models.cheetax.CheetaxRequest;
+import com.mibarim.taximeter.models.cheetax.CheetaxResponse;
 import com.mibarim.taximeter.models.maxim.MaximRequest;
 import com.mibarim.taximeter.models.maxim.MaximResponse;
 import com.mibarim.taximeter.models.qonqa.QonqaRequest;
@@ -57,7 +59,15 @@ public class PriceService {
     @Named("qonqa")
     private RestAdapter qonqaRestAdapter;
 
-    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter, RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter, RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter, RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter, RestAdapter tochsiRestAdapter, RestAdapter qonqaRestAdapter) {
+    @Named("cheetax")
+    private RestAdapter cheetaxRestAdapter;
+
+    public PriceService(RestAdapter restAdapter, RestAdapter snappRestAdapter,
+                        RestAdapter snappAuthRestAdapter, RestAdapter tap30AuthRestAdapter,
+                        RestAdapter tap30RestAdapter, RestAdapter carpinoRestAdapter,
+                        RestAdapter alopeykRestAdapter, RestAdapter maximRestAdapter,
+                        RestAdapter tochsiRestAdapter, RestAdapter qonqaRestAdapter,
+                        RestAdapter cheetaxRestAdapter) {
         this.restAdapter = restAdapter;
         this.snappRestAdapter = snappRestAdapter;
         this.snappAuthRestAdapter = snappAuthRestAdapter;
@@ -68,6 +78,7 @@ public class PriceService {
         this.maximRestAdapter = maximRestAdapter;
         this.tochsiRestAdapter = tochsiRestAdapter;
         this.qonqaRestAdapter = qonqaRestAdapter;
+        this.cheetaxRestAdapter = cheetaxRestAdapter;
     }
 
     public RestAdapter getRestAdapter() {
@@ -104,6 +115,10 @@ public class PriceService {
 
     public RestAdapter getTochsiRestAdapter() {
         return tochsiRestAdapter;
+    }
+
+    public RestAdapter getCheetaxRestAdapter() {
+        return cheetaxRestAdapter;
     }
 
     RestAdapter getQonqaRestAdapter() {
@@ -148,6 +163,10 @@ public class PriceService {
 
     private com.mibarim.taximeter.RestInterfaces.QonqaInterface getQonqaService() {
         return getQonqaRestAdapter().create(com.mibarim.taximeter.RestInterfaces.QonqaInterface.class);
+    }
+
+    private com.mibarim.taximeter.RestInterfaces.CheetaxInterface getCheetaxService(){
+        return getCheetaxRestAdapter().create(com.mibarim.taximeter.RestInterfaces.CheetaxInterface.class);
     }
 
     public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String userId) {
@@ -238,6 +257,20 @@ public class PriceService {
         return getQonqaService().getPathPriceQonqa("calculate_travel", authorization, qonqaRequest);
     }
 
+    public CheetaxResponse getPathPriceCheetax(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String authorization){
+        CheetaxRequest cheetaxRequest = new CheetaxRequest(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
+        return getCheetaxService().getCheetaxPrice(authorization, cheetaxRequest);
+    }
+
+    public String snappUnauthorizationint(String authorization) {
+        tmTokensModel tokenGenerator = new tmTokensModel();
+        if (!authorization.matches(""))
+            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.EXPIRED, authorization);
+        else
+            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.NOT_SET, authorization);
+        return tokenGenerator.getSnappToken();
+    }
+
     public String tap30Unauthorizationint(String authorization) {
         tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
@@ -280,20 +313,15 @@ public class PriceService {
             tokenGenerator.getToken("qonqa", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
             tokenGenerator.getToken("qonqa", tmTokensModel.tokenStatus.NOT_SET, authorization);
-        return tokenGenerator.getMaximToken();
+        return tokenGenerator.getQonqaToken();
     }
 
-    public String snappUnauthorizationint(String authorization) {
+    public String cheetaxUnauthorizationint(String authorization) {
         tmTokensModel tokenGenerator = new tmTokensModel();
         if (!authorization.matches(""))
-            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.EXPIRED, authorization);
+            tokenGenerator.getToken("cheetax", tmTokensModel.tokenStatus.EXPIRED, authorization);
         else
-            tokenGenerator.getToken("snapp", tmTokensModel.tokenStatus.NOT_SET, authorization);
-
-//        String basicAuthorization = "Basic " + Base64.encode(("armin.zirak97@gmail.com:az4484"));
-//        String basicAuthorization = "Basic " + "Kzk4OTE5OTI0MjcxMDoxMzc1MTI";
-//        CarpinoAuthResponse carpinoAuthResponse = getCarpinoService().authenticateUser("ANDROID", "PASSENGER", "app_version", basicAuthorization);
-
-        return tokenGenerator.getSnappToken();
+            tokenGenerator.getToken("cheetax", tmTokensModel.tokenStatus.NOT_SET, authorization);
+        return tokenGenerator.getCheetaxToken();
     }
 }

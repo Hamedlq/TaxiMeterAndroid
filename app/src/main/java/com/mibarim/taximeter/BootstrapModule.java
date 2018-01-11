@@ -148,11 +148,12 @@ public class BootstrapModule {
                                      @Named("alopeyk") RestAdapter alopeykRestAdapter,
                                      @Named("maxim") RestAdapter maximRestAdapter,
                                      @Named("tochsi") RestAdapter tochsiRestAdapter,
-                                     @Named("qonqa") RestAdapter qonqaRestAdapter) {
+                                     @Named("qonqa") RestAdapter qonqaRestAdapter,
+                                     @Named("cheetax") RestAdapter cheetaxRestAdapter) {
         return new PriceService(restAdapter, snappRestAdapter, snappAuthRestAdapter,
                 tap30AuthRestAdapter, tap30RestAdapter, carpinoRestAdapter,
                 alopeykRestAdapter, maximRestAdapter, tochsiRestAdapter,
-                qonqaRestAdapter);
+                qonqaRestAdapter, cheetaxRestAdapter);
     }
 
     @Provides
@@ -415,6 +416,20 @@ public class BootstrapModule {
         okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
                 .setEndpoint("http://147.135.163.161")
+                .setRequestInterceptor(restRequestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
+    @Provides
+    @Named("cheetax")
+    RestAdapter provideRestAdapterCheetax(@Named("json") RestAdapterRequestInterceptor restRequestInterceptor) {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint("https://trav.cheetax.com")
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setClient(new OkClient(okHttpClient))

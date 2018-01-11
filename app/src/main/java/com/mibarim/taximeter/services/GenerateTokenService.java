@@ -52,8 +52,12 @@ public class GenerateTokenService {
                 model.setMaximTokenStatus(tokenStatus);
                 break;
             case "qonqa":
-                model.setMaximToken(token);
-                model.setMaximTokenStatus(tokenStatus);
+                model.setQonqaToken(token);
+                model.setQonqaTokenStatus(tokenStatus);
+                break;
+            case "cheetax":
+                model.setCheetaxToken(token);
+                model.setCheetaxTokenStatus(tokenStatus);
                 break;
             case "all":
                 model.setSnappToken(token);
@@ -86,6 +90,8 @@ public class GenerateTokenService {
             model.setMaximTokenStatus(mainObject.getInt("MaximTokenStatus"));
             model.setQonqaToken(mainObject.getString("QonqaToken"));
             model.setQonqaTokenStatus(mainObject.getInt("QonqaTokenStatus"));
+            model.setCheetaxToken(mainObject.getString("CheetaxToken"));
+            model.setCheetaxTokenStatus(mainObject.getInt("CheetaxTokenStatus"));
         } catch (Exception e) {
 
         }

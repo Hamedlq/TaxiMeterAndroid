@@ -46,8 +46,9 @@ public class ServiceOrderService {
             Orders.add(5, json.getString("MaximOrder"));
             Orders.add(6, json.getString("TouchsiOrder"));
             Orders.add(7, json.getString("QonqaOrder"));
-            Orders.add(8, json.getString("TelephonyOrder"));
-            Orders.add(9, json.getString("OthersOrder"));
+            Orders.add(8, json.getString("CheetaxOrder"));
+            Orders.add(9, json.getString("TelephonyOrder"));
+            Orders.add(10, json.getString("OthersOrder"));
             return Orders;
     }
 }

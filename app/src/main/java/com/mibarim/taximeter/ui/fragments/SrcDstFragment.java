@@ -50,30 +50,6 @@ public class SrcDstFragment extends Fragment {
     protected Button do_source_btn;
     @Bind(R.id.up_down_arrow)
     protected ImageView upDown;
-    //    @Bind(R.id.price_shared)
-//    protected TextView price_shared;
-//    @Bind(R.id.price_layout_shared)
-//    protected LinearLayout price_layout_shared;
-//    @Bind(R.id.price_private)
-//    protected TextView price_private;
-//    @Bind(R.id.price_layout_private)
-//    protected LinearLayout price_layout_private;
-//    @Bind(R.id.price_line)
-//    protected TextView price_line;
-//    @Bind(R.id.price_snapp)
-//    protected TextView price_snapp;
-//    @Bind(R.id.price_tap30)
-//    protected TextView price_tap30;
-//    @Bind(R.id.price_carpino)
-//    protected TextView price_carpino;
-//    @Bind(R.id.price_layout_snapp)
-//    protected LinearLayout price_layout_snapp;
-//    @Bind(R.id.price_layout_tap30)
-//    protected LinearLayout price_layout_tap30;
-//    @Bind(R.id.price_layout_carpino)
-//    protected LinearLayout price_layout_carpino;
-//    @Bind(R.id.price_layout_line)
-//    protected LinearLayout price_layout_line;
     @Bind(R.id.waiting_layout)
     protected LinearLayout wait_layout;
 
@@ -101,13 +77,13 @@ public class SrcDstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BootstrapApplication.component().inject(this);
-        PriceOrders = ((AddMapActivity) getActivity()).getPriceOrderList();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String dstLat, dstLng;
+        priceModel = new ArrayList<>();
         SharedPreferences preferences = getActivity().getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
         dstLat = preferences.getString("DstLatitude", null);
         dstLng = preferences.getString("DstLongitude", null);
@@ -346,6 +322,38 @@ public class SrcDstFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         });
+                    } else if (serviceName.contains("چیتکس")) {
+                        dialog = new OpeningDialogTheme(getActivity());
+                        dialog.show();
+                        dialog.setText("چیتکس", "آیا تمایل به باز کردن این برنامه دارید؟");
+
+                        dialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i;
+                                PackageManager manager = getActivity().getPackageManager();
+                                dialog.dismiss();
+                                try {
+                                    i = manager.getLaunchIntentForPackage("com.cheetax.traveller");
+                                    if (i == null)
+                                        throw new PackageManager.NameNotFoundException();
+                                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                                    startActivity(i);
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    try {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.cheetax.traveller")));
+                                    } catch (Exception e1) {
+                                        Toast.makeText(getActivity(), "هیج مارکتی برروی موبایل شما نصب نیست", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                        dialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
                     }
                 }
             }
@@ -361,7 +369,6 @@ public class SrcDstFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         priceLayout.setLayoutManager(mLayoutManager);
         ButterKnife.bind(this, getView());
-        priceModel = new ArrayList<>();
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -479,7 +486,7 @@ public class SrcDstFragment extends Fragment {
             PriceListModel model = new PriceListModel(serviceName, thePrice.SharedServicePrice, icon, PriceListModel.serviceId.MIBARIM);
             if (adapter == null) {
                 priceModel.add(model);
-                adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+                adapter = new PricesAdapter(priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
             } else {
                 for (int i = 0; i <= priceModel.size(); i++) {
@@ -520,7 +527,7 @@ public class SrcDstFragment extends Fragment {
             model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             if (serviceName.matches(getString(R.string.snapp_echo_price)))
@@ -538,7 +545,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(PriceOrders.size() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -558,7 +565,7 @@ public class SrcDstFragment extends Fragment {
         PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.TAP30);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             for (int i = 0; i <= priceModel.size(); i++) {
@@ -584,7 +591,7 @@ public class SrcDstFragment extends Fragment {
         PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.TOUCHSI);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             for (int i = 0; i <= priceModel.size(); i++) {
@@ -621,7 +628,7 @@ public class SrcDstFragment extends Fragment {
             model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             if (serviceName.matches(getString(R.string.carpino_normal_price)))
@@ -639,7 +646,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(PriceOrders.size() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -660,7 +667,7 @@ public class SrcDstFragment extends Fragment {
         PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.ALOPEYK);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             for (int i = 0; i <= priceModel.size(); i++) {
@@ -689,7 +696,7 @@ public class SrcDstFragment extends Fragment {
             model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.OTHERS);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             if (serviceName.matches(getString(R.string.maxim_echo_price)))
@@ -707,7 +714,7 @@ public class SrcDstFragment extends Fragment {
                     if (i == priceModel.size()) {
                         priceModel.add(model);
                         break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(9))) {
+                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(PriceOrders.size() - 1))) {
                         priceModel.add(i, model);
                         break;
                     }
@@ -727,7 +734,33 @@ public class SrcDstFragment extends Fragment {
         PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.QONQA);
         if (adapter == null) {
             priceModel.add(model);
-            adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
+            priceLayout.setAdapter(adapter);
+        } else {
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                    priceModel.add(i, model);
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+        if (bottom_sheet.getVisibility() != View.VISIBLE)
+            bottom_sheet.setVisibility(View.VISIBLE);
+
+        if (upDown.getAnimation() == null)
+            upDown.startAnimation(animation);
+    }
+
+    public void setCheetaxPrice(String serviceName, String price, int icon) {
+
+        PriceListModel model = new PriceListModel(serviceName, price, icon, PriceListModel.serviceId.CHEETAX);
+        if (adapter == null) {
+            priceModel.add(model);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
             priceLayout.setAdapter(adapter);
         } else {
             for (int i = 0; i <= priceModel.size(); i++) {
@@ -755,7 +788,7 @@ public class SrcDstFragment extends Fragment {
             PriceListModel model = new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon, PriceListModel.serviceId.Telephony);
             if (adapter == null) {
                 priceModel.add(model);
-                adapter = new PricesAdapter(getActivity(), priceModel, onItemClickListener);
+                adapter = new PricesAdapter(priceModel, onItemClickListener);
                 priceLayout.setAdapter(adapter);
             } else
                 for (int i = 0; i <= priceModel.size(); i++) {
@@ -779,6 +812,7 @@ public class SrcDstFragment extends Fragment {
 
     public void setWait() {
         setAllBlocksInvisible();
+        PriceOrders = ((AddMapActivity) getActivity()).getPriceOrderList();
         if (my_location.getVisibility() == View.VISIBLE)
             my_location.setVisibility(View.GONE);
         wait_layout.setVisibility(View.VISIBLE);
