@@ -26,6 +26,7 @@ public class DataBaseFav extends SQLiteOpenHelper {
     private static final String TABLE_NANE = "favorite";
     //columns
     private static final String KEY_TITLE = "title";
+    private static final String KEY_SECOUND = "secound";
     private static final String KEY_SRCLAT = "lat";
     private static final String KEY_SRCLNG = "lng";
 
@@ -37,7 +38,7 @@ public class DataBaseFav extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_NANE + "("
-                + KEY_TITLE + " TEXT," + KEY_SRCLAT + " TEXT,"
+                + KEY_TITLE + " TEXT," + KEY_SECOUND + " TEXT," + KEY_SRCLAT + " TEXT,"
                 + KEY_SRCLNG + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -55,6 +56,7 @@ public class DataBaseFav extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, model.getCardText());
+        values.put(KEY_SECOUND,model.getCardSecondText());
         values.put(KEY_SRCLAT, model.getLat());
         values.put(KEY_SRCLNG, model.getLng());
 
@@ -74,8 +76,9 @@ public class DataBaseFav extends SQLiteOpenHelper {
             do {
                 favoriteModel model = new favoriteModel();
                 model.setCardText(cursor.getString(0));
-                model.setLat(cursor.getString(1));
-                model.setLng(cursor.getString(2));
+                model.setCardSecondText(cursor.getString(1));
+                model.setLat(cursor.getString(2));
+                model.setLng(cursor.getString(3));
 
                 //add
                 models.add(model);

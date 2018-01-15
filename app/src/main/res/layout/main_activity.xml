@@ -9,9 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="#fff"
-        >
+        android:orientation="vertical">
 
         <include layout="@layout/toolbar"></include>
         <!-- The tm content view -->
@@ -20,65 +19,58 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar"
             android:background="@color/colorPrimary"
             android:orientation="horizontal"
-            android:weightSum="5"
-            android:layout_below="@+id/toolbar"
-            >
+            android:weightSum="5">
 
             <LinearLayout
+                android:id="@+id/fav_on_map1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/fav_on_map1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginEnd="10dp"
-                >
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginStart="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star2"
-                    />
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_star2" />
 
-            <TextView
-                android:id="@+id/fav_on_map_text1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="2dp"
-                android:drawablePadding="-10dp"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:textColor="@android:color/white"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+                <TextView
+                    android:id="@+id/fav_on_map_text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:drawablePadding="-10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
 
 
-
-
             <LinearLayout
+                android:id="@+id/fav_on_map2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/fav_on_map2"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginEnd="10dp"
-                >
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginStart="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star2"
-                    />
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_star2" />
 
                 <TextView
                     android:id="@+id/fav_on_map_text2"
@@ -86,32 +78,30 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="2dp"
                     android:drawablePadding="-10dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/white"
                     android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fav_on_map3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/fav_on_map3"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginEnd="10dp"
-                >
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginStart="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star2"
-                    />
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_star2" />
 
                 <TextView
                     android:id="@+id/fav_on_map_text3"
@@ -119,31 +109,30 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="2dp"
                     android:drawablePadding="-10dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/white"
                     android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fav_on_map4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/fav_on_map4"
-                android:orientation="horizontal"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:layout_marginEnd="10dp">
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginStart="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star2"
-                    />
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_star2" />
 
                 <TextView
                     android:id="@+id/fav_on_map_text4"
@@ -151,32 +140,30 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="2dp"
                     android:drawablePadding="-10dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/white"
                     android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fav_on_map5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/fav_on_map5"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginEnd="10dp"
-                >
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginStart="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star2"
-                    />
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_star2" />
 
                 <TextView
                     android:id="@+id/fav_on_map_text5"
@@ -184,22 +171,23 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="2dp"
                     android:drawablePadding="-10dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/white"
                     android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>
 
 
         </LinearLayout>
+
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/fav_on_map"/>
+            android:layout_below="@+id/fav_on_map" />
     </RelativeLayout>
 
 </LinearLayout>

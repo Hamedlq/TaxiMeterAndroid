@@ -55,6 +55,9 @@ public class AddressFlagFragment extends Fragment {
     @Bind(R.id.src_dst_divide)
     protected View src_dst_divide;
 
+    @Bind(R.id.flagImage)
+    protected View flag_image;
+
 
 
     public AddressFlagFragment() {
@@ -104,6 +107,15 @@ public class AddressFlagFragment extends Fragment {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        flag_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof AddMapActivity) {
+                    ((AddMapActivity) getActivity()).doBtnClicked();
+                }
             }
         });
 

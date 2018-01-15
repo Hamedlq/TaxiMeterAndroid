@@ -78,6 +78,7 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
         addressService = new AddressService();
         db = new DataBaseFav(this);
 
+        Locale.setDefault(new Locale("FA","IR"));
         if (servicesOK()) {
             Locale.setDefault(new Locale("ir"));
             initMap();
@@ -238,6 +239,8 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra("lat", latLng.latitude);
         intent.putExtra("lng", latLng.longitude);
         intent.putExtra("text", place_name);
+        intent.putExtra("second",getAddress(latLng.latitude,latLng.longitude));
+
         setResult(favorite_place.RESULT_OK, intent);
         finish();
     }
@@ -260,6 +263,34 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(favorite_map.this, Locale.getDefault());
+        String add = "";
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+//            String add = obj.getAddressLine(0);
+//            add = add + "\n" + obj.getCountryName();
+//            add = add + "\n" + obj.getCountryCode();
+//            add = add + "\n" + obj.getAdminArea();
+//            add = add + "\n" + obj.getPostalCode();
+//            add = add + "\n" + obj.getSubAdminArea();
+//            add = add + "\n" + obj.getLocality();
+//            add = add + "\n" + obj.getSubThoroughfare();
+            add = obj.getFeatureName();
+//
+//            Log.v("IGA", "Address" + add);
+            // Toast.makeText(this, "Address=>" + add,
+            // Toast.LENGTH_SHORT).show();
+
+            // TennisAppActivity.showDialog(add);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return add;
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -275,5 +306,6 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 
 }

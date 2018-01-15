@@ -124,6 +124,7 @@ public class favorite_place extends AppCompatActivity {
             fModel.setLat(String.valueOf(data.getDoubleExtra("lat", 0)));
             fModel.setLng(String.valueOf(data.getDoubleExtra("lng", 0)));
             fModel.setCardText(data.getStringExtra("text"));
+            fModel.setCardSecondText(data.getStringExtra("second"));
             db.addOneItem(fModel);
             refresh();
             Toast.makeText(getApplicationContext(), "با موفقیت ذخیره شد", Toast.LENGTH_LONG).show();
@@ -147,7 +148,6 @@ public class favorite_place extends AppCompatActivity {
             empty_image.setVisibility(View.GONE);
             empty_image.setVisibility(View.VISIBLE);
         } else {
-
             mAdapter = new favoriteRecyclerAdapter(this, itemClickListiner, items);
             recyclerView.setAdapter(mAdapter);
             empty_image.setVisibility(View.GONE);

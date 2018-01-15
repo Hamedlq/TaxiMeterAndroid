@@ -8,10 +8,18 @@ import java.io.Serializable;
 
 public class favoriteModel implements Serializable{
     public String cardText;
+    public String cardSecondText;
     public String lat;
     public String lng;
 
 
+    public String getCardSecondText() {
+        return cardSecondText;
+    }
+
+    public void setCardSecondText(String cardSecondText) {
+        this.cardSecondText = cardSecondText;
+    }
 
     public String getCardText() {
         return cardText;

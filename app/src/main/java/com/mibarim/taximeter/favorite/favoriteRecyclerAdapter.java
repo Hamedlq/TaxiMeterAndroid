@@ -41,6 +41,8 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.fav_text.setText(items.get(position).cardText);
+        holder.fav_second_text.setText(items.get(position).cardSecondText);
+
     }
 
     @Override
@@ -52,7 +54,7 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
 
 
         public RelativeLayout fav_linear;
-        public TextView fav_text;
+        public TextView fav_text,fav_second_text;
         public LinearLayout delete;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -60,6 +62,7 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
             fav_linear = (RelativeLayout) itemView.findViewById(R.id.linear_fav);
             fav_text = (TextView) itemView.findViewById(R.id.fav_card_text);
             delete = (LinearLayout) itemView.findViewById(R.id.fav_delete);
+            fav_second_text = (TextView)itemView.findViewById(R.id.fav_card_secound_text);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
