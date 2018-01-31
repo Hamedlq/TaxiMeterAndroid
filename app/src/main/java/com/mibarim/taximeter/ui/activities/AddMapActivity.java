@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -42,7 +41,7 @@ import com.mibarim.taximeter.core.LocationService;
 import com.mibarim.taximeter.dataBase.DataBaseFav;
 import com.mibarim.taximeter.events.NetworkErrorEvent;
 import com.mibarim.taximeter.favorite.favoriteModel;
-import com.mibarim.taximeter.favorite.favorite_place;
+import com.mibarim.taximeter.favorite.FavoritePlaceActivity;
 import com.mibarim.taximeter.models.Address.AddressComponent;
 import com.mibarim.taximeter.models.Address.AddressObject;
 import com.mibarim.taximeter.models.Address.AddressResult;
@@ -69,11 +68,11 @@ import com.mibarim.taximeter.services.PriceService;
 import com.mibarim.taximeter.services.ServiceOrderService;
 import com.mibarim.taximeter.ui.AlertDialogTheme;
 import com.mibarim.taximeter.ui.BootstrapActivity;
+import com.mibarim.taximeter.ui.OpeningDialogTheme;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.ui.fragments.SrcDstFragment;
 import com.mibarim.taximeter.util.SafeAsyncTask;
-import com.mibarim.taximeter.util.Toaster;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -116,6 +115,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     PriceService priceService;
     @Inject
     ServiceOrderService serviceOrderService;
+
+    OpeningDialogTheme dialog;
     boolean isSnappShown = false;
     boolean isTap30Shown = false;
     boolean isCarpinoNormalShown = false;
@@ -188,16 +189,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     private List<Location> wayPoints;
     private String authToken;
     private boolean isGettingPrice;
-    private LinearLayout fav_on_map, fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
-    private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
-    private DataBaseFav db;
-    private List<favoriteModel> items;
-    //public Menu theMenu;
-    //private Tracker mTracker;
-    //private TrafficAddressResponse trafficAddress;
-    private SharedPreferences dstPrefs;
-    private List<String> priceOrderList;
-    private UserInfoModel userInfo;
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -210,6 +201,16 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
             }
         }
     };
+    private LinearLayout fav_on_map, fav_on_map1, fav_on_map2, fav_on_map3, fav_on_map4, fav_on_map5;
+    private TextView fav_on_map_text1, fav_on_map_text2, fav_on_map_text3, fav_on_map_text4, fav_on_map_text5;
+    private DataBaseFav db;
+    private List<favoriteModel> items;
+    //public Menu theMenu;
+    //private Tracker mTracker;
+    //private TrafficAddressResponse trafficAddress;
+    private SharedPreferences dstPrefs;
+    private List<String> priceOrderList;
+    private UserInfoModel userInfo;
 
     public List<String> getPriceOrderList() {
         return priceOrderList;
@@ -344,12 +345,18 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         dstPrefs = getSharedPreferences("com.mibarim.main", Context.MODE_PRIVATE);
         prefs = getSharedPreferences("taximeter", MODE_PRIVATE);
 
-        userInfo = new UserInfoModel();
-        userInfo.setAndroid_id(Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID));
-        setFavoriteOnMap();
+//        userInfo = new UserInfoModel();
+//        userInfo.setAndroid_id(Settings.Secure.getString(getContentResolver(),
+//                Settings.Secure.ANDROID_ID));
+//        setFavoriteOnMap();
+//        setFavoriteOnMap();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFavoriteOnMap();
+    }
 
     public void setFavoriteOnMap() {
         fav_on_map = (LinearLayout) findViewById(R.id.fav_on_map);
@@ -376,7 +383,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.GONE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
                 break;
             case 2:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -385,8 +392,8 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.GONE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
-                fav_on_map_text2.setText(items.get(1).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
+                fav_on_map_text2.setText(items.get(1).getFavPlace());
                 break;
             case 3:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -395,9 +402,9 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.GONE);
                 fav_on_map5.setVisibility(View.GONE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
-                fav_on_map_text2.setText(items.get(1).getCardText());
-                fav_on_map_text3.setText(items.get(2).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
+                fav_on_map_text2.setText(items.get(1).getFavPlace());
+                fav_on_map_text3.setText(items.get(2).getFavPlace());
                 break;
             case 4:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -406,10 +413,10 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.GONE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
-                fav_on_map_text2.setText(items.get(1).getCardText());
-                fav_on_map_text3.setText(items.get(2).getCardText());
-                fav_on_map_text4.setText(items.get(3).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
+                fav_on_map_text2.setText(items.get(1).getFavPlace());
+                fav_on_map_text3.setText(items.get(2).getFavPlace());
+                fav_on_map_text4.setText(items.get(3).getFavPlace());
                 break;
             case 5:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -418,11 +425,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.VISIBLE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
-                fav_on_map_text2.setText(items.get(1).getCardText());
-                fav_on_map_text3.setText(items.get(2).getCardText());
-                fav_on_map_text4.setText(items.get(3).getCardText());
-                fav_on_map_text5.setText(items.get(4).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
+                fav_on_map_text2.setText(items.get(1).getFavPlace());
+                fav_on_map_text3.setText(items.get(2).getFavPlace());
+                fav_on_map_text4.setText(items.get(3).getFavPlace());
+                fav_on_map_text5.setText(items.get(4).getFavPlace());
                 break;
             default:
                 fav_on_map.setVisibility(View.VISIBLE);
@@ -431,11 +438,11 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
                 fav_on_map3.setVisibility(View.VISIBLE);
                 fav_on_map4.setVisibility(View.VISIBLE);
                 fav_on_map5.setVisibility(View.VISIBLE);
-                fav_on_map_text1.setText(items.get(0).getCardText());
-                fav_on_map_text2.setText(items.get(1).getCardText());
-                fav_on_map_text3.setText(items.get(2).getCardText());
-                fav_on_map_text4.setText(items.get(3).getCardText());
-                fav_on_map_text5.setText(items.get(4).getCardText());
+                fav_on_map_text1.setText(items.get(0).getFavPlace());
+                fav_on_map_text2.setText(items.get(1).getFavPlace());
+                fav_on_map_text3.setText(items.get(2).getFavPlace());
+                fav_on_map_text4.setText(items.get(3).getFavPlace());
+                fav_on_map_text5.setText(items.get(4).getFavPlace());
                 break;
         }
 
@@ -1018,31 +1025,6 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         return dialog;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if (requestCode == GET_PERSONAL_INFO && resultCode == RESULT_OK) {
-            getPersonalInfoFromServer();
-        }*/
-        if (requestCode == RELOAD_REQUEST && resultCode == RESULT_OK) {
-            authToken = null;
-            Toaster.showLong(AddMapActivity.this, getString(R.string.retry), R.drawable.toast_warn);
-        }
-        if (requestCode == Drive_SET && resultCode == RESULT_OK) {
-            RebuildSrcDstFragment();
-        }
-        if (requestCode == Location_SET && resultCode == RESULT_OK) {
-            String PlaceId = data.getStringExtra("PlaceId");
-            getPlaceDetail(PlaceId);
-        }
-        if (requestCode == FAV_SET && resultCode == RESULT_OK) {
-            setFavoriteOnMap();
-            if (!(data.getStringExtra("latFav").equals("0") && data.getStringExtra("lngFav").equals("0")))
-                MoveMapFragment(data.getStringExtra("latFav"), data.getStringExtra("lngFav"));
-        }
-
-    }
-
-
     private void RebuildSrcDstFragment() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_container);
@@ -1295,8 +1277,32 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
     }
 
     public void gotoFavorite() {
-        Intent intent = new Intent(AddMapActivity.this, favorite_place.class);
-        startActivityForResult(intent, FAV_SET);
+        SharedPreferences preferences = getSharedPreferences("user_token", MODE_PRIVATE);
+        String token = preferences.getString("token", null);
+        if (token == null) {
+            dialog = new OpeningDialogTheme(this);
+            dialog.show();
+            dialog.setText(getString(R.string.membership), getString(R.string.membership_dialog));
+            dialog.no.setText(getString(R.string.cancel));
+            dialog.yes.setText(getString(R.string.sign_up));
+            dialog.yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AddMapActivity.this, UserAccountActivity.class);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            dialog.no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            Intent intent = new Intent(AddMapActivity.this, FavoritePlaceActivity.class);
+            startActivityForResult(intent, FAV_SET);
+        }
     }
 
     public void gotoLocationActivity() {
@@ -1353,7 +1359,7 @@ public class AddMapActivity extends BootstrapActivity implements AddMapFragment.
         new SafeAsyncTask<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                ApiResponse response = priceService.GetPathPrice(srcLatitude, srcLongitude, dstLatitude, dstLongitude, userInfo.getAndroid_id());
+                ApiResponse response = priceService.GetPathPrice(srcLatitude, srcLongitude, dstLatitude, dstLongitude);
                 Gson gson = new Gson();
                 for (String json : response.Messages) {
                     pathPrice = gson.fromJson(json, PathPrice.class);

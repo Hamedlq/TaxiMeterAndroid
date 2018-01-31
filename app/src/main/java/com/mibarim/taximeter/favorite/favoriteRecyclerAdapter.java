@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,7 +20,7 @@ import java.util.List;
 public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyclerAdapter.ViewHolder>{
 
     private Activity _activity;
-    private favorite_place.ItemClickListiner onItemClickListiner;
+    private FavoritePlaceActivity.ItemClickListiner onItemClickListiner;
     private List<favoriteModel> items;
 
 
@@ -42,7 +40,6 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.fav_text.setText(items.get(position).cardText);
         holder.fav_second_text.setText(items.get(position).cardSecondText);
-
     }
 
     @Override
@@ -80,7 +77,7 @@ public class favoriteRecyclerAdapter  extends RecyclerView.Adapter<favoriteRecyc
     }
 
 
-    public favoriteRecyclerAdapter(Activity _activity, favorite_place.ItemClickListiner onItemClickListiner, List<favoriteModel> items) {
+    public favoriteRecyclerAdapter(Activity _activity, FavoritePlaceActivity.ItemClickListiner onItemClickListiner, List<favoriteModel> items) {
         this._activity = _activity;
         this.onItemClickListiner = onItemClickListiner;
         this.items = items;

@@ -54,6 +54,7 @@ public final class Constants {
 //        public static final String URL_BASE = "http://mibarim.ir/testApp";
 //        public static final String URL_BASE = "http://mibarimapp.com/testApp";
         public static final String URL_BASE = "http://Kerayechi.mibarimapp.com";
+        public static final String URL_BASE_TEST = "http://127.0.0.1:5000";
 
 
         /**

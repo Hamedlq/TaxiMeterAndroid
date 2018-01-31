@@ -782,31 +782,27 @@ public class SrcDstFragment extends Fragment {
     }
 
     public void setPrice(String serviceName, PathPrice pathPrice, int icon) {
-        if (pathPrice == null || pathPrice.equals("")) {
-
-        } else {
-            PriceListModel model = new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon, PriceListModel.serviceId.Telephony);
-            if (adapter == null) {
-                priceModel.add(model);
-                adapter = new PricesAdapter(priceModel, onItemClickListener);
-                priceLayout.setAdapter(adapter);
-            } else
-                for (int i = 0; i <= priceModel.size(); i++) {
-                    if (i == priceModel.size()) {
-                        priceModel.add(model);
-                        break;
-                    } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
-                        priceModel.add(i, model);
-                        break;
-                    }
+        PriceListModel model = new PriceListModel(serviceName, pathPrice.PrivateServicePrice, icon, PriceListModel.serviceId.Telephony);
+        if (adapter == null) {
+            priceModel.add(model);
+            adapter = new PricesAdapter(priceModel, onItemClickListener);
+            priceLayout.setAdapter(adapter);
+        } else
+            for (int i = 0; i <= priceModel.size(); i++) {
+                if (i == priceModel.size()) {
+                    priceModel.add(model);
+                    break;
+                } else if (Integer.parseInt(PriceOrders.get(priceModel.get(i).id.getValue() - 1)) >= Integer.parseInt(PriceOrders.get(model.id.getValue() - 1))) {
+                    priceModel.add(i, model);
+                    break;
                 }
-            adapter.notifyDataSetChanged();
-            if (bottom_sheet.getVisibility() != View.VISIBLE)
-                bottom_sheet.setVisibility(View.VISIBLE);
+            }
+        adapter.notifyDataSetChanged();
+        if (bottom_sheet.getVisibility() != View.VISIBLE)
+            bottom_sheet.setVisibility(View.VISIBLE);
 
-            if (upDown.getAnimation() == null)
-                upDown.startAnimation(animation);
-        }
+        if (upDown.getAnimation() == null)
+            upDown.startAnimation(animation);
     }
 
 

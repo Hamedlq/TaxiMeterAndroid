@@ -3,11 +3,8 @@ package com.mibarim.taximeter.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,13 +17,11 @@ import com.mibarim.taximeter.R;
 
 public class OpeningDialogTheme extends Dialog {
 
+    public Button yes, no;
+
     public OpeningDialogTheme(@NonNull Context context) {
         super(context);
-        activity = (Activity) context;
     }
-
-    Activity activity;
-    public Button yes, no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

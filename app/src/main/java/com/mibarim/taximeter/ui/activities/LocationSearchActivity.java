@@ -16,18 +16,13 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
-import com.mibarim.taximeter.events.UnAuthorizedErrorEvent;
-import com.mibarim.taximeter.favorite.favorite_map;
+import com.mibarim.taximeter.favorite.FavoriteMapActivity;
 import com.mibarim.taximeter.ui.BootstrapActivity;
 import com.mibarim.taximeter.ui.fragments.LocationSearchMainFragment;
-import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -175,7 +170,7 @@ public class LocationSearchActivity extends BootstrapActivity {
             setResult(RESULT_OK, intent);
             finish();
         }else if (checkActivity == 1){
-            Intent intent = new Intent(LocationSearchActivity.this, favorite_map.class);
+            Intent intent = new Intent(LocationSearchActivity.this, FavoriteMapActivity.class);
             intent.putExtra("PlaceId", placeId);
             setResult(RESULT_OK, intent);
             finish();

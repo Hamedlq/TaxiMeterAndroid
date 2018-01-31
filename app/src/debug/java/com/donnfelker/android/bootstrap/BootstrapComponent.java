@@ -1,14 +1,14 @@
 package com.mibarim.taximeter;
 
-import com.mibarim.taximeter.favorite.favorite_map;
-import com.mibarim.taximeter.services.GoogleAutocompleteService;
+import com.mibarim.taximeter.favorite.FavoriteMapActivity;
+import com.mibarim.taximeter.favorite.FavoritePlaceActivity;
+import com.mibarim.taximeter.ui.BootstrapActivity;
+import com.mibarim.taximeter.ui.BootstrapFragmentActivity;
 import com.mibarim.taximeter.ui.activities.AboutUsActivity;
 import com.mibarim.taximeter.ui.activities.AddMapActivity;
 import com.mibarim.taximeter.ui.activities.HelpActivity;
 import com.mibarim.taximeter.ui.activities.LocationSearchActivity;
 import com.mibarim.taximeter.ui.activities.SplashActivity;
-import com.mibarim.taximeter.ui.BootstrapActivity;
-import com.mibarim.taximeter.ui.BootstrapFragmentActivity;
 import com.mibarim.taximeter.ui.fragments.AboutUsFragment;
 import com.mibarim.taximeter.ui.fragments.AddMapFragment;
 import com.mibarim.taximeter.ui.fragments.AddressFlagFragment;
@@ -17,8 +17,10 @@ import com.mibarim.taximeter.ui.fragments.LocationListFragment;
 import com.mibarim.taximeter.ui.fragments.LocationSearchMainFragment;
 import com.mibarim.taximeter.ui.fragments.MainAddMapFragment;
 import com.mibarim.taximeter.ui.fragments.SrcDstFragment;
+import com.mibarim.taximeter.ui.fragments.userAccount.UserIdentityCodeFragment;
+import com.mibarim.taximeter.ui.fragments.userAccount.UserLoginFragment;
+import com.mibarim.taximeter.ui.fragments.userAccount.UserSignUpFragment;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -64,4 +66,13 @@ public interface BootstrapComponent {
 
     void inject(HelpFragment target);
 
+    void inject(UserSignUpFragment target);
+
+    void inject(UserLoginFragment target);
+
+    void inject(UserIdentityCodeFragment target);
+
+    void inject(FavoritePlaceActivity target);
+
+    void inject(FavoriteMapActivity target);
 }

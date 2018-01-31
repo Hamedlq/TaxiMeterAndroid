@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Hamed on 2/26/2016.
  */
 public class ApiResponse  implements Serializable {
-    protected int StatusCode;
+    public int StatusCode;
     public String Status;
     public int Count;
     public String Type;

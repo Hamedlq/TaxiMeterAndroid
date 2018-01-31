@@ -4,17 +4,13 @@ import android.accounts.OperationCanceledException;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,25 +22,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mibarim.taximeter.BootstrapApplication;
 import com.mibarim.taximeter.R;
 import com.mibarim.taximeter.core.Constants;
-import com.mibarim.taximeter.dataBase.DataBaseFav;
 import com.mibarim.taximeter.models.Address.DetailPlaceResult;
-import com.mibarim.taximeter.models.enums.AddRouteStates;
+import com.mibarim.taximeter.models.ApiResponse;
 import com.mibarim.taximeter.services.AddressService;
+import com.mibarim.taximeter.services.UserInfoService;
 import com.mibarim.taximeter.ui.activities.LocationSearchActivity;
 import com.mibarim.taximeter.ui.dialog_fav;
 import com.mibarim.taximeter.util.SafeAsyncTask;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.BrokenBarrierException;
 
 import javax.inject.Inject;
 
@@ -53,32 +43,37 @@ import javax.inject.Inject;
  * Created by mohammad hossein on 14/12/2017.
  */
 
-public class favorite_map extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class FavoriteMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int ERROR_DIALOG_REQUEST = 9001;
     AddressService addressService;
     GoogleMap mMap;
     Button fav_choose;
-    String place_name = "تهران,دانشگاه امیر کبیر";
-    String place_snippet;
-    private static final int ERROR_DIALOG_REQUEST = 9001;
+    String place_name;
     LatLng latLng;
     RelativeLayout address_search;
-    private int Location_SET = 1515;
     String srcLatitude, srcLongitude;
-    DataBaseFav db;
-
+    ApiResponse apiResponse;
+    @Inject
+    UserInfoService userInfoService;
+    String token;
+    private int Location_SET = 1515;
+//    DataBaseFav db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.favorite_map);
+        BootstrapApplication.component().inject(this);
 
+        SharedPreferences preferences = getSharedPreferences("user_token", MODE_PRIVATE);
+        token = preferences.getString("token", null);
+        apiResponse = new ApiResponse();
         fav_choose = (Button) findViewById(R.id.fav_choose);
         address_search = (RelativeLayout) findViewById(R.id.address_layout_fav);
         addressService = new AddressService();
-        db = new DataBaseFav(this);
+//        db = new DataBaseFav(this);
 
-        Locale.setDefault(new Locale("FA","IR"));
         if (servicesOK()) {
             Locale.setDefault(new Locale("ir"));
             initMap();
@@ -133,7 +128,7 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
             protected void onSuccess(final Boolean res) throws Exception {
                 super.onSuccess(res);
                 //Toaster.showLong(AddMapActivity.this, srcLatitude + " " + srcLongitude);
-               goToLocationByAnimate(Double.parseDouble(srcLatitude),Double.parseDouble(srcLongitude),15);
+                goToLocationByAnimate(Double.parseDouble(srcLatitude), Double.parseDouble(srcLongitude), 15);
             }
         }.execute();
     }
@@ -209,40 +204,44 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
             fav_choose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                       final dialog_fav dialog = new dialog_fav(favorite_map.this);
-                       dialog.show();
-                       dialog.btn_detail.setOnClickListener(new View.OnClickListener() {
-                           @Override
-                           public void onClick(View v) {
-                               if (dialog.editText_detail.getText().toString().replaceAll("\\s+","").matches(""))
-                                   Toast.makeText(getApplicationContext(), "لطفا عنوان آدرس خود را وارد کنید", Toast.LENGTH_LONG).show();
-                               else {
-                                   place_name = dialog.editText_detail.getText().toString();
-                                   if (db.getOneItem(db.getAllItems(),place_name))
-                                       Toast.makeText(getApplicationContext(), "قبلا آدرسی با این  عنوان انتخاب کرده اید", Toast.LENGTH_LONG).show();
-                                   else {
-                                       dialog.dismiss();
-                                       goToRecy();
-                                   }
-
-                               }
-                           }
-                       });
-
-
+                    final dialog_fav dialog = new dialog_fav(FavoriteMapActivity.this);
+                    dialog.show();
+                    dialog.btn_detail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (dialog.editText_detail.getText().toString().replaceAll("\\s+", "").matches(""))
+                                Toast.makeText(getApplicationContext(), "لطفا عنوان آدرس خود را وارد کنید", Toast.LENGTH_LONG).show();
+                            else {
+                                place_name = dialog.editText_detail.getText().toString();
+                                goToRecy();
+                            }
+                        }
+                    });
                 }
             });
         }
     }
-    public void goToRecy(){
-        Intent intent = new Intent();
-        intent.putExtra("lat", latLng.latitude);
-        intent.putExtra("lng", latLng.longitude);
-        intent.putExtra("text", place_name);
-        intent.putExtra("second",getAddress(latLng.latitude,latLng.longitude));
 
-        setResult(favorite_place.RESULT_OK, intent);
-        finish();
+    public void goToRecy() {
+        new SafeAsyncTask<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                apiResponse = userInfoService.addFavoritePlace(token, new favoriteModel(place_name, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 0));
+                return true;
+            }
+
+            @Override
+            protected void onSuccess(Boolean aBoolean) throws Exception {
+                super.onSuccess(aBoolean);
+                finish();
+            }
+
+            @Override
+            protected void onException(Exception e) throws RuntimeException {
+                super.onException(e);
+                Toast.makeText(FavoriteMapActivity.this, getString(R.string.server_not_responde), Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
     }
 
     private void goToLocation(double lat, double lng, float zoom) {
@@ -263,34 +262,6 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    public String getAddress(double lat, double lng) {
-        Geocoder geocoder = new Geocoder(favorite_map.this, Locale.getDefault());
-        String add = "";
-        try {
-            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
-            Address obj = addresses.get(0);
-//            String add = obj.getAddressLine(0);
-//            add = add + "\n" + obj.getCountryName();
-//            add = add + "\n" + obj.getCountryCode();
-//            add = add + "\n" + obj.getAdminArea();
-//            add = add + "\n" + obj.getPostalCode();
-//            add = add + "\n" + obj.getSubAdminArea();
-//            add = add + "\n" + obj.getLocality();
-//            add = add + "\n" + obj.getSubThoroughfare();
-            add = obj.getFeatureName();
-//
-//            Log.v("IGA", "Address" + add);
-            // Toast.makeText(this, "Address=>" + add,
-            // Toast.LENGTH_SHORT).show();
-
-            // TennisAppActivity.showDialog(add);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        return add;
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -306,6 +277,5 @@ public class favorite_map extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
 
 }

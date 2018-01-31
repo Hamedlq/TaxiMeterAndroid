@@ -9,9 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.mibarim.taximeter.favorite.favoriteModel;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by mohammad hossein on 18/12/2017.
@@ -57,6 +55,7 @@ public class DataBaseFav extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, model.getCardText());
         values.put(KEY_SECOUND,model.getCardSecondText());
+        values.put(KEY_TITLE, model.getFavPlace());
         values.put(KEY_SRCLAT, model.getLat());
         values.put(KEY_SRCLNG, model.getLng());
 
@@ -95,7 +94,7 @@ public class DataBaseFav extends SQLiteOpenHelper {
         boolean checking = false;
         for (int i = 0; i < models.size(); i++) {
             favoriteModel model = models.get(i);
-            if (title.equals(model.getCardText()))
+            if (title.equals(model.getFavPlace()))
                 checking = true;
         }
 
@@ -103,10 +102,9 @@ public class DataBaseFav extends SQLiteOpenHelper {
     }
 
     //delete a menu
-    public void deleteMenu(favoriteModel model) {
+    public void deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NANE, KEY_TITLE + " = ?",
-                new String[]{model.getCardText()});
+        db.delete(TABLE_NANE, null, null);
         db.close();
     }
 }

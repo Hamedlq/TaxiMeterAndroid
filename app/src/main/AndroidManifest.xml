@@ -13,17 +13,18 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Bootstrap.Dark.Me" >
+        android:theme="@style/Theme.Bootstrap.Dark.Me">
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="AdadToken"
             android:value="" />
+
         <activity
             android:name="com.mibarim.taximeter.ui.activities.SplashActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,13 +53,17 @@
             android:label="@string/about_us"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.UserAccountActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name="ir.adad.client.AdadActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent"/>
-        <activity android:name=".favorite.favorite_place"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name=".favorite.FavoritePlaceActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".favorite.favorite_map" />
+        <activity android:name=".favorite.FavoriteMapActivity" />
 
 
         <!-- Replace with your Fabric Crashlytics key from Fabric.io -->

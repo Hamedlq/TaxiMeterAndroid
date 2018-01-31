@@ -6,13 +6,31 @@ package com.mibarim.taximeter.models;
 
 public class UserInfoModel {
 
-    private String android_id;
+    private String identityCode;
+    private String phoneNumber;
+    private String password;
 
-    public String getAndroid_id() {
-        return android_id;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAndroid_id(String android_id) {
-        this.android_id = android_id;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getidentity() {
+        return identityCode;
+    }
+
+    public void setidentity(String identity) {
+        this.identityCode = identity;
     }
 }

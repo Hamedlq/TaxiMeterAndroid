@@ -161,22 +161,22 @@ public class AddressFlagFragment extends Fragment {
 //            favMap1.setVisibility(View.VISIBLE);
 //            favMap2.setVisibility(View.GONE);
 //            favMap3.setVisibility(View.GONE);
-//            favText1.setText(items.get(0).getCardText());
+//            favText1.setText(items.get(0).getFavPlace());
 //        } else if (items.size() == 2) {
 //            favMap.setVisibility(View.VISIBLE);
 //            favMap1.setVisibility(View.VISIBLE);
 //            favMap2.setVisibility(View.VISIBLE);
 //            favMap3.setVisibility(View.GONE);
-//            favText1.setText(items.get(0).getCardText());
-//            favText2.setText(items.get(1).getCardText());
+//            favText1.setText(items.get(0).getFavPlace());
+//            favText2.setText(items.get(1).getFavPlace());
 //        } else {
 //            favMap.setVisibility(View.VISIBLE);
 //            favMap1.setVisibility(View.VISIBLE);
 //            favMap2.setVisibility(View.VISIBLE);
 //            favMap3.setVisibility(View.VISIBLE);
-//            favText1.setText(items.get(0).getCardText());
-//            favText2.setText(items.get(1).getCardText());
-//            favText3.setText(items.get(2).getCardText());
+//            favText1.setText(items.get(0).getFavPlace());
+//            favText2.setText(items.get(1).getFavPlace());
+//            favText3.setText(items.get(2).getFavPlace());
 //        }
 //
 //

@@ -169,13 +169,12 @@ public class PriceService {
         return getCheetaxRestAdapter().create(com.mibarim.taximeter.RestInterfaces.CheetaxInterface.class);
     }
 
-    public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude, String userId) {
+    public ApiResponse GetPathPrice(String srcLatitude, String srcLongitude, String dstLatitude, String dstLongitude) {
         ApiResponse res = getService().GetPathPrice(
                 srcLatitude,
                 srcLongitude,
                 dstLatitude,
-                dstLongitude,
-                userId
+                dstLongitude
         );
         return res;
     }

@@ -9,12 +9,22 @@ import java.io.Serializable;
 public class favoriteModel implements Serializable{
     public String cardText;
     public String cardSecondText;
+    public String favPlace;
     public String lat;
     public String lng;
+    public int id;
 
+    public favoriteModel() {
+    }
 
     public String getCardSecondText() {
         return cardSecondText;
+    }
+    public favoriteModel(String favPlace, String lat, String lng, int id) {
+        this.favPlace = favPlace;
+        this.lat = lat;
+        this.lng = lng;
+        this.id = id;
     }
 
     public void setCardSecondText(String cardSecondText) {
@@ -25,8 +35,16 @@ public class favoriteModel implements Serializable{
         return cardText;
     }
 
-    public void setCardText(String cardText) {
-        this.cardText = cardText;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFavPlace() {
+        return favPlace;
+    }
+
+    public void setFavPlace(String favPlace) {
+        this.favPlace = favPlace;
     }
 
     public String getLat() {

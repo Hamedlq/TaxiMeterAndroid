@@ -18,8 +18,7 @@ public interface GetPriceService {
     ApiResponse GetPathPrice(@Field("SrcLat") String SrcLat,
                              @Field("SrcLng") String SrcLng,
                              @Field("DstLat") String DstLat,
-                             @Field("DstLng") String DstLng,
-                             @Field("UserId") String userId
+                             @Field("DstLng") String DstLng
     );
 
     @POST(Constants.Http.URL_TAP30_PATH_PRICE_FROM_SERVER)

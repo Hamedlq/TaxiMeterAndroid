@@ -69,6 +69,8 @@
     <color name="teal_light">#b2dfdb</color>
     <color name="yellow_light">#0E464E</color>
     <color name="dialog_button">#0E464E</color>
-
+    <color name="account_error">#004D40</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="accent">#FFFFFF</color>
 
 </resources>

@@ -396,12 +396,12 @@ public class BootstrapModule {
 
     @Provides
     @Named("userInfo")
-    RestAdapter provideRestAdapterUserInfo(RestAdapterRequestInterceptor restRequestInterceptor) {
+    RestAdapter provideRestAdapterUserInfo(@Named("json") RestAdapterRequestInterceptor restRequestInterceptor) {
         final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setConnectTimeout(120, TimeUnit.SECONDS);
-        okHttpClient.setReadTimeout(120, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
         return new RestAdapter.Builder()
-                .setEndpoint(Constants.Http.URL_BASE)
+                .setEndpoint(Constants.Http.URL_BASE_TEST)
                 .setRequestInterceptor(restRequestInterceptor)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setClient(new OkClient(okHttpClient))
